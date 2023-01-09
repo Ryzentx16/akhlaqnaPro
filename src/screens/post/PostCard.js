@@ -98,7 +98,7 @@ function ActionButton(props) {
       break;
     case "comment":
       CurrentIcon = (
-        <Ionicons size={30} name={"chatbubbles"} color={"#660032"} />
+        <Ionicons size={30} name={"chatbubbles-outline"} color={"#660032"} />
       );
       break;
   }
