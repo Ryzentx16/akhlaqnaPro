@@ -3,7 +3,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 import SearchPage from "../screens/SearchPage";
 import AddPostPage from "../screens/AddpostPage";
-import ChatsPage from "../screens/chat/ChatsPage";
+import commentPage from "../screens/comment/CommentPage";
 import NotificationsPage from "../screens/notification/NotificationsPage";
 import PostsPage from "../screens/post/PostsPage";
 import AppHeader from "../components/AppHeader";
@@ -75,7 +75,7 @@ export default function MyTabs() {
 
       <Tab.Screen
         name="Chat"
-        component={ChatsPage}
+        component={commentPage}
         options={{
           tabBarShowLabel: false,
           tabBarIcon: ({ focused }) => (
