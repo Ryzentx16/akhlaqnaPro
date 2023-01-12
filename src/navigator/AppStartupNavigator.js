@@ -2,7 +2,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import LoginPage from "../screens/LoginPage";
 import SignUpPage from "../screens/SignUpPage";
-import SignUpConfirmation from "../screens/signUpConfirmation";
+import SignUpConfirmation from "../screens/SignUpConfirmation"
 import AppBottomTabNavigator from "./AppBottomTabNavigator"
 
 const Stack = createStackNavigator();

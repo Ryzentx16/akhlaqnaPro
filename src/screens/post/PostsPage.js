@@ -19,7 +19,7 @@ function CommentBottomSheet() {}
 
 export default function PostsPage({ navigation }) {
   const onPressComment = () => {
-    navigation.navigate("Home", {
+    navigation.navigate("Post", {
       screen: "CommentPage",
       initial: false,
     });

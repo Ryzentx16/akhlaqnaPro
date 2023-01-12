@@ -18,7 +18,6 @@ export default function LoginPage({ navigation }) {
 
   const checkLogin = () => {
     const axios = require("axios").default;
-    // console.warn("hi");
     axios
       .post(
         "http://ryzentx.online/?phoneNumber=" +
@@ -29,7 +28,7 @@ export default function LoginPage({ navigation }) {
       .then(function (response) {
         if (response.data === 1) {
           // redirect to Dashboard
-          navigation.navigate("PostsPage");
+          navigation.navigate("Home");
         } else {
           // alert something is wrong
           Alert.alert("Error", "Username/Password Wrong");

@@ -61,7 +61,7 @@ export default function AppBottomTabNavigator() {
         }}
       />
       <Tab.Screen
-        name="Home"
+        name="Post"
         component={PostNavigator}
         options={{
           tabBarShowLabel: false,
