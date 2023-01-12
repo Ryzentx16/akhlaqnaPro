@@ -14,7 +14,8 @@ import Entypo from "react-native-vector-icons/Entypo";
 import users from "../data/users";
 
 const AddPostPage = ({ navigation }) => {
-  const user = users[2];
+  const user = users[0];
+  
   return (
     <View style={styles.container}>
       <View style={styles.headContainer}>

@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import SearchPage from "../screens/SearchPage";
+import SearchPage from "../screens/search/SearchPage";
 import AddPostPage from "../screens/AddpostPage";
 import chatRoom from "../screens/chat/chatRoom"
 import commentPage from "../screens/comment/CommentPage";
@@ -9,6 +9,9 @@ import NotificationsPage from "../screens/notification/NotificationsPage";
 import AppHeader from "../components/AppHeader";
 import ChatNavigator from "./ChatNavigator";
 import PostNavigator from "./PostNavigator";
+
+import logo from "../../assets/logo.svg"
+import { SvgXml } from "react-native-svg";
 
 const Tab = createBottomTabNavigator();
 const iconsize = 30;
@@ -71,6 +74,7 @@ export default function AppBottomTabNavigator() {
               color={iconcolor}
               size={iconsize}
             />
+            //<SvgXml xml={logo} /> // Why i can't use svgxml ? it throw error [TypeError: source.split is not a function. (In 'source.split('\n')', 'source.split' is undefined)]
           ),
         }}
       />

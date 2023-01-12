@@ -1,7 +1,8 @@
 import React from 'react';
-import {Image, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import { Image, KeyboardAvoidingView, Dimensions, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
+const windowHeight = Dimensions.get('window').height;
 let firstName = "";
 let lastName = "";
 let phoneNumber = "";
@@ -9,120 +10,125 @@ let birthday = "";
 let newPassword = "";
 let confirmPassword = "";
 
-export default function SignUpPage({navigation}) {
+export default function SignUpPage({ navigation }) {
     const onSubmit = () => {
+        navigation.navigate("SignUpConfirmation")
         let isFilled = false;
         isFilled = firstName !== "" && lastName !== "" && phoneNumber !== "" && birthday !== "" && newPassword !== "" && confirmPassword !== "";
         // console.warn(isFilled);
         (isFilled) ? navigation.navigate("SignUpConfirmation") : alert("Please Fill Required")
     };
 
+    const onLogin = () => {
+        navigation.navigate("LoginPage");
+    };
+
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            keyboardVerticalOffset={100}
-            style={styles.background}
-        >
-
-            <View style={styles.logoSection}>
-                <View style={styles.logo}>
-                    <Image source={require("../../assets/Logo.png")}
-                           style={styles.imageLogo}/>
+        <View style={styles.background}>
+            <ScrollView alwaysBounceHorizontal={false}
+                        alwaysBounceVertical={false}
+                        bounces={false}
+                        contentContainerStyle={{ flex: 1, minHeight: windowHeight, maxHeight: windowHeight, }}>
+                <View style={styles.logoSection}>
+                    <View style={styles.logo}>
+                        <Image source={require("../../assets/Logo.png")}
+                            style={styles.imageLogo} />
+                    </View>
                 </View>
-            </View>
 
-            <View style={styles.titleContainer}>
-                <Text style={styles.title}>Sign Up</Text>
-            </View>
+                <View style={styles.titleContainer}>
+                    <Text style={styles.title}>Sign Up</Text>
+                </View>
 
-            <View style={styles.inputsContainer}>
+                <View style={styles.inputsContainer}>
 
-                <View style={styles.usernameContainer}>
-                    <View style={styles.firstnameContainer}>
-                        <View style={styles.firstname}>
-                            <TextInput placeholder={"First Name *"}
-                                       placeholderTextColor={"rgba(102,0,50,0.75)"}
-                                       onChangeText={(text) => {
-                                           firstName = text
-                                       }}/>
+                    <View style={styles.usernameContainer}>
+                        <View style={styles.firstnameContainer}>
+                            <View style={styles.firstname}>
+                                <TextInput placeholder={"First Name *"}
+                                    placeholderTextColor={"rgba(102,0,50,0.75)"}
+                                    onChangeText={(text) => {
+                                        firstName = text
+                                    }} />
+                            </View>
+                        </View>
+                        <View style={styles.lastnameContainer}>
+                            <View style={styles.lastname}>
+                                <TextInput placeholder={"Last Name *"}
+                                    placeholderTextColor={"rgba(102,0,50,0.75)"}
+                                    onChangeText={(text) => {
+                                        lastName = text
+                                    }} />
+                            </View>
                         </View>
                     </View>
-                    <View style={styles.lastnameContainer}>
-                        <View style={styles.lastname}>
-                            <TextInput placeholder={"Last Name *"}
-                                       placeholderTextColor={"rgba(102,0,50,0.75)"}
-                                       onChangeText={(text) => {
-                                           lastName = text
-                                       }}/>
+
+                    <View style={styles.phonenumberContainer}>
+                        <View style={styles.phonenumber}>
+                            <TextInput placeholder={"+974" + " | Phone Number *"}
+                                placeholderTextColor={"rgba(102,0,50,0.75)"}
+                                onChangeText={(text) => {
+                                    phoneNumber = text
+                                }}
+                                keyboardType={"phone-pad"} />
                         </View>
                     </View>
-                </View>
 
-                <View style={styles.phonenumberContainer}>
-                    <View style={styles.phonenumber}>
-                        <TextInput placeholder={"+974" + " | Phone Number *"}
-                                   placeholderTextColor={"rgba(102,0,50,0.75)"}
-                                   onChangeText={(text) => {
-                                       phoneNumber = text
-                                   }}
-                                   keyboardType={"phone-pad"}/>
-                    </View>
-                </View>
-
-                <View style={styles.birthdayContainer}>
-                    <View style={styles.birthday}>
-                        <View style={{flex: 8}}>
-                            <TextInput placeholder={"Birthday *"}
-                                       placeholderTextColor={"rgba(102,0,50,0.75)"}
-                                       onChangeText={(text) => {
-                                           birthday = text
-                                       }}/>
-                        </View>
-                        <View style={styles.birthdayIcon}>
-                            <FontAwesome5 name={'calendar-alt'}
-                                          size={30}
-                                          color={"#660032"}/>
+                    <View style={styles.birthdayContainer}>
+                        <View style={styles.birthday}>
+                            <View style={{ flex: 8 }}>
+                                <TextInput placeholder={"Birthday *"}
+                                    placeholderTextColor={"rgba(102,0,50,0.75)"}
+                                    onChangeText={(text) => {
+                                        birthday = text
+                                    }} />
+                            </View>
+                            <View style={styles.birthdayIcon}>
+                                <FontAwesome5 name={'calendar-alt'}
+                                    size={30}
+                                    color={"#660032"} />
+                            </View>
                         </View>
                     </View>
-                </View>
 
-                <View style={styles.passwordContainer}>
-                    <View style={styles.newPasswordContainer}>
-                        <TextInput placeholder={"Enter Password *"}
-                                   placeholderTextColor={"rgba(102,0,50,0.75)"}
-                                   onChangeText={(text) => {
-                                       newPassword = text
-                                   }}
-                                   secureTextEntry={true}
-                        />
+                    <View style={styles.passwordContainer}>
+                        <View style={styles.newPasswordContainer}>
+                            <TextInput placeholder={"Enter Password *"}
+                                placeholderTextColor={"rgba(102,0,50,0.75)"}
+                                onChangeText={(text) => {
+                                    newPassword = text
+                                }}
+                                secureTextEntry={true}
+                            />
+                        </View>
+                        <View style={styles.confirmPasswordContainer}>
+                            <TextInput placeholder={"Confirm Password *"}
+                                placeholderTextColor={"rgba(102,0,50,0.75)"}
+                                onChangeText={(text) => {
+                                    confirmPassword = text
+                                }}
+                                secureTextEntry={true}
+                            />
+                        </View>
                     </View>
-                    <View style={styles.confirmPasswordContainer}>
-                        <TextInput placeholder={"Confirm Password *"}
-                                   placeholderTextColor={"rgba(102,0,50,0.75)"}
-                                   onChangeText={(text) => {
-                                       confirmPassword = text
-                                   }}
-                                   secureTextEntry={true}
-                        />
+
+                </View>
+
+                <View style={styles.actionContainer}>
+                    <View style={styles.loginContainer}>
+                        <TouchableOpacity style={styles.login} onPress={onLogin}>
+                            <Text style={{ fontSize: 18, color: '#660032' }}>Log in</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <View style={styles.submitContainer}>
+                        <TouchableOpacity style={styles.submit} onPress={onSubmit}>
+                            <Text style={{ fontSize: 20, color: 'white' }}>Submit</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
-
-            </View>
-
-            <View style={styles.actionContainer}>
-                <View style={styles.loginContainer}>
-                    <TouchableOpacity style={styles.login}>
-                        <Text style={{fontSize: 18, color: '#660032'}}>Log in</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.submitContainer}>
-                    <TouchableOpacity style={styles.submit} onPress={onSubmit}>
-                        <Text style={{fontSize: 22, color: 'white'}}>Submit</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        </KeyboardAvoidingView>
+            </ScrollView>
+        </View>
     );
 }
 
@@ -230,12 +236,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
     },
     phonenumber: {
-        flex: 1,
-
+        // flex: 1,
+        maxHeight: 50,
+        minHeight: 50,
         borderWidth: 2,
         borderColor: "#660032",
         borderRadius: 50,
-
+        marginVertical: 10,
         paddingHorizontal: 16,
         padding: 8,
     },
@@ -244,6 +251,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         // backgroundColor: '#987412',
         maxHeight: 50,
+        minHeight: 50,
 
         // alignItems: 'center',
         justifyContent: 'center',
@@ -272,11 +280,11 @@ const styles = StyleSheet.create({
     },
     btnsContainer: {
         flex: 3,
-        backgroundColor: 'grey',
+        // backgroundColor: 'grey',
     },
     createNewPasswordContainer: {
         flex: 1,
-        backgroundColor: 'red',
+        // backgroundColor: 'red',
     },
     createNewPassword: {},
     passwordContainer: {
@@ -318,7 +326,9 @@ const styles = StyleSheet.create({
     },
     loginContainer: {
         // backgroundColor: 'blue',
-        marginBottom: 47,
+        // marginBottom: 47,
+        maxHeight: 40,
+        minHeight: 40,
         justifyContent: 'center',
         alignItems: 'center',
         borderColor: '#660032',
@@ -335,14 +345,15 @@ const styles = StyleSheet.create({
 
     submitContainer: {
         backgroundColor: '#660032',
-        marginBottom: 47,
+        maxHeight: 40,
+        minHeight: 40,
         borderRadius: 20,
     },
     submit: {
         flex: 1,
         alignItems: 'flex-start',
 
-        paddingTop: 2,
+        paddingTop: 3,
         padding: 8,
     }
 });

@@ -1,7 +1,9 @@
 import React from "react";
 import {
   Alert,
+  Dimensions,
   Image,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -11,11 +13,13 @@ import {
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 // import AmanatiLogo from "../Classes/logoXml";
 // import {SvgXml} from "react-native-svg";
+const windowHeight = Dimensions.get('screen').height;
 
 export default function LoginPage({ navigation }) {
   let phoneNumber;
   let password;
-
+  console.log(windowHeight);
+  
   const checkLogin = () => {
     const axios = require("axios").default;
     axios
@@ -41,7 +45,7 @@ export default function LoginPage({ navigation }) {
 
   return (
     <View style={styles.background}>
-      <View style={styles.form}>
+      <ScrollView contentContainerStyle={styles.form} scrollEnabled={false} bounces={false}>
         <View style={styles.logoSection}>
           <View style={styles.logo}>
             <Image
@@ -98,11 +102,11 @@ export default function LoginPage({ navigation }) {
         </View>
 
         <View style={styles.buttonsArea}>
-          <TouchableOpacity onPress={checkLogin} style={styles.forgetButton}>
-            <Text style={styles.textForget}>Forget Password</Text>
-          </TouchableOpacity>
           <TouchableOpacity onPress={checkLogin} style={styles.loginButton}>
             <Text style={styles.textLogin}>Login</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={checkLogin} style={styles.forgetButton}>
+            <Text style={styles.textForget}>Forget Password</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.signupButton}
@@ -111,7 +115,7 @@ export default function LoginPage({ navigation }) {
             <Text style={styles.textSignup}>Sign Up</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 }
@@ -123,6 +127,8 @@ const styles = StyleSheet.create({
 
   form: {
     flex: 1,
+    minHeight: windowHeight,
+    maxHeight: windowHeight,
     borderColor: "#660032",
     backgroundColor: "white",
   },
@@ -215,17 +221,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   forgetButton: {
-    marginTop: -40,
-    marginBottom: 10,
+    marginTop: 10,
+    // marginBottom: 10,
   },
   loginButton: {
     flex: 1,
-    width: 300,
+    width: 250,
     maxHeight: 45,
     alignSelf: "center",
     justifyContent: "center",
     alignItems: "center",
-    // backgroundColor: 'grey',
+    backgroundColor: 'grey',
     backgroundColor: "#660032",
     borderRadius: 30,
   },

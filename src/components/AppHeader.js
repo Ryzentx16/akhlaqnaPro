@@ -25,7 +25,7 @@ export default function AppHeader({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    height: 100,
+    height: 140,
     justifyContent: "center",
     backgroundColor:"white"
   },
