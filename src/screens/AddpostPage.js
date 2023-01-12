@@ -1,113 +1,171 @@
 import React from "react";
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import UserAvatar from "@muhzi/react-native-user-avatar";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import Entypo from "react-native-vector-icons/Entypo";
 
-export default function AddPostPage({ navigation }) {
+import users from "../data/users";
+
+const AddPostPage = ({ navigation }) => {
+  const user = users[2];
   return (
-    <View style={styles.background}>
-      <View style={styles.addPostSection}>
-        <View style={styles.buttons}>
-          <View style={styles.firstRow}>
-            <View style={styles.addTextButton}>
-              <Image
-                style={{ height: 65, width: 65 }}
-                source={require("../../assets/Icon_text.png")}
-              />
-            </View>
-            <View style={styles.addImageButton}>
-              <Image
-                style={{ height: 65, width: 65 }}
-                source={require("../../assets/Icon_photo-library.png")}
-              />
-            </View>
-          </View>
-          <View style={styles.secRow}>
-            <View style={styles.cameraButton}>
-              <Image
-                style={{ height: 65, width: 74 }}
-                source={require("../../assets/Icon_camera.png")}
-              />
-            </View>
-          </View>
+    <View style={styles.container}>
+      <View style={styles.headContainer}>
+        <View style={styles.avatarContainer}>
+          <UserAvatar size={55} src={user.profileImage} fontSize={20} />
         </View>
+        <View style={styles.headerDetailsContainer}>
+          <Text style={styles.userName}>{user.name}</Text>
+        </View>
+      </View>
+
+      <View style={styles.contentContainer}>
+        <View style={styles.content}>
+          <TextInput
+            style={styles.contentInput}
+            placeholder={"What did you lost/find today ?"}
+            multiline={true}
+          />
+        </View>
+      </View>
+
+      <View style={styles.actionsContainer}>
+        <View style={styles.attachmentContainer}>
+          <TouchableOpacity style={styles.actionBtnContainer}>
+            <FontAwesome name={"camera"} size={30} color={"#660032"} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionBtnContainer}>
+            <MaterialIcons
+              name={"add-photo-alternate"}
+              size={40}
+              color={"#660032"}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionBtnContainer}>
+            <Entypo name={"location"} size={30} color={"#660032"} />
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity style={styles.postBtnContaianer}>
+          <Text style={styles.postText}>POST</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  background: {
+  container: {
     flex: 1,
+    paddingVertical: 10,
     backgroundColor: "#fff",
   },
 
-  addPostSection: {
+  headContainer: {
     flex: 1,
-    // backgroundColor: 'red',
+    minHeight: 60,
+    maxHeight: 60,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginHorizontal: 10,
+    marginBottom: 10,
+  },
 
+  avatarContainer: {
+    flex: 1,
     justifyContent: "center",
-
-    margin: 15,
+    alignItems: "center",
+    maxWidth: 60,
   },
-  buttons: {
-    height: 240,
-    width: 270,
 
-    alignSelf: "center",
-
-    borderRadius: 25,
-
-    // backgroundColor: 'green',
+  headerDetailsContainer: {
+    flex: 1,
+    justifyContent: "center",
+    paddingLeft: 5,
   },
-  firstRow: {
+
+  userName: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#660032",
+  },
+
+  contentContainer: {
+    flex: 1,
+    backgroundColor: "#F0F2F5",
+    borderRadius: 15,
+    marginHorizontal: 10,
+    marginBottom: 10,
+    padding: 5,
+  },
+
+  content: {
+    padding: 10,
+  },
+
+  contentInput: {
+    height: "100%",
+    fontSize: 16,
+    textAlignVertical: "top",
+  },
+
+  actionsContainer: {
+    flex: 1,
+    minHeight: 40,
+    maxHeight: 40,
+    marginHorizontal: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+
+  attachmentContainer: {
     flex: 1,
     flexDirection: "row",
-    // backgroundColor: 'grey',
-
-    borderTopEndRadius: 25,
-    borderTopStartRadius: 25,
+    justifyContent: "space-around",
+    alignItems: "center",
   },
-  addTextButton: {
+  actionBtnContainer: {
     flex: 1,
-    backgroundColor: "#660032",
-
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-
-    borderColor: "white",
-    borderRightWidth: 2,
-
-    borderTopStartRadius: 25,
   },
-  addImageButton: {
-    flex: 1,
-    backgroundColor: "#660032",
 
+  postBtnContaianer: {
     justifyContent: "center",
     alignItems: "center",
-
-    borderColor: "white",
-    borderLeftWidth: 2,
-
-    borderTopEndRadius: 25,
-  },
-  secRow: {
-    flex: 1,
-    // backgroundColor: 'yellow',
-
-    borderColor: "white",
-    borderTopWidth: 3,
-
-    borderBottomEndRadius: 25,
-    borderBottomStartRadius: 25,
-  },
-  cameraButton: {
-    flex: 1,
+    paddingHorizontal: 40,
+    borderRadius: 50,
     backgroundColor: "#660032",
-
-    justifyContent: "center",
+  },
+  attachmentsContainer: {
+    flex: 2,
+    flexDirection: "row",
+    justifyContent: "space-around",
     alignItems: "center",
+    padding: 8,
+  },
 
-    borderBottomEndRadius: 25,
-    borderBottomStartRadius: 25,
+  postContainer: {
+    flex: 1,
+    // backgroundColor: 'blue',
+    justifyContent: "center",
+    alignItems: "flex-end",
+
+    paddingRight: 50,
+  },
+  postText: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "white",
   },
 });
+
+export default AddPostPage;

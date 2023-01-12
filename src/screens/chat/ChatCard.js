@@ -3,16 +3,11 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import UserAvatar from "@muhzi/react-native-user-avatar";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-
 export default function ChatCard(props) {
-
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={props.onPress}>
       <View style={styles.avatarContainer}>
-        <UserAvatar
-          size={60}
-          src={props.data.user.profileImage}
-        />
+        <UserAvatar size={60} src={props.data.user.profileImage} />
       </View>
       <View style={styles.bodyContainer}>
         <View style={styles.headerContainer}>
@@ -29,7 +24,7 @@ export default function ChatCard(props) {
         <View style={styles.detailsContainer}>
           <Text style={styles.details}>{props.data.preText}</Text>
 
-          <Text style={styles.seen}>{props.data.lastSeen+" ago"}</Text>
+          <Text style={styles.seen}>{props.data.lastSeen + " ago"}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -41,7 +36,7 @@ const styles = StyleSheet.create({
     flex: 1,
     maxHeight: 60,
     marginBottom: 17,
-    paddingLeft:5,
+    paddingLeft: 5,
     flexDirection: "row",
   },
   avatarContainer: {
@@ -56,7 +51,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     paddingLeft: 5,
 
-    paddingBottom:5,
+    paddingBottom: 5,
     borderBottomColor: "#660032",
     borderBottomWidth: 0.5,
     marginLeft: 5,

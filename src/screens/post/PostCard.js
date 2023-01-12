@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import UserAvatar from "@muhzi/react-native-user-avatar";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import SeeMoreText from "../../components/SeeMoreText";
 import Helper from "../../shared/helpers";
 
 function ActionButton(props) {
@@ -41,18 +42,6 @@ export default function PostCard(props) {
 
   const [numOfLikes, setNumOfLikes] = useState(post.numberOfLikes); //To show ur remaining Text
   const [isLiked, setIsLiked] = useState(false);
-  const [textShown, setTextShown] = useState(false); //To show ur remaining Text
-  const [lengthMore, setLengthMore] = useState(false); //to show the "Read more & Less Line"
-  
-  const toggleNumberOfLines = () => {
-    //To toggle the show text or hide it
-    setTextShown(!textShown);
-  };
-
-  const onTextLayout = useCallback((e) => {
-    setLengthMore(e.nativeEvent.lines.length >= 4); //to check the text is more than 4 lines or not
-  }, []);
-
   const onMakeLike = () => {
     if (isLiked) {
       setNumOfLikes(numOfLikes - 1);
@@ -79,7 +68,7 @@ export default function PostCard(props) {
         <View style={headerStyles.headerDetailsContainer}>
           <Text style={headerStyles.userName}>{post.user.name}</Text>
 
-          <Text style={headerStyles.postTime}>{postDuration}</Text>
+          <Text style={headerStyles.postTime}>{postDuration + " (Al Rayaan)"}</Text>
         </View>
         <TouchableOpacity style={headerStyles.headerDotsContainer}>
           <MaterialCommunityIcons
@@ -90,26 +79,14 @@ export default function PostCard(props) {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity
-        style={styles.detailsContainer}
-        onPress={toggleNumberOfLines}
-      >
-        <Text
-          style={styles.detailsText}
-          onTextLayout={onTextLayout}
-          numberOfLines={textShown ? undefined : 4}
-        >
-          {post.content}
-        </Text>
+      <View style={styles.detailsContainer}>
+        <SeeMoreText
+          textStyle={styles.detailsText}
+          text={post.content}
+          numberOfLines={4}
+        />
+      </View>
 
-        {lengthMore && !textShown ? (
-          <TouchableOpacity onPress={toggleNumberOfLines}>
-            <Text style={[styles.detailsText, { fontWeight: "bold" }]}>
-              {"Read more"}
-            </Text>
-          </TouchableOpacity>
-        ) : null}
-      </TouchableOpacity>
       {post.hasOwnProperty("image") == true && (
         <View
           style={[
@@ -127,7 +104,7 @@ export default function PostCard(props) {
           details={numOfLikes}
           onPress={onMakeLike}
         />
-        <ActionButton type={"comment"} details={post.numberOfComments} />
+        <ActionButton type={"comment"} details={post.numberOfComments} onPress = {props.onPressComment} />
         <ActionButton type={"share"} details={post.numberOfShares} />
       </View>
     </View>

@@ -2,7 +2,9 @@ import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import UserAvatar from "@muhzi/react-native-user-avatar";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import SeeMoreText from "../../components/SeeMoreText";
 import Helper from "../../shared/helpers";
+
 
 export default function CommentCard(props) {
   const { comment } = props;
@@ -20,7 +22,11 @@ export default function CommentCard(props) {
           <Text style={detailsStyles.postTime}>{postDuration}</Text>
         </View>
         <View style={detailsStyles.commentDetailsContainer}>
-          <Text style={detailsStyles.detailsText}>{comment.content}</Text>
+          <SeeMoreText
+            textStyle={detailsStyles.detailsText}
+            text={comment.content}
+            numberOfLines={6}
+          />
         </View>
         <View style={detailsStyles.actionContainer}>
           <TouchableOpacity style={detailsStyles.replybutton}>

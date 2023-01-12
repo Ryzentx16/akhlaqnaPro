@@ -20,13 +20,20 @@ function prepareTempData() {
 export default function ChatsPage({ navigation }) {
   let chatList = prepareTempData();
 
+  const onPress = () => {
+    navigation.navigate("Chat", {
+      screen: "ChatRoom",
+      initial: false,
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
         style={styles.scrollContainer}
         data={chatList}
         renderItem={(item, index) => {
-          return <ChatCard key={index} data={item.item} />;
+          return <ChatCard key={index} data={item.item} onPress={onPress}/>;
         }}
         keyExtractor={(item, index) => index}
       />

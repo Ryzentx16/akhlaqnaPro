@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, StyleSheet, View,SafeAreaView } from "react-native";
+import { Image, StyleSheet, View, SafeAreaView } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 
 import posts from "../../data/posts";
@@ -15,7 +15,16 @@ function preperTempData() {
   return _posts;
 }
 
+function CommentBottomSheet() {}
+
 export default function PostsPage({ navigation }) {
+  const onPressComment = () => {
+    navigation.navigate("Home", {
+      screen: "CommentPage",
+      initial: false,
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
@@ -23,7 +32,13 @@ export default function PostsPage({ navigation }) {
         style={styles.scrollContainer}
         keyExtractor={(item, index) => index}
         renderItem={(item, index) => {
-          return <PostCard post={item.item} key={index} />;
+          return (
+            <PostCard
+              post={item.item}
+              key={index}
+              onPressComment={onPressComment}
+            />
+          );
         }}
       />
     </SafeAreaView>
@@ -34,7 +49,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingBottom: 10,
-    paddingTop:17,
+    paddingTop: 5,
     backgroundColor: "#CCCCCC",
   },
 
