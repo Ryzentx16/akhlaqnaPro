@@ -1,8 +1,10 @@
-import React from 'react';
-import { Image, KeyboardAvoidingView, Dimensions, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
+import { Image, KeyboardAvoidingView, Dimensions, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, I18nManager } from 'react-native';
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const windowHeight = Dimensions.get('window').height;
+const isRTL = I18nManager.isRTL;
 let firstName = "";
 let lastName = "";
 let phoneNumber = "";
@@ -11,6 +13,32 @@ let newPassword = "";
 let confirmPassword = "";
 
 export default function SignUpPage({ navigation }) {
+    const [birthday, setbirthday] = useState(new Date());
+    // console.warn(birthday);
+    const [date, setDate] = useState(new Date());
+    const [mode, setMode] = useState('date');
+    const [show, setShow] = useState(false);
+
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate;
+        setShow(false);
+        setDate(currentDate);
+        setbirthday(currentDate);
+        // const test = new Date(date).getUTCDay();
+    };
+
+    const showMode = (currentMode) => {
+        if (Platform.OS === 'android') {
+            setShow(true);
+            // for iOS, add a button that closes the picker
+        }
+        setMode(currentMode);
+    };
+
+    const showDatepicker = () => {
+        showMode('date');
+    };
+
     const onSubmit = () => {
         navigation.navigate("SignUpConfirmation")
         let isFilled = false;
@@ -26,9 +54,9 @@ export default function SignUpPage({ navigation }) {
     return (
         <View style={styles.background}>
             <ScrollView alwaysBounceHorizontal={false}
-                        alwaysBounceVertical={false}
-                        bounces={false}
-                        contentContainerStyle={{ flex: 1, minHeight: windowHeight, maxHeight: windowHeight, }}>
+                alwaysBounceVertical={false}
+                bounces={false}
+                contentContainerStyle={{ flex: 1, minHeight: windowHeight, maxHeight: windowHeight, }}>
                 <View style={styles.logoSection}>
                     <View style={styles.logo}>
                         <Image source={require("../../assets/Logo.png")}
@@ -49,7 +77,8 @@ export default function SignUpPage({ navigation }) {
                                     placeholderTextColor={"rgba(102,0,50,0.75)"}
                                     onChangeText={(text) => {
                                         firstName = text
-                                    }} />
+                                    }}
+                                    style={{ textAlign: isRTL ? 'right' : 'left' }} />
                             </View>
                         </View>
                         <View style={styles.lastnameContainer}>
@@ -58,37 +87,49 @@ export default function SignUpPage({ navigation }) {
                                     placeholderTextColor={"rgba(102,0,50,0.75)"}
                                     onChangeText={(text) => {
                                         lastName = text
-                                    }} />
+                                    }}
+                                    style={{ textAlign: isRTL ? 'right' : 'left' }} />
                             </View>
                         </View>
                     </View>
 
                     <View style={styles.phonenumberContainer}>
                         <View style={styles.phonenumber}>
-                            <TextInput placeholder={"+974" + " | Phone Number *"}
+                            <TextInput placeholder={"Phone Number (With Country Code) *"}
                                 placeholderTextColor={"rgba(102,0,50,0.75)"}
                                 onChangeText={(text) => {
                                     phoneNumber = text
                                 }}
-                                keyboardType={"phone-pad"} />
+                                keyboardType={"phone-pad"}
+                                style={{ textAlign: isRTL ? 'right' : 'left' }} />
                         </View>
                     </View>
 
                     <View style={styles.birthdayContainer}>
-                        <View style={styles.birthday}>
+                        <TouchableOpacity style={styles.birthday} onPress={showDatepicker}>
                             <View style={{ flex: 8 }}>
-                                <TextInput placeholder={"Birthday *"}
+                                <TextInput placeholder={"DD/MM/YYYY *"}
                                     placeholderTextColor={"rgba(102,0,50,0.75)"}
-                                    onChangeText={(text) => {
-                                        birthday = text
-                                    }} />
+                                    value={birthday.toLocaleDateString()}
+                                    onChange={(text) => {
+                                        setbirthday(text)
+                                    }}
+                                    style={{ textAlign: isRTL ? 'right' : 'left' }} />
                             </View>
                             <View style={styles.birthdayIcon}>
                                 <FontAwesome5 name={'calendar-alt'}
                                     size={30}
                                     color={"#660032"} />
+                                {show && (
+                                    <DateTimePicker
+                                        testID="dateTimePicker"
+                                        value={date}
+                                        mode={mode}
+                                        onChange={onChange}
+                                    />
+                                )}
                             </View>
-                        </View>
+                        </TouchableOpacity>
                     </View>
 
                     <View style={styles.passwordContainer}>
@@ -99,6 +140,7 @@ export default function SignUpPage({ navigation }) {
                                     newPassword = text
                                 }}
                                 secureTextEntry={true}
+                                style={{ textAlign: isRTL ? 'right' : 'left' }}
                             />
                         </View>
                         <View style={styles.confirmPasswordContainer}>
@@ -108,6 +150,7 @@ export default function SignUpPage({ navigation }) {
                                     confirmPassword = text
                                 }}
                                 secureTextEntry={true}
+                                style={{ textAlign: isRTL ? 'right' : 'left' }}
                             />
                         </View>
                     </View>
@@ -142,7 +185,7 @@ const styles = StyleSheet.create({
     logoSection: {
         flex: 2,
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
 
         // backgroundColor: 'red',
     },
@@ -162,7 +205,7 @@ const styles = StyleSheet.create({
         width: 57,
 
         // marginTop: 12,
-        marginLeft: 4,
+        marginLeft: isRTL ? -5 : 5,
     },
 
     titleContainer: {
@@ -184,7 +227,7 @@ const styles = StyleSheet.create({
     },
     usernameContainer: {
         flex: 1,
-        flexDirection: 'row',
+        flexDirection: isRTL ? 'row-reverse' : 'row',
         // backgroundColor: '#578978',
         alignItems: 'flex-end',
         justifyContent: 'center',
@@ -248,7 +291,7 @@ const styles = StyleSheet.create({
     },
     birthdayContainer: {
         flex: 1,
-        flexDirection: 'row',
+        flexDirection: isRTL ? 'row-reverse' : 'row',
         // backgroundColor: '#987412',
         maxHeight: 50,
         minHeight: 50,
@@ -276,7 +319,7 @@ const styles = StyleSheet.create({
         // position: 'absolute',
         // backgroundColor: 'red',
 
-        alignItems: 'flex-end',
+        alignItems: isRTL ? 'flex-start' : 'flex-end',
     },
     btnsContainer: {
         flex: 3,
@@ -318,7 +361,7 @@ const styles = StyleSheet.create({
 
     actionContainer: {
         flex: 1,
-        flexDirection: 'row',
+        flexDirection: isRTL ? 'row-reverse' : 'row',
         // backgroundColor: 'red',
 
         justifyContent: 'space-around',

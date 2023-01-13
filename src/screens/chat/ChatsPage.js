@@ -20,11 +20,13 @@ function prepareTempData() {
 export default function ChatsPage({ navigation }) {
   let chatList = prepareTempData();
 
-  const onPress = () => {
+  const onPress = (chat) => {
     navigation.navigate("Chat", {
       screen: "ChatRoom",
       initial: false,
+      params: {roomId: chat.chatRoomId}
     });
+    // console.log(chat.user.username + ':' + chat.chatRoomId);
   };
 
   return (

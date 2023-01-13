@@ -6,10 +6,12 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  I18nManager
 } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Entypo from "react-native-vector-icons/Entypo";
 import Fontisto from "react-native-vector-icons/Fontisto";
+const isRTL = I18nManager.isRTL;
 
 export default function InputBox(props) {
   var heightLimit = 130;
@@ -48,7 +50,7 @@ export default function InputBox(props) {
         )}
       </View>
       <TouchableOpacity style={styles.buttonContainer}>
-        <MaterialIcons name="send" size={20} color="white" />
+        <MaterialIcons name="send" size={20} color="white" style={{transform: [{rotateY: isRTL ? '180deg' : '0deg'}]}} />
       </TouchableOpacity>
     </KeyboardAvoidingView>
   );

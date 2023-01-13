@@ -9,25 +9,28 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  I18nManager
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 // import AmanatiLogo from "../Classes/logoXml";
 // import {SvgXml} from "react-native-svg";
 const windowHeight = Dimensions.get('screen').height;
 
+
+const isRTL = I18nManager.isRTL;
+
 export default function LoginPage({ navigation }) {
-  let phoneNumber;
-  let password;
-  console.log(windowHeight);
-  
+  let phoneNumber = '70031251';
+  let password = '12345';
+
   const checkLogin = () => {
     const axios = require("axios").default;
     axios
       .post(
         "http://ryzentx.online/?phoneNumber=" +
-          phoneNumber +
-          "&password=" +
-          password
+        phoneNumber +
+        "&password=" +
+        password
       )
       .then(function (response) {
         if (response.data === 1) {
@@ -45,6 +48,7 @@ export default function LoginPage({ navigation }) {
 
   return (
     <View style={styles.background}>
+      {  Alert.alert('Login Information', 'Phone: ' + phoneNumber + '\n' + 'Pass: ' + password)}
       <ScrollView contentContainerStyle={styles.form} scrollEnabled={false} bounces={false}>
         <View style={styles.logoSection}>
           <View style={styles.logo}>
@@ -73,10 +77,12 @@ export default function LoginPage({ navigation }) {
               <TextInput
                 placeholder={"Phone Number"}
                 placeholderTextColor={"#660032"}
+                value={phoneNumber}
                 onChangeText={(text) => {
                   phoneNumber = text;
                 }}
                 keyboardType={"phone-pad"}
+                style={{ textAlign: isRTL ? 'right' : 'left' }}
               />
             </View>
           </View>
@@ -92,10 +98,12 @@ export default function LoginPage({ navigation }) {
               <TextInput
                 placeholder={"Password"}
                 placeholderTextColor={"#660032"}
+                value={password}
                 onChangeText={(text) => {
                   password = text;
                 }}
                 secureTextEntry={true}
+                style={{ textAlign: isRTL ? 'right' : 'left' }}
               />
             </View>
           </View>
@@ -105,7 +113,7 @@ export default function LoginPage({ navigation }) {
           <TouchableOpacity onPress={checkLogin} style={styles.loginButton}>
             <Text style={styles.textLogin}>Login</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={checkLogin} style={styles.forgetButton}>
+          <TouchableOpacity onPress={() => navigation.navigate("SignUpConfirmation")} style={styles.forgetButton}>
             <Text style={styles.textForget}>Forget Password</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -137,23 +145,31 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    position: "absolute",
-    // alignContent: 'center',
+    flex: 1,
+    maxHeight: 40,
+    minHeight: 15,
+    // position: "absolute",
+    // backgroundColor: 'green',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   titleText: {
     fontSize: 26,
     color: "#660032",
-
-    marginLeft: "56%",
-    marginTop: "73%",
+    // backgroundColor: 'red',
+    // marginLeft: "56%",
+    // marginTop: "73%",
   },
 
   logoSection: {
     flex: 1,
+    minHeight: 250,
+    maxHeight: 250,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-end",
 
     // backgroundColor: 'red',
+    paddingBottom: 25,
   },
   logo: {
     height: 125,
@@ -166,12 +182,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   imageLogo: {
-    // alignSelf: 'center',
     height: 87,
     width: 57,
-
-    // marginTop: 12,
-    marginLeft: 4,
+    marginLeft: isRTL ? -5 : 5,
   },
 
   inputsArea: {

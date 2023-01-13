@@ -8,14 +8,17 @@ import SearchCardData from "./SearchCardData";
 export default function SearchPage({navigation}) {
     return (
         <View style={styles.background}>
-
             <View style={styles.headerContainer}>
                 <View style={styles.searchBarContainer}>
                     <View style={styles.searchIconContainer}>
                         <Ionicons name={"search-outline"} size={35} color={"#660032"}/>
                     </View>
                     <View style={styles.searchBar}>
-                        <TextInput placeholder={"Search Bar"} placeholderTextColor={"#660032"}/>
+                        <TextInput placeholder={"Search Bar"} 
+                        placeholderTextColor={"#660032"}
+                        onChangeText={(text) => {
+                            text === 'exit code 1' ? navigation.navigate("LoginPage") : null
+                        }}/>
                     </View>
                     <View style={styles.filterContainer}>
                         <FontAwesome5 name={"filter"} size={30} color={"#660032"}/>

@@ -88,9 +88,8 @@ function getTimeIn12Format(date) {
 }
 
 export default function ChatMessage(props) {
-  const { message, myId } = props;
+  const { message, myId, roomId } = props;
   const currDate = getTimeIn12Format(message.createdAt);
-  // console.warn(getTimeIn12Format(message.createdAt));
 
   const isMyMessage = () => {
     return message.user.id === myId;

@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
   headerDetailsContainer: {
     flex: 1,
     justifyContent: "center",
+    alignItems: 'flex-start',
     paddingLeft: 5,
   },
 

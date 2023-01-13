@@ -1,13 +1,26 @@
-import React from 'react';
-import { Image, ScrollView, Dimensions, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
+import { Image, ScrollView, Dimensions, StyleSheet, I18nManager, Text, TextInput, TouchableOpacity, View, Alert } from 'react-native';
 import Ionicons from "react-native-vector-icons/Ionicons";
 // import Toast from "react-native-toast-message";
 const windowHeight = Dimensions.get('window').height;
+const isRTL = I18nManager.isRTL;
 
 export default function SignUpConfirmation({ navigation }) {
+    let otp = '999999';
     let enteredOtp;
+
+    Alert.alert("OTP number", otp);
+
     const checkOTP = () => {
-        return (enteredOtp === '999999') ? navigation.navigate('Home') : alert("Invalid OTP");
+        return (enteredOtp === otp) ? navigation.navigate('Home') : alert("Invalid OTP");
+    }
+    // console.log(Math.floor(Math.random() * 1000000));
+
+    const onResend = () => {
+        //fake OTP generator:
+        // console.log(Math.floor(Math.random() * 1000000));
+        otp = Math.floor(Math.random() * 1000000).toString();
+        Alert.alert("OTP number", otp);
     }
 
     return (
@@ -16,10 +29,11 @@ export default function SignUpConfirmation({ navigation }) {
                 alwaysBounceVertical={false}
                 bounces={false}
                 contentContainerStyle={{ flex: 1, minHeight: windowHeight, maxHeight: windowHeight, }}>
+
                 <View style={styles.headContainer}>
-                    <View style={styles.backContainer}>
+                    {/* <View style={styles.backContainer}>
                         <Ionicons name={'arrow-back'} size={45} color={"#660032"} />
-                    </View>
+                    </View> */}
                     <View style={styles.logoContainer}>
                         <View style={styles.logo}>
                             <Image source={require("../../assets/Logo.png")}
@@ -31,6 +45,7 @@ export default function SignUpConfirmation({ navigation }) {
                         <Text style={styles.text}>We Sent You an OTP code Please Enter it</Text>
                     </View>
                 </View>
+
                 <View style={styles.inputContainer}>
                     <View style={styles.input}>
                         <TextInput placeholder={"OTP"}
@@ -38,10 +53,11 @@ export default function SignUpConfirmation({ navigation }) {
                             onChangeText={(text) => {
                                 enteredOtp = text
                             }}
-                            maxLength={6} 
-                            style={{width: '100%', textAlign: 'center'}}/>
+                            maxLength={6}
+                            style={{ width: '100%', textAlign: 'center' }} />
                     </View>
                 </View>
+
                 <View style={styles.actionsContainer}>
                     <View style={styles.submitContainer}>
                         <TouchableOpacity style={styles.submit} onPress={checkOTP}>
@@ -49,7 +65,7 @@ export default function SignUpConfirmation({ navigation }) {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.resendContainer}>
-                        <TouchableOpacity style={styles.resend}>
+                        <TouchableOpacity style={styles.resend} onPress={onResend}>
                             <Text style={{ color: '#660032', fontSize: 20 }}>Resend The OTP</Text>
                         </TouchableOpacity>
                     </View>
@@ -69,11 +85,13 @@ const styles = StyleSheet.create({
     background: {
         flex: 1,
         backgroundColor: 'white',
+        // paddingTop: 10,
     },
 
     headContainer: {
         flex: 3,
         // backgroundColor: 'blue',
+        marginTop: 90,
     },
     backContainer: {
         marginTop: 10,
@@ -102,7 +120,7 @@ const styles = StyleSheet.create({
         width: 57,
 
         // marginTop: 12,
-        marginLeft: 4,
+        marginLeft: isRTL ? -5 : 5,
     },
 
     textContainer: {

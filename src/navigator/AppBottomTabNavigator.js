@@ -1,3 +1,6 @@
+import { useEffect } from 'react';
+import { BackHandler, Alert } from 'react-native';
+
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
@@ -10,16 +13,31 @@ import AppHeader from "../components/AppHeader";
 import ChatNavigator from "./ChatNavigator";
 import PostNavigator from "./PostNavigator";
 
-import logo from "../../assets/logo.svg"
+import logo from "../../assets/logo.js"
 import { SvgXml } from "react-native-svg";
 
 const Tab = createBottomTabNavigator();
 const iconsize = 30;
 const iconcolor = "#660032";
 
-export default function AppBottomTabNavigator() {
+export default function AppBottomTabNavigator({navigation}) {
+  useEffect(() => {
+    // console.log(logo);
+    const backAction = () => {
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
   return (
     <Tab.Navigator
+      initialRouteName={"Post"}
       screenOptions={{
         headerShown: true,
         tabBarActiveTintColor: "red",
@@ -30,7 +48,7 @@ export default function AppBottomTabNavigator() {
           borderTopColor: "#660032",
           borderTopWidth: 3,
         },
-        header: () => <AppHeader />,
+        header: () => <AppHeader navigation={navigation}/>,
       }}
       tabbarop
       barStyle={{ backgroundColor: "black" }} //This is where you can manipulate its look.
@@ -74,7 +92,7 @@ export default function AppBottomTabNavigator() {
               color={iconcolor}
               size={iconsize}
             />
-            //<SvgXml xml={logo} /> // Why i can't use svgxml ? it throw error [TypeError: source.split is not a function. (In 'source.split('\n')', 'source.split' is undefined)]
+            // <SvgXml xml={logo} /> // Why i can't use svgxml ? it throw error [TypeError: source.split is not a function. (In 'source.split('\n')', 'source.split' is undefined)]
           ),
         }}
       />

@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View, I18nManager } from "react-native";
 import UserAvatar from "@muhzi/react-native-user-avatar";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import SeeMoreText from "../../components/SeeMoreText";
 import Helper from "../../shared/helpers";
+const isRTL = I18nManager.isRTL;
 
 function ActionButton(props) {
   let CurrentIcon;
@@ -116,7 +117,7 @@ const headerStyles = StyleSheet.create({
     flex: 1,
     minHeight: 40,
     maxHeight: 40,
-    flexDirection: "row",
+    flexDirection: 'row',
     justifyContent: "space-between",
     marginHorizontal: 10,
     marginBottom: 10,
@@ -132,6 +133,7 @@ const headerStyles = StyleSheet.create({
   headerDetailsContainer: {
     flex: 1,
     justifyContent: "center",
+    alignItems: 'flex-start', //for RTL
     paddingLeft: 5,
   },
 

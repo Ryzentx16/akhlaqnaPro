@@ -3,10 +3,11 @@ import users from "./users";
 const chats = [
     {
         id: 'c1',
-        user: users[0],
+        user: users[4],
         createdAt: '2022:12:04 12:00:00',
         preText: 'Hi this post\'s image is wha...',
         lastSeen: Math.floor((Math.random() * 40) + 1) + 'm',
+        chatRoomId: 'r1',
     },
     {
         id: 'c2',
@@ -14,6 +15,7 @@ const chats = [
         createdAt: '2022:12:04 12:00:00',
         preText: 'Hi this post\'s image is wha...',
         lastSeen: Math.floor((Math.random() * 40) + 1) + 'm',
+        chatRoomId: 'r2',
     },
     {
         id: 'c3',
@@ -21,6 +23,7 @@ const chats = [
         createdAt: '2022:12:04 12:00:00',
         preText: 'Hi this post\'s image is wha...',
         lastSeen: Math.floor((Math.random() * 40) + 1) + 'm',
+        chatRoomId: 'r3',
     },
     {
         id: 'c4',
@@ -28,6 +31,7 @@ const chats = [
         createdAt: '2022:12:04 12:00:00',
         preText: 'Hi this post\'s image is wha...',
         lastSeen: Math.floor((Math.random() * 40) + 1) + 'm',
+        chatRoomId: 'r4',
     },
 ];
 

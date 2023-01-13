@@ -4,16 +4,18 @@ import ChatMessage from "./ChatMessage";
 import chatRoomData from "../../data/chatRoomData";
 import InputBox from "./inputBox";
 
-export default function ChatRoom() {
+export default function ChatRoom({route}) {
+  // console.log(route.params);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.messgaesContainer}>
         <FlatList
-          data={chatRoomData.messages}
+          data={chatRoomData[0].messages}
           style={styles.scrollContainer}
           keyExtractor={(item, index) => index}
           renderItem={(item, index) => {
-            return <ChatMessage key={index} message={item.item} myId={"u5"} />;
+            return <ChatMessage key={index} message={item.item} myId={"u1"} />;
           }}
           inverted
         />

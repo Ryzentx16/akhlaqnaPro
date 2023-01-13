@@ -1,8 +1,9 @@
 import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View, I18nManager } from "react-native";
 import AppStartupNavigator from "./src/navigator/AppStartupNavigator";
+// import i18next from "./src/languages/i18n";
 
 export default function App() {
   return (
