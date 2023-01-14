@@ -6,6 +6,8 @@ import InputBox from "../chat/inputBox";
 import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
+import PostsPage from "../post/PostsPage";
+
 function preperTempData() {
   let coments = [];
 
@@ -38,7 +40,7 @@ function Comments() {
 export default function CommentPage(props) {
   const commentSheetRef = useRef(null);
 
-  const snapPoints = useMemo(() => ["99"], []);
+  const snapPoints = useMemo(() => ["35%", "100%"], []);
 
   const handleSheetChanges = useCallback((index) => {
     if (index == -1) {
@@ -47,7 +49,7 @@ export default function CommentPage(props) {
   }, []);
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor:'red'}}>
       <BottomSheet
         ref={commentSheetRef}
         index={0}

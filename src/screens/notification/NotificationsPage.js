@@ -10,7 +10,6 @@ export default function NotificationsPage({ navigation }) {
   for (let i = 0; i < notifications.length * 5; i++) {
     _notifications.push(notifications[i % notifications.length]);
   }
-
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
@@ -19,7 +18,9 @@ export default function NotificationsPage({ navigation }) {
         keyExtractor={(item, index) => index}
         renderItem={(item, index) => {
           return (
-            <NotificationCard notification={item.item} type={item.item.type} />
+            <NotificationCard navigation={{navigation}}
+                              notification={item.item} 
+                              type={item.item.type} />
           );
         }}
       />

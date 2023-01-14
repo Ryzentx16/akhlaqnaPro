@@ -17,7 +17,7 @@ export default function SearchCard(props) {
     }
 
     return (
-        <TouchableOpacity style={styles.content}>
+        <TouchableOpacity style={[styles.content, props.style]}>
             <View style={styles.searchTypeIconContainer}>
                 {searchTypeIcon}
             </View>

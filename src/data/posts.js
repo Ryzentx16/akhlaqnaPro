@@ -5,19 +5,20 @@ const posts = [
         id: 't1',
         user: users[0],
         createdAt: '2023/01/09 23:32:20',
-        content: 'Lorem Ipsum is simply dummy text of the printing and \n' +
-            'typesetting industry. Lorem Ipsum has been the \n' +
-            'industry\'s standard dummy text ever \n' +
-            'since the 1500s, when an unknown printer \n' +
-            'took a galley of type and scrambled it to \n' +
-            'industry\'s standard dummy text ever \n' +
-            'since the 1500s, when an unknown printer \n' +
-            'took a galley of type and scrambled it to \n' +
-            'industry\'s standard dummy text ever \n' +
-            'since the 1500s, when an unknown printer \n' +
-            'took a galley of type and scrambled it to \n' +
+        content: 'Lorem Ipsum is simply dummy text of the printing and' +
+            'typesetting industry. Lorem Ipsum has been the' +
+            'industry\'s standard dummy text ever' +
+            'since the 1500s, when an unknown printer' +
+            'took a galley of type and scrambled it to ' +
+            'industry\'s standard dummy text ever' +
+            'since the 1500s, when an unknown printer' +
+            'took a galley of type and scrambled it to' +
+            'industry\'s standard dummy text ever' +
+            'since the 1500s, when an unknown printer' +
+            'took a galley of type and scrambled it to' +
             'make a type specimen book.',
         image: require('../../assets/image_1.png'),
+        commentsId: 'p1',
         numberOfComments: 126,
         numberOfShares: 506,
         numberOfLikes: 53,
@@ -29,6 +30,7 @@ const posts = [
         content: 'Lorem Ipsum is simply dummy text of the printing and ' +
             'typesetting industry. Lorem Ipsum has been the ' +
             'make a type specimen book.',
+        commentsId: 'p2',
         numberOfComments: 0,
         numberOfShares: 10,
         numberOfLikes: 3,
@@ -40,6 +42,7 @@ const posts = [
         content: 'Lorem Ipsum is simply dummy text of the printing and ' +
             'typesetting industry. ',
         image: require('../../assets/image_2.png'),
+        commentsId: 'p3',
         numberOfComments: 260,
         numberOfShares: 623,
         numberOfLikes: 1025,
@@ -51,6 +54,7 @@ const posts = [
         content: 'Lorem Ipsum is simply dummy text of the printing and ' +
             'typesetting industry. ',
         image: require('../../assets/image_3.jpg'),
+        commentsId: 'p4',
         numberOfComments: 126,
         numberOfShares: 506,
         numberOfLikes: 53,

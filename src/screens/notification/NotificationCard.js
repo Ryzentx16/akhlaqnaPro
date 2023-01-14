@@ -27,18 +27,27 @@ function NotificationIcon(props) {
 }
 
 export default function NotificationCard(props) {
-  const { notification, type } = props;
+  const { notification, type, navigation } = props;
+
+  // console.log(navigation?.navigate());
+  const onAvatar = () => {
+    console.warn('Navigate To User\'s Profile');
+  };
+
+  const onNotification = () => {
+    console.warn('Navigate To Notification Post Page');
+  };
 
   return (
     <TouchableOpacity style={styles.container}>
-      <View style={styles.avatarContainer}>
+      <TouchableOpacity style={styles.avatarContainer} onPress={onAvatar}>
         <UserAvatar
           active={true}
           size={size}
           src={notification.user.profileImage}
         />
         <NotificationIcon type={type} />
-      </View>
+      </TouchableOpacity>
 
       <View style={styles.bodyContainer}>
         <View style={styles.headerContainer}>
@@ -53,7 +62,7 @@ export default function NotificationCard(props) {
         </View>
 
         <View style={styles.detailsContainer}>
-          <Text style={styles.details}>{notification.details}</Text>
+          <Text style={styles.details}>{notification.user.name + notification.details}</Text>
         </View>
       </View>
     </TouchableOpacity>

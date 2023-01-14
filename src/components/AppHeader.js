@@ -7,13 +7,28 @@ import {
   Text,
   View,
   I18nManager,
-  TouchableOpacity
+  TouchableOpacity,
+  Alert
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 const isRTL = I18nManager.isRTL;
 
 export default function AppHeader(props) {
-  const {navigation} = props;
+  const { navigation } = props;
+
+  const onSignOut = () => {
+    Alert.alert("Sign Out", "Are you Sure You Want to Sign Out ?", [
+      {
+        text: 'Yes',
+        onPress: () => navigation.navigate("LoginPage")
+      },
+      {
+        text: 'Cancel',
+        onPress: null
+      }
+    ])
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.circle}></View>
@@ -24,7 +39,7 @@ export default function AppHeader(props) {
         />
         {/*<AmanatiLogo style={styles.imageLogo}/>*/}
       </View>
-      <TouchableOpacity style={styles.signOutContainer} onPress={() => navigation.navigate("LoginPage")}>
+      <TouchableOpacity style={styles.signOutContainer} onPress={onSignOut}>
         <FontAwesome name="sign-out" size={30} color={'#660032'} style={styles.signOutIcon} />
       </TouchableOpacity>
     </View>
@@ -72,6 +87,6 @@ const styles = StyleSheet.create({
     right: 100,
   },
   signOutIcon: {
-    transform: [{rotateY: isRTL ? '180deg' : '0deg'}]
+    transform: [{ rotateY: isRTL ? '180deg' : '0deg' }]
   }
 });

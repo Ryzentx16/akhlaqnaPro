@@ -8,7 +8,7 @@ import Helper from "../../shared/helpers";
 
 export default function CommentCard(props) {
   const { comment } = props;
-
+  const isCommentReply = false;
   var postDuration = Helper.getPostDuration(comment.createdAt);
 
   return (
@@ -108,6 +108,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 17,
     paddingLeft: 10,
+    // backgroundColor:'red',
+    marginLeft: 0,
   },
 
   avatarContainer: {

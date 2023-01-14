@@ -39,7 +39,7 @@ function ActionButton(props) {
 }
 
 export default function PostCard(props) {
-  let { post } = props;
+  let { post, navigation, onPressComment } = props;
 
   const [numOfLikes, setNumOfLikes] = useState(post.numberOfLikes); //To show ur remaining Text
   const [isLiked, setIsLiked] = useState(false);
@@ -63,9 +63,9 @@ export default function PostCard(props) {
   return (
     <View style={styles.container}>
       <View style={headerStyles.container}>
-        <View style={headerStyles.avatarContainer}>
+        <TouchableOpacity style={headerStyles.avatarContainer} onPress={() => navigation.navigate("PersonProfile", { user: post.user })}>
           <UserAvatar size={35} src={post.user.profileImage} fontSize={15} />
-        </View>
+        </TouchableOpacity>
         <View style={headerStyles.headerDetailsContainer}>
           <Text style={headerStyles.userName}>{post.user.name}</Text>
 
@@ -105,7 +105,10 @@ export default function PostCard(props) {
           details={numOfLikes}
           onPress={onMakeLike}
         />
-        <ActionButton type={"comment"} details={post.numberOfComments} onPress = {props.onPressComment} />
+        <ActionButton type={"comment"} details={post.numberOfComments} onPress={() => {
+          onPressComment(post);
+          console.log("Action Pressed");
+        }} />
         <ActionButton type={"share"} details={post.numberOfShares} />
       </View>
     </View>

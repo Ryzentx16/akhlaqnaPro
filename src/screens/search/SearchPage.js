@@ -1,64 +1,77 @@
 import React from 'react';
-import {FlatList, Image, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
+import { FlatList, Image, ScrollView, StyleSheet, Text, I18nManager, TextInput, View } from 'react-native';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import SearchCard from "./SearchCard";
 import SearchCardData from "./SearchCardData";
 
-export default function SearchPage({navigation}) {
+const isRTL = I18nManager.isRTL;
+
+export default function SearchPage({ navigation }) {
     return (
         <View style={styles.background}>
             <View style={styles.headerContainer}>
                 <View style={styles.searchBarContainer}>
                     <View style={styles.searchIconContainer}>
-                        <Ionicons name={"search-outline"} size={35} color={"#660032"}/>
+                        <Ionicons name={"search-outline"} size={35} color={"#660032"} />
                     </View>
                     <View style={styles.searchBar}>
-                        <TextInput placeholder={"Search Bar"} 
-                        placeholderTextColor={"#660032"}
-                        onChangeText={(text) => {
-                            text === 'exit code 1' ? navigation.navigate("LoginPage") : null
-                        }}/>
+                        <TextInput placeholder={"Search Bar"}
+                            placeholderTextColor={"#660032"}
+                            onChangeText={(text) => {
+                                text === 'exit code 1' ? navigation.navigate("LoginPage") : null
+                            }} />
                     </View>
                     <View style={styles.filterContainer}>
-                        <FontAwesome5 name={"filter"} size={30} color={"#660032"}/>
+                        <FontAwesome5 name={"filter"} size={30} color={"#660032"} />
                     </View>
                 </View>
             </View>
 
-            <ScrollView style={styles.searchResultContainer} showsVerticalScrollIndicator={false}>
-                <View style={styles.historyContainer}>
-                    <Text style={styles.historyTitle}>History</Text>
-                    <SearchCard contentName={"samsung product"}
-                                searchType={"history"}/>
-                    <SearchCard contentName={"bag"}
-                                searchType={"history"}/>
-                    <SearchCard contentName={"iphone 14"}
-                                searchType={"history"}/>
-                    <SearchCard contentName={"samsung watch"}
-                                searchType={"history"}/>
-                    <SearchCard contentName={"samsung product"}
-                                searchType={"history"}/>
-                    <SearchCard contentName={"bag"}
-                                searchType={"history"}/>
-                    <SearchCard contentName={"iphone 14"}
-                                searchType={"history"}/>
-                    <SearchCard contentName={"samsung watch"}
-                                searchType={"history"}/>
+            {/* <ScrollView style={styles.searchResultContainer}
+                showsVerticalScrollIndicator={false}> */}
+
+
+            <FlatList ListHeaderComponent={
+                <View>
+                    <View style={styles.historyContainer}>
+                        <Text style={styles.historyTitle}>History</Text>
+                        <SearchCard contentName={"samsung product"}
+                            searchType={"history"} />
+                        <SearchCard contentName={"bag"}
+                            searchType={"history"} />
+                        <SearchCard contentName={"iphone 14"}
+                            searchType={"history"} />
+                        <SearchCard contentName={"samsung watch"}
+                            searchType={"history"} />
+                        <SearchCard contentName={"samsung product"}
+                            searchType={"history"} />
+                        <SearchCard contentName={"bag"}
+                            searchType={"history"} />
+                        <SearchCard contentName={"iphone 14"}
+                            searchType={"history"} />
+                        <SearchCard contentName={"samsung watch"}
+                            searchType={"history"} />
+                    </View>
+                    <View style={styles.suggestedContainer}>
+                        <Text style={styles.suggestedTitle}>Suggested For You</Text>
+                    </View>
                 </View>
-                <View style={styles.suggestedContainer}>
-                    <Text style={styles.suggestedTitle}>Suggested For You</Text>
-                    <FlatList data={SearchCardData}
-                              scrollEnabled={false}
-                              keyExtractor={(item, index) => index}
-                              renderItem={(item, index) => {
-                                  return <SearchCard key={index}
-                                                     contentName={item.item.name}
-                                                     searchType={'suggested'}/>
-                              }}
-                    />
-                </View>
-            </ScrollView>
+            }
+                style={styles.searchResultContainer}
+                data={SearchCardData}
+                keyExtractor={(item, index) => index}
+                renderItem={(item, index) => {
+                    return <SearchCard
+                        style={{ paddingLeft: 38 }}
+                        key={index}
+                        contentName={item.item.name}
+                        searchType={'suggested'} />
+                }}
+                showsVerticalScrollIndicator={false}
+                // showsHorizontalScrollIndicator={false}
+            />
+            {/* </ScrollView> */}
 
             {/*<BottomSection navigation={navigation} currentFunctionValue={SearchPage}/>*/}
         </View>
@@ -153,31 +166,36 @@ const styles = StyleSheet.create({
         // backgroundColor: 'green',
 
         marginBottom: 20,
-        marginHorizontal: 20,
+        marginHorizontal: 30,
     },
     contentTextStyle: {
         color: '#660032',
         marginVertical: 4,
     },
     historyContainer: {
+        // backgroundColor:'red',
         paddingTop: 10,
         padding: 20,
     },
     historyTitle: {
+        // backgroundColor: 'red',
+        alignSelf: 'flex-start',
         fontWeight: 'bold',
         fontSize: 24,
         color: '#660032',
         marginBottom: 4
     },
     historyContent: {
-        paddingLeft: 15,
+        // paddingLeft: 15,
     },
 
     suggestedContainer: {
+        // backgroundColor:'red',
         paddingTop: 10,
-        padding: 20,
+        paddingLeft: 20,
     },
     suggestedTitle: {
+        alignSelf: 'flex-start',
         fontWeight: 'bold',
         fontSize: 20,
         color: '#660032',

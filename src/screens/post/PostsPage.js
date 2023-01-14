@@ -1,9 +1,15 @@
-import React from "react";
-import { Image, StyleSheet, View, SafeAreaView } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
+import React, { useState, useRef, useMemo, useCallback } from "react";
+import { Image, StyleSheet, View, SafeAreaView, FlatList } from "react-native";
+// import { FlatList } from "react-native-gesture-handler";
+import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
+import CommentCard from "../comment/CommentCard";
+import comments from "../../data/comments";
+import InputBox from "../chat/inputBox";
 import posts from "../../data/posts";
 import PostCard from "./PostCard";
+import CommentPage from "../comment/CommentPage";
 
 function preperTempData() {
   let _posts = [];
@@ -15,18 +21,53 @@ function preperTempData() {
   return _posts;
 }
 
-function CommentBottomSheet() {}
+function prepercomentsTempData() {
+  let coments = [];
+  // console.warn("here");
+  for (let i = 0; i < comments.length * 5; i++) {
+    coments.push(comments[i % comments.length]);
+  }
+
+  return coments;
+}
+
+function Comments() {
+  return (
+    <SafeAreaView style={commentsStyles.container}>
+      <View style={commentsStyles.commentsContainer}>
+        <BottomSheetFlatList
+          data={prepercomentsTempData()}
+          style={commentsStyles.scrollContainer}
+          keyExtractor={(item, index) => index}
+          renderItem={(item, index) => {
+            return <CommentCard comment={item.item} key={index} />;
+          }}
+        />
+      </View>
+
+      <InputBox isComment={true} />
+    </SafeAreaView>
+  );
+}
 
 export default function PostsPage({ navigation }) {
+  const [isCommentOpen, setIsCommentOpen] = useState(false);
+  const [commentPost, setCommentPost] = useState(null);
+  const commentSheetRef = useRef(null);
+  const snapPoints = useMemo(() => ["65%", "100%"], []);
+
   const onPressComment = () => {
-    navigation.navigate("Post", {
-      screen: "CommentPage",
-      initial: false,
-    });
+    // navigation.navigate("Post", {
+    //   screen: "CommentPage",
+    //   initial: false,
+    // });
+    console.log("Comment Pressed");
   };
 
+  console.log("Comment State: " + (isCommentOpen ? "Opened" : "Closed"));
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={commentsStyles.container}>
       <FlatList
         data={preperTempData()}
         style={styles.scrollContainer}
@@ -34,16 +75,43 @@ export default function PostsPage({ navigation }) {
         renderItem={(item, index) => {
           return (
             <PostCard
+              navigation={navigation}
               post={item.item}
               key={index}
-              onPressComment={onPressComment}
+              onPressComment={(clickedPost) => {
+                setCommentPost(clickedPost);
+                setIsCommentOpen(true);
+                console.log("Comment Pressed: " + clickedPost.commentsId);
+              }}
             />
           );
         }}
       />
+      {!isCommentOpen ? console.log("Comment Clsoed: PostsPage") : null}
+      {isCommentOpen &&
+        <CommentPage post={commentPost} isClosed={(state) => { setIsCommentOpen(state) }} />
+      }
+
     </SafeAreaView>
   );
 }
+
+const commentsStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingBottom: 10,
+    paddingTop: 17,
+    backgroundColor: "#F0F2F5",
+  },
+
+  commentsContainer: {
+    flex: 1,
+  },
+
+  scrollContainer: {
+    flex: 1,
+  },
+});
 
 const styles = StyleSheet.create({
   container: {

@@ -2,7 +2,10 @@ import React from "react";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import PostsPage from "../screens/post/PostsPage";
-import CommentPage from "../screens/comment/CommentPage";
+import CommentPage from "../screens/comment/tempcommentwithbottomsheet";
+
+import PersonProfile from "../screens/Profiles/PersonProfile";
+import ProfileNavigator from "./ProfileNavigator"; 
 
 const Stack = createStackNavigator();
 
@@ -10,11 +13,11 @@ export default function PostNavigator({ navigation, route }) {
   React.useLayoutEffect(() => {
     const tabHiddenRoutes = ["CommentPage"];
 
-    if(tabHiddenRoutes.includes(getFocusedRouteNameFromRoute(route))){
-        navigation.setOptions({tabBarStyle: {display: 'none'}});
-       } else {
-       navigation.setOptions({tabBarStyle: {display: 'flex'}});
-      }
+    if (tabHiddenRoutes.includes(getFocusedRouteNameFromRoute(route))) {
+      navigation.setOptions({ tabBarStyle: { display: 'none' } });
+    } else {
+      navigation.setOptions({ tabBarStyle: { display: 'flex' } });
+    }
   }, [navigation, route]);
 
   return (
@@ -34,10 +37,22 @@ export default function PostNavigator({ navigation, route }) {
       barStyle={{ backgroundColor: "black" }} //This is where you can manipulate its look.
     >
       <Stack.Screen name="PostsPage" component={PostsPage} />
+      <Stack.Screen name="PersonProfile"
+                    // headerBackTitleVisible={true}
+                    component={PersonProfile}
+                    options={
+                      {
+                        headerShown: true,
+                        title: "Profile",
+                        headerBlurEffect: true,
+                        headerTitleAlign: 'center',
+                        presentation: 'Modal'
+                      }} 
+                    />
       <Stack.Screen
         name="CommentPage"
         component={CommentPage}
-        options={{ headerShown: true }}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
