@@ -74,14 +74,14 @@ export default function SignUpPage({ navigation }) {
     if (!vaildateSubmit()) {
       return;
     }
-
+navigation.navigate("SignUpConfirmation")
     var data = {
         firstName: firstName,
         lastName: lastName,
         phoneNumber: phoneNumber,
         password: confirmPassword,
     };
-    NewUser(data, () => {navigation.navigate("SignUpConfirmation", {phoneNumber: data.phoneNumber})});
+   // NewUser(data, () => {navigation.navigate("SignUpConfirmation", {phoneNumber: data.phoneNumber})});
   };
 
   const onLogin = () => {

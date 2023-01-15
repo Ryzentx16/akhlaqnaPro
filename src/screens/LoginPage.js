@@ -24,10 +24,10 @@ export default function LoginPage({ navigation }) {
   let password = '12345';
 
   const checkLogin = () => {
-    navigation.navigate("Home");
+    // navigation.navigate("Home");
     const axios = require("axios").default;
     axios
-      .post(
+      .get(
         "http://ryzentx.online/?phoneNumber=" +
         phoneNumber +
         "&password=" +

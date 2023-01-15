@@ -9,7 +9,7 @@ const isRTL = I18nManager.isRTL;
 export default function SignUpConfirmation({ navigation, route }) {
     const [OTP, setOtp] = useState('999999');
 
-    const checkOTP = () => {
+    const checkOTP = () => { navigation.navigate("Home")
         CheckOTP({
             otp: OTP, 
             phoneNumber: route.params?.phoneNumber
