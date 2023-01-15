@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,10 +12,29 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Entypo from "react-native-vector-icons/Entypo";
 
 import users from "../data/users";
+import AddPost from "../../API/AddPost";
 
 const AddPostPage = ({ navigation }) => {
   const user = users[0];
-  
+
+  const [content, setContent] = useState("fake content");
+  const [image, setImage] = useState("null image");
+  const [createdDateTime, setcreatedDateTime] = useState(Date.now());
+
+  const onPost = () => {
+    let data = new FormData();
+    data.append("userId", user.id);
+    data.append("content", content);
+    data.append("createdDateTime", createdDateTime);
+    data.append("image", {
+      uri: "http://ryzentx.online/image_1.png",
+      name: "profileExample.png",
+      type: "image/png",
+    });
+
+    AddPost(data, () => navigation.navigate("Post"));
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.headContainer}>
@@ -33,6 +52,9 @@ const AddPostPage = ({ navigation }) => {
             style={styles.contentInput}
             placeholder={"What did you lost/find today ?"}
             multiline={true}
+            onChangeText={(text) => {
+              setContent(text);
+            }}
           />
         </View>
       </View>
@@ -89,7 +111,7 @@ const styles = StyleSheet.create({
   headerDetailsContainer: {
     flex: 1,
     justifyContent: "center",
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
     paddingLeft: 5,
   },
 

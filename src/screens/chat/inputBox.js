@@ -6,19 +6,37 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  I18nManager
+  I18nManager,
 } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Entypo from "react-native-vector-icons/Entypo";
 import Fontisto from "react-native-vector-icons/Fontisto";
+import AddComment from "../../../API/AddComment";
 const isRTL = I18nManager.isRTL;
+
+import users from "../../data/users";
 
 export default function InputBox(props) {
   var heightLimit = 130;
   const [message, setMessage] = useState("");
+  const [createdDateTime, setcreatedDateTime] = useState(Date.now());
   const [textInputHeight, setTextInputHeight] = useState(20);
 
-  var placeholder = props.hasOwnProperty("isComment") == false ? "Type a message" : "Type a comment"
+  var placeholder =
+    props.hasOwnProperty("isComment") == false
+      ? "Type a message"
+      : "Type a comment";
+
+  const onSend = () => {
+    setcreatedDateTime(Date.now());
+    AddComment({
+      userId: users[0].id,
+      postId: props.post.id,
+      content: message,
+      createdDateTime: createdDateTime,
+    })
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -49,8 +67,13 @@ export default function InputBox(props) {
           <Fontisto name="camera" size={20} color="grey" style={styles.icon} />
         )}
       </View>
-      <TouchableOpacity style={styles.buttonContainer}>
-        <MaterialIcons name="send" size={20} color="white" style={{transform: [{rotateY: isRTL ? '180deg' : '0deg'}]}} />
+      <TouchableOpacity style={styles.buttonContainer} onPress={onSend}>
+        <MaterialIcons
+          name="send"
+          size={20}
+          color="white"
+          style={{ transform: [{ rotateY: isRTL ? "180deg" : "0deg" }] }}
+        />
       </TouchableOpacity>
     </KeyboardAvoidingView>
   );

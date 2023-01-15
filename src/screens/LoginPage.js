@@ -15,7 +15,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 // import AmanatiLogo from "../Classes/logoXml";
 // import {SvgXml} from "react-native-svg";
 const windowHeight = Dimensions.get('screen').height;
-
+// import SELECTquery from "../../server/SELECTquery";
 
 const isRTL = I18nManager.isRTL;
 

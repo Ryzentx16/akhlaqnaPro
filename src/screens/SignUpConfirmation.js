@@ -1,24 +1,26 @@
 import React, { useState } from 'react';
 import { Image, ScrollView, Dimensions, StyleSheet, I18nManager, Text, TextInput, TouchableOpacity, View, Alert } from 'react-native';
 import Ionicons from "react-native-vector-icons/Ionicons";
-// import Toast from "react-native-toast-message";
+import CheckOTP from "../../API/CheckOTP";
+
 const windowHeight = Dimensions.get('window').height;
 const isRTL = I18nManager.isRTL;
 
-export default function SignUpConfirmation({ navigation }) {
-    let otp = '999999';
-    let enteredOtp;
-
-    Alert.alert("OTP number", otp);
+export default function SignUpConfirmation({ navigation, route }) {
+    const [OTP, setOtp] = useState('999999');
 
     const checkOTP = () => {
-        return (enteredOtp === otp) ? navigation.navigate('Home') : alert("Invalid OTP");
+        CheckOTP({
+            otp: OTP, 
+            phoneNumber: route.params?.phoneNumber
+        }, () => navigation.navigate("Home"));
+        return;
     }
-    // console.log(Math.floor(Math.random() * 1000000));
+    
 
     const onResend = () => {
+
         //fake OTP generator:
-        // console.log(Math.floor(Math.random() * 1000000));
         otp = Math.floor(Math.random() * 1000000).toString();
         Alert.alert("OTP number", otp);
     }
@@ -28,12 +30,9 @@ export default function SignUpConfirmation({ navigation }) {
             <ScrollView alwaysBounceHorizontal={false}
                 alwaysBounceVertical={false}
                 bounces={false}
-                contentContainerStyle={{ flex: 1, minHeight: windowHeight, maxHeight: windowHeight, }}>
+                contentContainerStyle={{ flex: 1, minHeight: windowHeight, maxHeight: windowHeight}}>
 
                 <View style={styles.headContainer}>
-                    {/* <View style={styles.backContainer}>
-                        <Ionicons name={'arrow-back'} size={45} color={"#660032"} />
-                    </View> */}
                     <View style={styles.logoContainer}>
                         <View style={styles.logo}>
                             <Image source={require("../../assets/Logo.png")}
@@ -51,7 +50,7 @@ export default function SignUpConfirmation({ navigation }) {
                         <TextInput placeholder={"OTP"}
                             placeholderTextColor={"#660032"}
                             onChangeText={(text) => {
-                                enteredOtp = text
+                                setOtp(text);
                             }}
                             maxLength={6}
                             style={{ width: '100%', textAlign: 'center' }} />

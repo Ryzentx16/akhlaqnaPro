@@ -35,7 +35,7 @@ function Comments(props) {
         />
       </View>
 
-      <InputBox isComment={true} />
+      <InputBox isComment={true} post={post}/>
     </SafeAreaView>
   );
 }
