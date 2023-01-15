@@ -24,6 +24,7 @@ export default function LoginPage({ navigation }) {
   let password = '12345';
 
   const checkLogin = () => {
+    navigation.navigate("Home");
     const axios = require("axios").default;
     axios
       .post(
