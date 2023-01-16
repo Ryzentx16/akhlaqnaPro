@@ -11,22 +11,26 @@ import {
   Alert
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import AppDrawerNavigator from "../navigator/AppDrawerNavigator";
+
 const isRTL = I18nManager.isRTL;
 
 export default function AppHeader(props) {
-  const { navigation } = props;
+  const { navigation, onPress } = props;
 
   const onSignOut = () => {
-    Alert.alert("Sign Out", "Are you Sure You Want to Sign Out ?", [
-      {
-        text: 'Yes',
-        onPress: () => navigation.navigate("LoginPage")
-      },
-      {
-        text: 'Cancel',
-        onPress: null
-      }
-    ])
+    // Alert.alert("Sign Out", "Are you Sure You Want to Sign Out ?", [
+    //   {
+    //     text: 'Yes',
+    //     onPress: () => navigation.navigate("LoginPage")
+    //   },
+    //   {
+    //     text: 'Cancel',
+    //     onPress: null
+    //   }
+    // ])
+
+    navigation.toggleDrawer();
   }
 
   return (
@@ -39,7 +43,7 @@ export default function AppHeader(props) {
         />
         {/*<AmanatiLogo style={styles.imageLogo}/>*/}
       </View>
-      <TouchableOpacity style={styles.signOutContainer} onPress={onSignOut}>
+      <TouchableOpacity style={styles.signOutContainer} onPress={onPress}>
         <FontAwesome name="sign-out" size={30} color={'#660032'} style={styles.signOutIcon} />
       </TouchableOpacity>
     </View>

@@ -8,7 +8,9 @@ import PostCard from "../../screens/post/PostCard";
 const isRTL = I18nManager.isRTL;
 
 export default function PersonProfile({ route }) {
-    const ourUser = route.params.user;
+    console.log(route);
+    const ourUser = route.params?.user;
+    console.log(ourUser);
     const isUserMe = ourUser.id === 'u1' ? true : false;
     let x = [];
 

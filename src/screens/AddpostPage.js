@@ -12,7 +12,8 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Entypo from "react-native-vector-icons/Entypo";
 
 import users from "../data/users";
-import AddPost from "../../API/AddPost";
+// import AddPost from "../../API/AddPost";
+import Adding from "../../API/Adding";
 
 const AddPostPage = ({ navigation }) => {
   const user = users[0];
@@ -32,7 +33,7 @@ const AddPostPage = ({ navigation }) => {
       type: "image/png",
     });
 
-    AddPost(data, () => navigation.navigate("Post"));
+    Adding("addPost", data, () => navigation.navigate("Post"));
   };
 
   return (

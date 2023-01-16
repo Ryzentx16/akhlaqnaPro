@@ -11,30 +11,32 @@ import {
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Entypo from "react-native-vector-icons/Entypo";
 import Fontisto from "react-native-vector-icons/Fontisto";
-import AddComment from "../../../API/AddComment";
-const isRTL = I18nManager.isRTL;
-
 import users from "../../data/users";
+
+// import AddComment from "../../../API/AddComment"; 
+import Adding from "../../../API/Adding"; // API
+
+const isRTL = I18nManager.isRTL;
 
 export default function InputBox(props) {
   var heightLimit = 130;
   const [message, setMessage] = useState("");
+  const [isComment, setIsComment] = useState(props.hasOwnProperty("isComment"));
   const [createdDateTime, setcreatedDateTime] = useState(Date.now());
   const [textInputHeight, setTextInputHeight] = useState(20);
 
-  var placeholder =
-    props.hasOwnProperty("isComment") == false
-      ? "Type a message"
-      : "Type a comment";
+  var placeholder = isComment ? "Type a message" : "Type a comment";
 
   const onSend = () => {
     setcreatedDateTime(Date.now());
-    AddComment({
-      userId: users[0].id,
-      postId: props.post.id,
-      content: message,
-      createdDateTime: createdDateTime,
-    })
+    isComment
+      ? Adding("addComment", {
+          userId: users[0].id,
+          postId: props.post.id,
+          content: message,
+          createdDateTime: createdDateTime,
+        })
+      : null;
   };
 
   return (

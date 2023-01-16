@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   Image,
   KeyboardAvoidingView,
@@ -11,15 +11,24 @@ import {
   TouchableOpacity,
   View,
   I18nManager,
+  Alert,
 } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import NewUser from "../../API/NewUser";
+
+import PhoneInput from "react-native-phone-number-input";
+
+import Adding from "../../API/Adding";
 
 const windowHeight = Dimensions.get("window").height;
 const isRTL = I18nManager.isRTL;
 
 export default function SignUpPage({ navigation }) {
+  const [value, setValue] = useState("");
+  const [formattedValue, setFormattedValue] = useState("");
+  const [valid, setValid] = useState(false);
+  const phoneInput = useRef(PhoneInput);
+
   const [birthday, setbirthday] = useState(new Date());
 
   const [firstName, setFirstName] = useState("");
@@ -27,7 +36,6 @@ export default function SignUpPage({ navigation }) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-    //  const [password, setPassword] = useState("");
 
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
@@ -39,7 +47,6 @@ export default function SignUpPage({ navigation }) {
     setDate(currentDate);
     setbirthday(currentDate);
     // const test = new Date(date).getUTCDay();
-
   };
 
   const showMode = (currentMode) => {
@@ -67,21 +74,51 @@ export default function SignUpPage({ navigation }) {
 
     // (isConfirmPassword) ? setPassword(confirmPassword) : null;
 
-    return (isConfirmPassword && isFilled);
+    return (
+      isConfirmPassword && isFilled && phoneInput.current?.isValidNumber(value)
+    );
   };
 
   const onSubmit = () => {
     if (!vaildateSubmit()) {
+      Alert.alert(
+        "Error",
+        "Please fill it up with your information" +
+          "\n" +
+          "and use the same password on both inputs",
+        [
+          {
+            text: "ok",
+            // onPress: () => {},
+          },
+          {
+            text: "are u a dev ?",
+            onPress: () => {
+              navigation.navigate("SignUpConfirmation", {
+                phoneNumber: "+97470031251",
+              });
+            },
+          },
+        ],
+        "number-pad"
+      );
       return;
     }
-navigation.navigate("SignUpConfirmation")
+
+    // navigation.navigate("SignUpConfirmation");
+
     var data = {
-        firstName: firstName,
-        lastName: lastName,
-        phoneNumber: phoneNumber,
-        password: confirmPassword,
+      firstName: firstName,
+      lastName: lastName,
+      phoneNumber: phoneNumber,
+      password: confirmPassword,
     };
-   // NewUser(data, () => {navigation.navigate("SignUpConfirmation", {phoneNumber: data.phoneNumber})});
+
+    Adding("addUser", data, () => {
+      navigation.navigate("SignUpConfirmation", {
+        phoneNumber: data.phoneNumber,
+      });
+    });
   };
 
   const onLogin = () => {
@@ -143,14 +180,33 @@ navigation.navigate("SignUpConfirmation")
 
           <View style={styles.phonenumberContainer}>
             <View style={styles.phonenumber}>
-              <TextInput
-                placeholder={"Phone Number (With Country Code) *"}
-                placeholderTextColor={"rgba(102,0,50,0.75)"}
+              <PhoneInput
+                ref={phoneInput}
+                // defaultValue="70031251"
+                defaultCode="QA"
+                layout="second"
+                placeholder="hi"
                 onChangeText={(text) => {
-                  setPhoneNumber(text);
+                  console.log(phoneNumber);
+                  setValid(phoneInput.current?.isValidNumber(text));
                 }}
-                keyboardType={"phone-pad"}
-                style={{ textAlign: isRTL ? "right" : "left" }}
+                onChangeFormattedText={(text) => {
+                  setPhoneNumber(text);
+                  setFormattedValue(text);
+                }}
+                // withDarkTheme
+
+                textContainerStyle={{ backgroundColor: "white" }}
+                textInputStyle={{
+                  fontSize: 16,
+                  height: 50,
+                  backgroundColor: "white",
+                  textAlign: isRTL ? 'right' : 'left'
+                }}
+                textInputProps={{
+                  placeholder: "Phone Number *",
+                  placeholderTextColor: "rgba(102,0,50,0.75)",
+                }}
               />
             </View>
           </View>
@@ -338,7 +394,10 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginVertical: 10,
     paddingHorizontal: 16,
-    padding: 8,
+    // backgroundColor: '#987412',
+    justifyContent: "center",
+    overflow: "hidden",
+    // paddingTop: 3,
   },
   birthdayContainer: {
     flex: 1,

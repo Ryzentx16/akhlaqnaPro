@@ -1,26 +1,27 @@
-import { useEffect } from 'react';
-import { BackHandler, Alert } from 'react-native';
+import { useEffect } from "react";
+import { BackHandler, Alert } from "react-native";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import SearchPage from "../screens/search/SearchPage";
 import AddPostPage from "../screens/AddpostPage";
-import chatRoom from "../screens/chat/chatRoom"
+import chatRoom from "../screens/chat/chatRoom";
 import commentPage from "../screens/comment/CommentPage";
 import NotificationsPage from "../screens/notification/NotificationsPage";
 import AppHeader from "../components/AppHeader";
 import ChatNavigator from "./ChatNavigator";
 import PostNavigator from "./PostNavigator";
+import AppDrawerNavigator from "./AppDrawerNavigator";
 
-import logo from "../../assets/logo.js"
+import logo from "../../assets/logo.js";
 import { SvgXml } from "react-native-svg";
 
 const Tab = createBottomTabNavigator();
 const iconsize = 30;
 const iconcolor = "#660032";
 
-export default function AppBottomTabNavigator({navigation}) {
+export default function AppBottomTabNavigator({ navigation }) {
   useEffect(() => {
     // console.log(logo);
     const backAction = () => {
@@ -28,12 +29,16 @@ export default function AppBottomTabNavigator({navigation}) {
     };
 
     const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction,
+      "hardwareBackPress",
+      backAction
     );
 
     return () => backHandler.remove();
   }, []);
+
+  const onPress = () => {
+    navigation.toggleDrawer();
+  };
 
   return (
     <Tab.Navigator
@@ -48,7 +53,7 @@ export default function AppBottomTabNavigator({navigation}) {
           borderTopColor: "#660032",
           borderTopWidth: 3,
         },
-        header: () => <AppHeader navigation={navigation}/>,
+        header: () => <AppHeader onPress={onPress}/>,
       }}
       tabbarop
       barStyle={{ backgroundColor: "black" }} //This is where you can manipulate its look.

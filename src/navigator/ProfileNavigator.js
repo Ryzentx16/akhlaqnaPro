@@ -5,7 +5,7 @@ import PersonProfile from "../screens/Profiles/PersonProfile";
 
 const Stack = createStackNavigator();
 
-export default function ChatNavigator({ navigation, route }) {
+export default function ProfileNavigator({ navigation, route }) {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -24,6 +24,7 @@ export default function ChatNavigator({ navigation, route }) {
     >
       <Stack.Screen name="PersonProfile"
         component={PersonProfile}
+        initialParams={route.params}
         options={
           {
             headerShown: true,
