@@ -8,30 +8,16 @@ import {
   View,
   I18nManager,
   TouchableOpacity,
-  Alert
+  Alert,
 } from "react-native";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import AppDrawerNavigator from "../navigator/AppDrawerNavigator";
+import {FontAwesome, Entypo} from "react-native-vector-icons";
+
+// import AppDrawerNavigator from "../navigator/AppDrawerNavigator";
 
 const isRTL = I18nManager.isRTL;
 
 export default function AppHeader(props) {
-  const { navigation, onPress } = props;
-
-  const onSignOut = () => {
-    // Alert.alert("Sign Out", "Are you Sure You Want to Sign Out ?", [
-    //   {
-    //     text: 'Yes',
-    //     onPress: () => navigation.navigate("LoginPage")
-    //   },
-    //   {
-    //     text: 'Cancel',
-    //     onPress: null
-    //   }
-    // ])
-
-    navigation.toggleDrawer();
-  }
+  const { navigation, onSignOut, onToggleDrawer } = props;
 
   return (
     <View style={styles.container}>
@@ -43,8 +29,21 @@ export default function AppHeader(props) {
         />
         {/*<AmanatiLogo style={styles.imageLogo}/>*/}
       </View>
-      <TouchableOpacity style={styles.signOutContainer} onPress={onPress}>
-        <FontAwesome name="sign-out" size={30} color={'#660032'} style={styles.signOutIcon} />
+      <TouchableOpacity style={styles.signOutContainer} onPress={onSignOut}>
+        <FontAwesome
+          name="sign-out"
+          size={30}
+          color={"#660032"}
+          style={styles.signOutIcon}
+        />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.menuContainer} onPress={onToggleDrawer}>
+        <Entypo
+          name="menu"
+          size={30}
+          color={"#660032"}
+          style={styles.menutIcon}
+        />
       </TouchableOpacity>
     </View>
   );
@@ -54,7 +53,7 @@ const styles = StyleSheet.create({
   container: {
     height: 140,
     justifyContent: "center",
-    backgroundColor: "white"
+    backgroundColor: "white",
   },
   circle: {
     width: 750,
@@ -85,12 +84,22 @@ const styles = StyleSheet.create({
   },
 
   signOutContainer: {
-    position: 'absolute',
-    alignSelf: 'flex-end',
+    position: "absolute",
+    // alignSelf: "flex-end",
+    top: 50,
+    left: 100,
+  },
+  signOutIcon: {
+    transform: [{ rotateY: isRTL ? "0deg" : "180deg" }],
+  },
+
+  menuContainer: {
+    position: "absolute",
+    // alignSelf: "flex-end",
     top: 50,
     right: 100,
   },
-  signOutIcon: {
-    transform: [{ rotateY: isRTL ? '180deg' : '0deg' }]
-  }
+  menuIcon: {
+    // transform: [{ rotateY: isRTL ? "0deg" : "180deg" }],
+  },
 });

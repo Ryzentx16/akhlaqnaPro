@@ -1,17 +1,21 @@
 import { useEffect } from "react";
-import { BackHandler, Alert } from "react-native";
+import { BackHandler, Alert, I18nManager } from "react-native";
 
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
 
 import AppHeader from "../components/AppHeader.js";
 import ProfileNavigator from "./ProfileNavigator.js";
 import AppBottomTabNavigator from "./AppBottomTabNavigator.js";
 
 import users from "../data/users.js"; //Temp
+import AppStartupNavigator from "./AppStartupNavigator.js";
+import LostPosts from "../screens/post/lostPage.js";
+import FoundPage from "../screens/post/foundPage.js";
 
 const Drawer = createDrawerNavigator();
-const iconsize = 30;
-const iconcolor = "#660032";
+const isRTL = I18nManager.isRTL;
+// const iconsize = 30;
+// const iconcolor = "#660032";
 
 export default function AppDrawerNavigator() {
   useEffect(() => {
@@ -33,18 +37,28 @@ export default function AppDrawerNavigator() {
       initialRouteName="Pages"
       screenOptions={{
         headerShown: false,
-        // header: () => <AppHeader />,
-        drawerActiveTintColor: "white",
+        // drawerActiveTintColor: "white",
         drawerType: "front",
-        // header: () => {headerTitle: 'hi'},
         drawerStyle: {
-          backgroundColor: "#660032",
-          borderTopRightRadius: 15,
-          borderBottomRightRadius: 15,
+          backgroundColor: "white",
+          borderWidth: 5,
+
+          borderRightWidth: isRTL ? 5 : 0,
+          borderLeftWidth: isRTL ? 0 : 5,
+
+          borderColor: "#660032",
+
+          borderTopRightRadius: isRTL ? 15 : 0,
+          borderBottomRightRadius: isRTL ? 15 : 0,
+
+          borderTopLeftRadius: isRTL ? 0 : 15,
+          borderBottomLeftRadius: isRTL ? 0 : 15,
+
           marginTop: 80,
-          height: "50%",
+          maxHeight: "50%",
           width: 240,
         },
+        drawerPosition: isRTL ? "left" : "right",
       }}
     >
       <Drawer.Screen
@@ -52,8 +66,28 @@ export default function AppDrawerNavigator() {
         component={AppHeader}
         options={{ drawerItemStyle: { display: "none" } }}
       />
-      <Drawer.Screen name="Pages" component={AppBottomTabNavigator} />
-      <Drawer.Screen name="MyProfile" component={ProfileNavigator} initialParams={{ user: users[0] }} />
+      <Drawer.Screen
+        name="Pages"
+        component={AppBottomTabNavigator}
+        options={{ title: "Home" }}
+      />
+      <Drawer.Screen
+        name="LostsPage"
+        component={LostPosts}
+        // initialParams={{ user: users[0] }}
+        options={{ title: "Losts Page" }}
+      />
+      <Drawer.Screen
+        name="FoundsPage"
+        component={FoundPage}
+        // initialParams={{ user: users[0] }}
+        options={{ title: "Founds Page" }}
+      />
+      <Drawer.Screen
+        name="Sign Out"
+        component={AppStartupNavigator}
+        // options={{ drawerItemStyle: { display: "none" } }}
+      />
     </Drawer.Navigator>
   );
 }
