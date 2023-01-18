@@ -76,7 +76,7 @@ export default function AppBottomTabNavigator({ navigation }) {
           borderTopColor: "#660032",
           borderTopWidth: 3,
         },
-        header: () => <AppHeader onSignOut={onSignOut} onToggleDrawer={onToggleDrawer} />,
+        header: () => <AppHeader onSignOut={onSignOut} onToggleDrawer={onToggleDrawer} isDrawer={true}/>,
       }}
       tabbarop
       barStyle={{ backgroundColor: "black" }} //This is where you can manipulate its look.

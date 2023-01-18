@@ -5,6 +5,7 @@ import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
 
 import AppHeader from "../components/AppHeader.js";
 import ProfileNavigator from "./ProfileNavigator.js";
+import PersonProfile from "../screens/Profiles/PersonProfile.js";
 import AppBottomTabNavigator from "./AppBottomTabNavigator.js";
 
 import AppStartupNavigator from "./AppStartupNavigator.js";
@@ -13,6 +14,8 @@ import FoundPage from "../../src/screens/post/FoundPage";
 import SettingPage from "../screens/settings/SettingPage";
 import AccountPage from "../screens/settings/AccountPage.js";
 import LanguagePage from "../screens/settings/LanguagePage";
+
+import users from "../data/users.js";
 
 const Drawer = createDrawerNavigator();
 const isRTL = I18nManager.isRTL;
@@ -32,7 +35,7 @@ export default function AppDrawerNavigator() {
     return () => backHandler.remove();
   }, []);
 
-  
+  console.warn(users[0]);
 
   return (
     <Drawer.Navigator
@@ -68,6 +71,13 @@ export default function AppDrawerNavigator() {
         component={AppHeader}
         options={{ drawerItemStyle: { display: "none" } }}
       />
+      <Drawer.Screen
+        name="My Profile"
+        component={PersonProfile}
+        initialParams={{user: users[0], isDrawer: true}}
+        // options={}
+      />
+
       <Drawer.Screen
         name="Pages"
         component={AppBottomTabNavigator}

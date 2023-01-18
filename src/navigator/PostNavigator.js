@@ -6,6 +6,7 @@ import CommentPage from "../screens/comment/tempcommentwithbottomsheet";
 
 import PersonProfile from "../screens/Profiles/PersonProfile";
 import ProfileNavigator from "./ProfileNavigator"; 
+import AppHeader from "../components/AppHeader";
 
 const Stack = createStackNavigator();
 
@@ -19,6 +20,23 @@ export default function PostNavigator({ navigation, route }) {
       navigation.setOptions({ tabBarStyle: { display: 'flex' } });
     }
   }, [navigation, route]);
+
+  const onSignOut = () => {
+    Alert.alert("Sign Out", "Are you Sure You Want to Sign Out ?", [
+      {
+        text: "Yes",
+        onPress: () => navigation.navigate("LoginPage"),
+      },
+      {
+        text: "Cancel",
+        onPress: null,
+      },
+    ]);
+  };
+
+  const onToggleDrawer = () => {
+    navigation.toggleDrawer();
+  };
 
   return (
     <Stack.Navigator
@@ -43,10 +61,10 @@ export default function PostNavigator({ navigation, route }) {
                     options={
                       {
                         headerShown: true,
-                        title: "Profile",
+                        title: "",
                         headerBlurEffect: true,
                         headerTitleAlign: 'center',
-                        presentation: 'Modal'
+                        presentation: 'Modal',
                       }} 
                     />
       <Stack.Screen

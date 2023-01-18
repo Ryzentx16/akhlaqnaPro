@@ -10,17 +10,18 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import {FontAwesome, Entypo} from "react-native-vector-icons";
+import { FontAwesome, Entypo } from "react-native-vector-icons";
 
 // import AppDrawerNavigator from "../navigator/AppDrawerNavigator";
 
 const isRTL = I18nManager.isRTL;
 
 export default function AppHeader(props) {
-  const { navigation, onSignOut, onToggleDrawer } = props;
+  const { navigation, onSignOut, onToggleDrawer, isDrawer } = props;
 
   return (
-    <View style={[styles.container, props.style]}>
+    <>
+    {isDrawer ? <View style={[styles.container, props.style]}>
       <View style={styles.circle}></View>
       <View style={styles.logo}>
         <Image
@@ -45,7 +46,8 @@ export default function AppHeader(props) {
           style={styles.menutIcon}
         />
       </TouchableOpacity>
-    </View>
+    </View> : null}
+    </>
   );
 }
 
