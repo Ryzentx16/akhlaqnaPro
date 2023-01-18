@@ -7,15 +7,15 @@ import AppHeader from "../components/AppHeader.js";
 import ProfileNavigator from "./ProfileNavigator.js";
 import AppBottomTabNavigator from "./AppBottomTabNavigator.js";
 
-import users from "../data/users.js"; //Temp
 import AppStartupNavigator from "./AppStartupNavigator.js";
-import LostPosts from "../screens/post/lostPage.js";
-import FoundPage from "../screens/post/foundPage.js";
+import LostPosts from "../../src/screens/post/LostPage";
+import FoundPage from "../../src/screens/post/FoundPage";
+import SettingPage from "../screens/settings/SettingPage";
+import AccountPage from "../screens/settings/AccountPage.js";
+import LanguagePage from "../screens/settings/LanguagePage";
 
 const Drawer = createDrawerNavigator();
 const isRTL = I18nManager.isRTL;
-// const iconsize = 30;
-// const iconcolor = "#660032";
 
 export default function AppDrawerNavigator() {
   useEffect(() => {
@@ -32,12 +32,13 @@ export default function AppDrawerNavigator() {
     return () => backHandler.remove();
   }, []);
 
+  
+
   return (
     <Drawer.Navigator
       initialRouteName="Pages"
       screenOptions={{
         headerShown: false,
-        // drawerActiveTintColor: "white",
         drawerType: "front",
         drawerStyle: {
           backgroundColor: "white",
@@ -55,7 +56,8 @@ export default function AppDrawerNavigator() {
           borderBottomLeftRadius: isRTL ? 0 : 15,
 
           marginTop: 80,
-          maxHeight: "50%",
+          minHeight: "20%",
+          maxHeight: "70%",
           width: 240,
         },
         drawerPosition: isRTL ? "left" : "right",
@@ -71,22 +73,44 @@ export default function AppDrawerNavigator() {
         component={AppBottomTabNavigator}
         options={{ title: "Home" }}
       />
+
       <Drawer.Screen
         name="LostsPage"
         component={LostPosts}
-        // initialParams={{ user: users[0] }}
-        options={{ title: "Losts Page" }}
+        options={{
+          title: "Losts Page",
+        }}
       />
       <Drawer.Screen
         name="FoundsPage"
         component={FoundPage}
-        // initialParams={{ user: users[0] }}
         options={{ title: "Founds Page" }}
       />
+
+      <Drawer.Screen
+        name="SettingPage"
+        component={SettingPage}
+        options={{ title: "Settings" }}
+      />
+      <Drawer.Screen
+        name="AccountPage"
+        component={AccountPage}
+        options={{ drawerItemStyle: { display: "none" } }}
+      />
+      <Drawer.Screen
+        name="LanguagePage"
+        component={LanguagePage}
+        options={{ drawerItemStyle: { display: "none" } }}
+      />
+      {/* <Drawer.Screen
+        name="ChatsSettingPage"
+        component={ChatsSettingPage}
+        options={{ drawerItemStyle: { display: "none" } }}
+      /> */}
+
       <Drawer.Screen
         name="Sign Out"
         component={AppStartupNavigator}
-        // options={{ drawerItemStyle: { display: "none" } }}
       />
     </Drawer.Navigator>
   );

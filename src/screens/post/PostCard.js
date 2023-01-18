@@ -1,9 +1,19 @@
 import React, { useState } from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View, I18nManager } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  I18nManager,
+} from "react-native";
 import UserAvatar from "@muhzi/react-native-user-avatar";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import {
+  Ionicons,
+  AntDesign,
+  MaterialCommunityIcons,
+} from "react-native-vector-icons";
 import SeeMoreText from "../../components/SeeMoreText";
 import Helper from "../../shared/helpers";
 const isRTL = I18nManager.isRTL;
@@ -39,9 +49,10 @@ function ActionButton(props) {
 }
 
 export default function PostCard(props) {
-  let { post, navigation, onPressComment } = props;
-
+  let { post, navigation, onPressComment, isLostOrFound } = props;
+  // console.warn(post.numberOfLikes);
   const [numOfLikes, setNumOfLikes] = useState(post.numberOfLikes); //To show ur remaining Text
+  // setNumOfLikes(post.numberOfLikes);
   const [isLiked, setIsLiked] = useState(false);
   const onMakeLike = () => {
     if (isLiked) {
@@ -63,13 +74,28 @@ export default function PostCard(props) {
   return (
     <View style={styles.container}>
       <View style={headerStyles.container}>
-        <TouchableOpacity style={headerStyles.avatarContainer} onPress={() => navigation.navigate("PersonProfile", { user: post.user })}>
+        <TouchableOpacity
+          style={headerStyles.avatarContainer}
+          onPress={() =>
+            navigation.navigate("PersonProfile", { user: post.user })
+          }
+        >
           <UserAvatar size={35} src={post.user.profileImage} fontSize={15} />
         </TouchableOpacity>
         <View style={headerStyles.headerDetailsContainer}>
           <Text style={headerStyles.userName}>{post.user.name}</Text>
 
-          <Text style={headerStyles.postTime}>{postDuration + " (Al Rayaan)"}</Text>
+          <Text style={headerStyles.postTime}>
+            {postDuration + " (Al Rayaan)"}
+          </Text>
+        </View>
+        <View style={headerStyles.headerIconContainer}>
+          {props.hasOwnProperty("isFound") ? (
+            <Ionicons name="checkmark-circle" size={25} color={"#660032"} />
+          ) : null}
+          {props.hasOwnProperty("isLost") ? (
+            <AntDesign name="questioncircle" size={25} color={"#660032"} />
+          ) : null}
         </View>
         <TouchableOpacity style={headerStyles.headerDotsContainer}>
           <MaterialCommunityIcons
@@ -105,10 +131,14 @@ export default function PostCard(props) {
           details={numOfLikes}
           onPress={onMakeLike}
         />
-        <ActionButton type={"comment"} details={post.numberOfComments} onPress={() => {
-          onPressComment(post);
-          console.log("Action Pressed");
-        }} />
+        <ActionButton
+          type={"comment"}
+          details={post.numberOfComments}
+          onPress={() => {
+            onPressComment(post);
+            console.log("Action Pressed");
+          }}
+        />
         <ActionButton type={"share"} details={post.numberOfShares} />
       </View>
     </View>
@@ -120,7 +150,7 @@ const headerStyles = StyleSheet.create({
     flex: 1,
     minHeight: 40,
     maxHeight: 40,
-    flexDirection: 'row',
+    flexDirection: "row",
     justifyContent: "space-between",
     marginHorizontal: 10,
     marginBottom: 10,
@@ -136,13 +166,20 @@ const headerStyles = StyleSheet.create({
   headerDetailsContainer: {
     flex: 1,
     justifyContent: "center",
-    alignItems: 'flex-start', //for RTL
+    alignItems: "flex-start", //for RTL
     paddingLeft: 5,
   },
 
   headerDotsContainer: {
     flex: 1,
     maxWidth: 20,
+  },
+
+  headerIconContainer: {
+    flex: 1,
+    maxWidth: 25,
+    // backgroundColor: 'red',
+    marginEnd: 10,
   },
 
   userName: {

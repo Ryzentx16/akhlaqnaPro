@@ -31,25 +31,6 @@ function prepercomentsTempData() {
   return coments;
 }
 
-function Comments() {
-  return (
-    <SafeAreaView style={commentsStyles.container}>
-      <View style={commentsStyles.commentsContainer}>
-        <BottomSheetFlatList
-          data={prepercomentsTempData()}
-          style={commentsStyles.scrollContainer}
-          keyExtractor={(item, index) => index}
-          renderItem={(item, index) => {
-            return <CommentCard comment={item.item} key={index} />;
-          }}
-        />
-      </View>
-
-      <InputBox isComment={true} />
-    </SafeAreaView>
-  );
-}
-
 export default function PostsPage({ navigation }) {
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [commentPost, setCommentPost] = useState(null);

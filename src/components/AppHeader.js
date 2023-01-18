@@ -20,7 +20,7 @@ export default function AppHeader(props) {
   const { navigation, onSignOut, onToggleDrawer } = props;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, props.style]}>
       <View style={styles.circle}></View>
       <View style={styles.logo}>
         <Image
