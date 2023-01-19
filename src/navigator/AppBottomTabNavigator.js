@@ -44,25 +44,6 @@ export default function AppBottomTabNavigator({ navigation }) {
     return () => backHandler.remove();
   }, []);
 
-  const onSignOut = () => {
-    Alert.alert("Sign Out", "Are you Sure You Want to Sign Out ?", [
-      {
-        text: 'Yes',
-        onPress: () => navigation.navigate("LoginPage")
-      },
-      {
-        text: 'Cancel',
-        onPress: null
-      }
-    ])
-
-    navigation.navigate('Login');
-  };
-
-  const onToggleDrawer = () => {
-    navigation.toggleDrawer();
-  };
-
   return (
     <Tab.Navigator
       initialRouteName={"Post"}
@@ -76,7 +57,7 @@ export default function AppBottomTabNavigator({ navigation }) {
           borderTopColor: "#660032",
           borderTopWidth: 3,
         },
-        header: () => <AppHeader onSignOut={onSignOut} onToggleDrawer={onToggleDrawer} isDrawer={true}/>,
+        header: () => <AppHeader navigation={navigation} isDrawer={true}/>,
       }}
       tabbarop
       barStyle={{ backgroundColor: "black" }} //This is where you can manipulate its look.

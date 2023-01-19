@@ -11,9 +11,7 @@ import AppBottomTabNavigator from "./AppBottomTabNavigator.js";
 import AppStartupNavigator from "./AppStartupNavigator.js";
 import LostPosts from "../../src/screens/post/LostPage";
 import FoundPage from "../../src/screens/post/FoundPage";
-import SettingPage from "../screens/settings/SettingPage";
-import AccountPage from "../screens/settings/AccountPage.js";
-import LanguagePage from "../screens/settings/LanguagePage";
+import SettingNavigator from "./SettingNavigator.js";
 
 import users from "../data/users.js";
 
@@ -35,7 +33,7 @@ export default function AppDrawerNavigator() {
     return () => backHandler.remove();
   }, []);
 
-  console.warn(users[0]);
+  // console.warn(users[0]);
 
   return (
     <Drawer.Navigator
@@ -72,10 +70,10 @@ export default function AppDrawerNavigator() {
         options={{ drawerItemStyle: { display: "none" } }}
       />
       <Drawer.Screen
-        name="My Profile"
+        name="MyProfile"
         component={PersonProfile}
         initialParams={{user: users[0], isDrawer: true}}
-        // options={}
+        options={{title: "My Profile"}}
       />
 
       <Drawer.Screen
@@ -99,24 +97,9 @@ export default function AppDrawerNavigator() {
 
       <Drawer.Screen
         name="SettingPage"
-        component={SettingPage}
+        component={SettingNavigator}
         options={{ title: "Settings" }}
       />
-      <Drawer.Screen
-        name="AccountPage"
-        component={AccountPage}
-        options={{ drawerItemStyle: { display: "none" } }}
-      />
-      <Drawer.Screen
-        name="LanguagePage"
-        component={LanguagePage}
-        options={{ drawerItemStyle: { display: "none" } }}
-      />
-      {/* <Drawer.Screen
-        name="ChatsSettingPage"
-        component={ChatsSettingPage}
-        options={{ drawerItemStyle: { display: "none" } }}
-      /> */}
 
       <Drawer.Screen
         name="Sign Out"

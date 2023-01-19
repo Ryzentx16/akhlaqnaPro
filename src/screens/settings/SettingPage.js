@@ -7,36 +7,19 @@ import ar from "../../strings/ar";
 // import HeaderSection from "../Classes/headerSection";
 
 export default function SettingPage({ navigation }) {
-  const onSignOut = () => {
-    Alert.alert("Sign Out", "Are you Sure You Want to Sign Out ?", [
-      {
-        text: "Yes",
-        onPress: () => navigation.navigate("LoginPage"),
-      },
-      {
-        text: "Cancel",
-        onPress: null,
-      },
-    ]);
-  };
-
-  const onToggleDrawer = () => {
-    navigation.toggleDrawer();
-  };
-
   const onAccount = () => {
-    navigation.navigate('AccountPage');
-  }
+    navigation.navigate("AccountPage");
+  };
   const onLanguage = () => {
-    navigation.navigate('LanguagePage');
-  }
+    navigation.navigate("LanguagePage");
+  };
   const onChats = () => {
     // navigation.navigate('ChatsSettingPage');
-  }
+  };
 
   return (
     <View style={styles.container}>
-      <AppHeader onToggleDrawer={onToggleDrawer} onSignOut={onSignOut} />
+      <AppHeader navigation={navigation} isDrawer={true} />
 
       <View style={styles.bodyContainer}>
         <View style={styles.accountInfoContainer}>
@@ -51,7 +34,7 @@ export default function SettingPage({ navigation }) {
           </View>
         </View>
         <View style={styles.btnsBody}>
-          <TouchableOpacity style={styles.accountContainer} onPress={onAccount}>0
+          <TouchableOpacity style={styles.accountContainer} onPress={onAccount}>
             <View style={styles.iconAccountContainer}>
               <Ionicons size={60} name={"person-circle"} color={"#660032"} />
             </View>
@@ -60,7 +43,10 @@ export default function SettingPage({ navigation }) {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.languageContainer} onPress={onLanguage}>
+          <TouchableOpacity
+            style={styles.languageContainer}
+            onPress={onLanguage}
+          >
             <View style={styles.iconLanguageContainer}>
               <Ionicons size={50} name={"language"} color={"#660032"} />
             </View>

@@ -18,7 +18,7 @@ import AppHeader from "../../components/AppHeader";
 
 const lostPosts = () => {
   let value = [];
-  for (let index = 0; index < posts.length*4; index++) {
+  for (let index = 0; index < posts.length * 4; index++) {
     const element = posts[index % posts.length];
     if (element.type === "lost") {
       value.push(element);
@@ -40,30 +40,9 @@ function LostPage({ navigation }) {
 
   console.log("Comment State: " + (isCommentOpen ? "Opened" : "Closed"));
 
-
-  const onSignOut = () => {
-    Alert.alert("Sign Out", "Are you Sure You Want to Sign Out ?", [
-      {
-        text: "Yes",
-        onPress: () => navigation.navigate("LoginPage"),
-      },
-      {
-        text: "Cancel",
-        onPress: null,
-      },
-    ]);
-
-    // this.navigation.navigate("Login");
-  };
-
-  const onToggleDrawer = () => {
-    navigation.toggleDrawer();
-  };
-
-
   return (
     <SafeAreaView style={commentsStyles.container}>
-      <AppHeader style={{top: -17}} onSignOut={onSignOut} onToggleDrawer={onToggleDrawer} />
+      <AppHeader style={{ top: -17 }} navigation={navigation} isDrawer/>
       <FlatList
         data={lostPosts()}
         style={styles.scrollContainer}

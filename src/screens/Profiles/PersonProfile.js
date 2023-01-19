@@ -32,29 +32,11 @@ export default function PersonProfile({ navigation, route }) {
       x.push(posts[i]);
     }
   }
-
-  const onSignOut = () => {
-    Alert.alert("Sign Out", "Are you Sure You Want to Sign Out ?", [
-      {
-        text: "Yes",
-        onPress: () => navigation.navigate("LoginPage"),
-      },
-      {
-        text: "Cancel",
-        onPress: null,
-      },
-    ]);
-  };
-
-  const onToggleDrawer = () => {
-    navigation.toggleDrawer();
-  };
-
-  // console.warn(route.params.user);
+  
 
   return (
     <View style={styles.container}>
-      <AppHeader onSignOut={onSignOut} onToggleDrawer={onToggleDrawer} isDrawer={isDrawer}/>
+      <AppHeader navigation={navigation} isDrawer={isDrawer} />
 
       <FlatList
         style={styles.postsContainer}

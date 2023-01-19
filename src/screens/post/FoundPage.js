@@ -40,31 +40,12 @@ function FoundPage({ navigation }) {
 
   console.log("Comment State: " + (isCommentOpen ? "Opened" : "Closed"));
 
-  const onSignOut = () => {
-    Alert.alert("Sign Out", "Are you Sure You Want to Sign Out ?", [
-      {
-        text: "Yes",
-        onPress: () => navigation.navigate("LoginPage"),
-      },
-      {
-        text: "Cancel",
-        onPress: null,
-      },
-    ]);
-
-    // this.navigation.navigate("Login");
-  };
-
-  const onToggleDrawer = () => {
-    navigation.toggleDrawer();
-  };
-
   return (
     <SafeAreaView style={commentsStyles.container}>
       <AppHeader
         style={{ top: -17 }}
-        onSignOut={onSignOut}
-        onToggleDrawer={onToggleDrawer}
+        navigation={navigation}
+        isDrawer
       />
       <FlatList
         data={foundPosts()}

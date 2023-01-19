@@ -12,12 +12,29 @@ import {
 } from "react-native";
 import { FontAwesome, Entypo } from "react-native-vector-icons";
 
-// import AppDrawerNavigator from "../navigator/AppDrawerNavigator";
-
 const isRTL = I18nManager.isRTL;
 
-export default function AppHeader(props) {
-  const { navigation, onSignOut, onToggleDrawer, isDrawer } = props;
+export default function AppHeader(props, ) {
+  const { navigation, isDrawer } = props;
+
+  const onSignOut = () => {
+    Alert.alert("Sign Out", "Are you Sure You Want to Sign Out ?", [
+      {
+        text: 'Yes',
+        onPress: () => navigation.navigate("LoginPage")
+      },
+      {
+        text: 'Cancel',
+        onPress: null
+      }
+    ])
+
+    navigation.navigate('Login');
+  };
+
+  const onToggleDrawer = () => {
+    navigation.toggleDrawer();
+  };
 
   return (
     <>

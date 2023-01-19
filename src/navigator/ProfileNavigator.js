@@ -1,5 +1,5 @@
 import React from "react";
-import {Alert} from 'react-native';
+import { Alert } from "react-native";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import PersonProfile from "../screens/Profiles/PersonProfile";
@@ -7,24 +7,6 @@ import PersonProfile from "../screens/Profiles/PersonProfile";
 const Stack = createStackNavigator();
 
 export default function ProfileNavigator({ navigation, route }) {
-  const onSignOut = () => {
-    Alert.alert("Sign Out", "Are you Sure You Want to Sign Out ?", [
-      {
-        text: "Yes",
-        onPress: () => navigation.navigate("LoginPage"),
-      },
-      {
-        text: "Cancel",
-        onPress: null,
-      },
-    ]);
-
-    navigation.navigate("Login");
-  };
-
-  const onToggleDrawer = () => {
-    navigation.toggleDrawer();
-  };
 
   return (
     <Stack.Navigator
@@ -51,9 +33,7 @@ export default function ProfileNavigator({ navigation, route }) {
           title: "Profile",
           headerBlurEffect: true,
           headerTitleAlign: "center",
-          header: () => (
-            <AppHeader onSignOut={onSignOut} onToggleDrawer={onToggleDrawer} />
-          ),
+          // header: () => <AppHeader navigation={navigation} />,
         }}
       />
     </Stack.Navigator>

@@ -4,13 +4,16 @@ import { createStackNavigator } from "@react-navigation/stack";
 import PostsPage from "../screens/post/PostsPage";
 import CommentPage from "../screens/comment/tempcommentwithbottomsheet";
 
-import PersonProfile from "../screens/Profiles/PersonProfile";
-import ProfileNavigator from "./ProfileNavigator";
 import AppHeader from "../components/AppHeader";
+
+import SettingPage from "../screens/settings/SettingPage";
+import AccountPage from "../screens/settings/AccountPage";
+import LanguagePage from "..//screens/settings/LanguagePage";
+import ChatsSettingPage from "../screens/settings/ChatsSettingPage";
 
 const Stack = createStackNavigator();
 
-export default function PostNavigator({ navigation, route }) {
+export default function SettingNavigator({ navigation, route }) {
   React.useLayoutEffect(() => {
     const tabHiddenRoutes = ["CommentPage"];
 
@@ -23,6 +26,7 @@ export default function PostNavigator({ navigation, route }) {
 
   return (
     <Stack.Navigator
+      initialRouteName="SettingPage"
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: "red",
@@ -37,22 +41,41 @@ export default function PostNavigator({ navigation, route }) {
       tabbarop
       barStyle={{ backgroundColor: "black" }} //This is where you can manipulate its look.
     >
-      <Stack.Screen name="PostsPage" component={PostsPage} />
       <Stack.Screen
-        name="PersonProfile"
-        component={PersonProfile}
+        name="SettingPage"
+        component={SettingPage}
         options={{
-          headerShown: true,
-          title: "",
-          headerBlurEffect: true,
-          headerTitleAlign: "center",
-          presentation: "Modal",
+          header: () => {
+            return <AppHeader navigation={navigation} isDrawer={true} />;
+          },
         }}
       />
       <Stack.Screen
-        name="CommentPage"
-        component={CommentPage}
-        options={{ headerShown: false }}
+        name="AccountPage"
+        component={AccountPage}
+        options={{
+          header: () => {
+            return <AppHeader navigation={navigation} isDrawer={true} />;
+          },
+        }}
+      />
+      <Stack.Screen
+        name="LanguagePage"
+        component={LanguagePage}
+        options={{
+          header: () => {
+            return <AppHeader navigation={navigation} isDrawer={true} />;
+          },
+        }}
+      />
+      <Stack.Screen
+        name="ChatsSettingPage"
+        component={ChatsSettingPage}
+        options={{
+          header: () => {
+            return <AppHeader navigation={navigation} isDrawer={true} />;
+          },
+        }}
       />
     </Stack.Navigator>
   );
