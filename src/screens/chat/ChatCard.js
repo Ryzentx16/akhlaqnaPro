@@ -12,13 +12,13 @@ export default function ChatCard(props) {
       <View style={styles.bodyContainer}>
         <View style={styles.headerContainer}>
           <Text style={styles.header}>{props.data.user.name}</Text>
-          <TouchableOpacity>
+          {/* <TouchableOpacity>
             <MaterialCommunityIcons
               name={"dots-vertical"}
               color={"#660032"}
               size={20}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         <View style={styles.detailsContainer}>

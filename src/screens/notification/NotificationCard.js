@@ -52,13 +52,13 @@ export default function NotificationCard(props) {
       <View style={styles.bodyContainer}>
         <View style={styles.headerContainer}>
           <Text style={styles.header}>{notification.user.name}</Text>
-          <TouchableOpacity>
+          {/* <TouchableOpacity>
             <MaterialCommunityIcons
               name={"close"}
               color={"#660032"}
               size={20}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         <View style={styles.detailsContainer}>
