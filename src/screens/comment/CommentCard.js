@@ -1,45 +1,64 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import UserAvatar from "@muhzi/react-native-user-avatar";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import SeeMoreText from "../../components/SeeMoreText";
 import Helper from "../../shared/helpers";
-
+import ReplyCard from "./ReplyCard";
 
 export default function CommentCard(props) {
   const { comment } = props;
-  const isCommentReply = false;
+  // const replies = [];
+  // const isCommentReply = false;
   var postDuration = Helper.getPostDuration(comment.createdAt);
 
+  const isReply = comment.hasOwnProperty("replies");
+
   return (
-    <View style={styles.container}>
-      <View style={styles.avatarContainer}>
-        <UserAvatar size={35} src={comment.user.profileImage} fontSize={15} />
-      </View>
-      <View style={detailsStyles.container}>
-        <View style={detailsStyles.headerContainer}>
-          <Text style={detailsStyles.userName}>{comment.user.name}</Text>
-          <Text style={detailsStyles.postTime}>{postDuration}</Text>
+    <>
+      <View style={styles.container}>
+        <View style={styles.avatarContainer}>
+          <UserAvatar size={35} src={comment.user.profileImage} fontSize={15} />
         </View>
-        <View style={detailsStyles.commentDetailsContainer}>
-          <SeeMoreText
-            textStyle={detailsStyles.detailsText}
-            text={comment.content}
-            numberOfLines={6}
-          />
-        </View>
-        <View style={detailsStyles.actionContainer}>
-          <TouchableOpacity style={detailsStyles.replybutton}>
-            <MaterialCommunityIcons
-              name={"reply"}
-              color={"#65676b"}
-              size={20}
+        <View style={detailsStyles.container}>
+          <View style={detailsStyles.headerContainer}>
+            <Text style={detailsStyles.userName}>{comment.user.name}</Text>
+            <Text style={detailsStyles.postTime}>{postDuration}</Text>
+          </View>
+          <View style={detailsStyles.commentDetailsContainer}>
+            <SeeMoreText
+              textStyle={detailsStyles.detailsText}
+              text={comment.content}
+              numberOfLines={6}
             />
-            <Text style={detailsStyles.replybuttonText}>Reply</Text>
-          </TouchableOpacity>
+          </View>
+          <View style={detailsStyles.actionContainer}>
+            <TouchableOpacity style={detailsStyles.replybutton}>
+              <MaterialCommunityIcons
+                name={"reply"}
+                color={"#65676b"}
+                size={20}
+              />
+              <Text style={detailsStyles.replybuttonText}>Reply</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
+      <FlatList
+        data={comment.replies}
+        keyExtractor={(item, index) => index}
+        renderItem={(item, index) => {
+          console.log(item.item);
+          return <ReplyCard reply={item.item} />;
+        }}
+      />
+    </>
   );
 }
 
@@ -109,7 +128,7 @@ const styles = StyleSheet.create({
     marginBottom: 17,
     paddingLeft: 10,
     // backgroundColor:'red',
-    marginLeft: 0,
+    // marginLeft: is Reply ? ,
   },
 
   avatarContainer: {

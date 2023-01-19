@@ -97,13 +97,13 @@ export default function PostCard(props) {
             <AntDesign name="questioncircle" size={25} color={"#660032"} />
           ) : null}
         </View>
-        <TouchableOpacity style={headerStyles.headerDotsContainer}>
+        {/* <TouchableOpacity style={headerStyles.headerDotsContainer}>
           <MaterialCommunityIcons
             name={"dots-vertical"}
             color={"#660032"}
             size={25}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       <View style={styles.detailsContainer}>

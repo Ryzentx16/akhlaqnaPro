@@ -26,7 +26,7 @@ export default function SettingNavigator({ navigation, route }) {
 
   return (
     <Stack.Navigator
-      initialRouteName="SettingPage"
+      initialRouteName="Settings"
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: "red",
@@ -42,7 +42,7 @@ export default function SettingNavigator({ navigation, route }) {
       barStyle={{ backgroundColor: "black" }} //This is where you can manipulate its look.
     >
       <Stack.Screen
-        name="SettingPage"
+        name="Settings"
         component={SettingPage}
         options={{
           header: () => {

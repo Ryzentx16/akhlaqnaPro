@@ -38,10 +38,6 @@ export default function PostsPage({ navigation }) {
   const snapPoints = useMemo(() => ["65%", "100%"], []);
 
   const onPressComment = () => {
-    // navigation.navigate("Post", {
-    //   screen: "CommentPage",
-    //   initial: false,
-    // });
     console.log("Comment Pressed");
   };
 

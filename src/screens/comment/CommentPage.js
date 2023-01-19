@@ -7,10 +7,11 @@ import comments from "../../data/comments";
 import InputBox from "../chat/inputBox";
 
 function getCommentsGroup(post) {
-  console.log(comments.length);
+  // console.log(comments.length);
   for (let index = 0; index < comments.length; index++) {
     const element = comments[index];
     console.log("element: " + element.postId);
+
     if (post.commentsId === element.postId) {
       console.log("post.commentsId === element.postId: " + post.commentsId === element.postId);
       return element.comments;
@@ -30,6 +31,7 @@ function Comments(props) {
           style={commentsStyles.scrollContainer}
           keyExtractor={(item, index) => index}
           renderItem={(item, index) => {
+            console.log(item.item);
             return <CommentCard comment={item.item} key={index} />;
           }}
         />
