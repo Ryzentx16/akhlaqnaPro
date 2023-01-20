@@ -4,7 +4,6 @@ import { BackHandler, Alert, I18nManager } from "react-native";
 import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
 
 import AppHeader from "../components/AppHeader.js";
-import ProfileNavigator from "./ProfileNavigator.js";
 import PersonProfile from "../screens/Profiles/PersonProfile.js";
 import AppBottomTabNavigator from "./AppBottomTabNavigator.js";
 
@@ -14,9 +13,12 @@ import FoundPage from "../../src/screens/post/FoundPage";
 import SettingNavigator from "./SettingNavigator.js";
 
 import users from "../data/users.js";
+import languages from "../strings/LanguagesController";
 
 const Drawer = createDrawerNavigator();
 const isRTL = I18nManager.isRTL;
+
+// const currLang = languages.currLang();
 
 export default function AppDrawerNavigator() {
   useEffect(() => {
@@ -33,7 +35,10 @@ export default function AppDrawerNavigator() {
     return () => backHandler.remove();
   }, []);
 
-  // console.warn(users[0]);
+  let currLang = languages.currLang();
+  useEffect(() => {
+    currLang = languages.currLang();
+  });
 
   return (
     <Drawer.Navigator
@@ -58,8 +63,11 @@ export default function AppDrawerNavigator() {
 
           marginTop: 80,
           minHeight: "20%",
-          maxHeight: "70%",
+          maxHeight: "65%",
           width: 240,
+        },
+        drawerLabelStyle: {
+          textAlign: isRTL ? "right" : "left",
         },
         drawerPosition: isRTL ? "left" : "right",
       }}
@@ -72,38 +80,39 @@ export default function AppDrawerNavigator() {
       <Drawer.Screen
         name="MyProfile"
         component={PersonProfile}
-        initialParams={{user: users[0], isDrawer: true}}
-        options={{title: "My Profile"}}
+        initialParams={{ user: users[0], isDrawer: true }}
+        options={{ title: "My Profile", drawerItemStyle: { display: "none" } }}
       />
 
       <Drawer.Screen
         name="Pages"
         component={AppBottomTabNavigator}
-        options={{ title: "Home" }}
+        options={{ title: currLang.drawer.home }}
       />
 
       <Drawer.Screen
         name="LostsPage"
         component={LostPosts}
         options={{
-          title: "Losts Page",
+          title: currLang.drawer.lostspage,
         }}
       />
       <Drawer.Screen
         name="FoundsPage"
         component={FoundPage}
-        options={{ title: "Founds Page" }}
+        options={{ title: currLang.drawer.foundpage }}
       />
 
       <Drawer.Screen
         name="SettingPage"
         component={SettingNavigator}
-        options={{ title: "Settings" }}
+        options={{ title: currLang.drawer.settings }}
       />
 
       <Drawer.Screen
         name="Sign Out"
         component={AppStartupNavigator}
+        options={{ title: currLang.drawer.singout }}
       />
     </Drawer.Navigator>
   );

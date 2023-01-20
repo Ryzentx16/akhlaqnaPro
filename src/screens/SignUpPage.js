@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Image,
   KeyboardAvoidingView,
@@ -19,9 +19,11 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import PhoneInput from "react-native-phone-number-input";
 
 import Adding from "../../API/Adding";
+import languages from "../strings/LanguagesController";
 
 const windowHeight = Dimensions.get("window").height;
 const isRTL = I18nManager.isRTL;
+// const currLang = languages.currLang();
 
 export default function SignUpPage({ navigation }) {
   const [value, setValue] = useState("");
@@ -40,6 +42,11 @@ export default function SignUpPage({ navigation }) {
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
+
+  let currLang = languages.currLang();
+  useEffect(() => {
+    currLang = languages.currLang();
+  });
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
@@ -147,7 +154,7 @@ export default function SignUpPage({ navigation }) {
         </View>
 
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Sign Up</Text>
+          <Text style={styles.title}>{currLang.signupPage.title}</Text>
         </View>
 
         <View style={styles.inputsContainer}>
@@ -155,7 +162,7 @@ export default function SignUpPage({ navigation }) {
             <View style={styles.firstnameContainer}>
               <View style={styles.firstname}>
                 <TextInput
-                  placeholder={"First Name *"}
+                  placeholder={currLang.signupPage.firstname+" *"}
                   placeholderTextColor={"rgba(102,0,50,0.75)"}
                   onChangeText={(text) => {
                     setFirstName(text);
@@ -167,7 +174,7 @@ export default function SignUpPage({ navigation }) {
             <View style={styles.lastnameContainer}>
               <View style={styles.lastname}>
                 <TextInput
-                  placeholder={"Last Name *"}
+                  placeholder={currLang.signupPage.lastname+" *"}
                   placeholderTextColor={"rgba(102,0,50,0.75)"}
                   onChangeText={(text) => {
                     setLastName(text);
@@ -204,7 +211,7 @@ export default function SignUpPage({ navigation }) {
                   textAlign: isRTL ? 'right' : 'left'
                 }}
                 textInputProps={{
-                  placeholder: "Phone Number *",
+                  placeholder: currLang.signupPage.phonenumber+" *",
                   placeholderTextColor: "rgba(102,0,50,0.75)",
                 }}
               />
@@ -245,7 +252,7 @@ export default function SignUpPage({ navigation }) {
           <View style={styles.passwordContainer}>
             <View style={styles.newPasswordContainer}>
               <TextInput
-                placeholder={"Enter Password *"}
+                placeholder={currLang.signupPage.createnewpassword+" *"}
                 placeholderTextColor={"rgba(102,0,50,0.75)"}
                 onChangeText={(text) => {
                   setNewPassword(text);
@@ -256,7 +263,7 @@ export default function SignUpPage({ navigation }) {
             </View>
             <View style={styles.confirmPasswordContainer}>
               <TextInput
-                placeholder={"Confirm Password *"}
+                placeholder={currLang.signupPage.confirmpassword+" *"}
                 placeholderTextColor={"rgba(102,0,50,0.75)"}
                 onChangeText={(text) => {
                   setConfirmPassword(text);
@@ -271,13 +278,13 @@ export default function SignUpPage({ navigation }) {
         <View style={styles.actionContainer}>
           <View style={styles.loginContainer}>
             <TouchableOpacity style={styles.login} onPress={onLogin}>
-              <Text style={{ fontSize: 18, color: "#660032" }}>Log in</Text>
+              <Text style={{ fontSize: 18, color: "#660032" }}>{currLang.signupPage.login}</Text>
             </TouchableOpacity>
           </View>
 
           <View style={styles.submitContainer}>
             <TouchableOpacity style={styles.submit} onPress={onSubmit}>
-              <Text style={{ fontSize: 20, color: "white" }}>Submit</Text>
+              <Text style={{ fontSize: 20, color: "white" }}>{currLang.signupPage.submit}</Text>
             </TouchableOpacity>
           </View>
         </View>

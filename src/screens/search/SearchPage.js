@@ -1,13 +1,20 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { FlatList, Image, ScrollView, StyleSheet, Text, I18nManager, TextInput, View } from 'react-native';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import SearchCard from "./SearchCard";
 import SearchCardData from "./SearchCardData";
+import languages from '../../strings/LanguagesController';
 
 const isRTL = I18nManager.isRTL;
+// const currLang = languages.currLang();
 
 export default function SearchPage({ navigation }) {
+    let currLang = languages.currLang();
+    useEffect(() => {
+      currLang = languages.currLang();
+    });
+
     return (
         <View style={styles.background}>
             <View style={styles.headerContainer}>
@@ -35,7 +42,7 @@ export default function SearchPage({ navigation }) {
             <FlatList ListHeaderComponent={
                 <View>
                     <View style={styles.historyContainer}>
-                        <Text style={styles.historyTitle}>History</Text>
+                        <Text style={styles.historyTitle}>{currLang.searchPage.history}</Text>
                         <SearchCard contentName={"samsung product"}
                             searchType={"history"} />
                         <SearchCard contentName={"bag"}
@@ -54,7 +61,7 @@ export default function SearchPage({ navigation }) {
                             searchType={"history"} />
                     </View>
                     <View style={styles.suggestedContainer}>
-                        <Text style={styles.suggestedTitle}>Suggested For You</Text>
+                        <Text style={styles.suggestedTitle}>{currLang.searchPage.suggestedforyou}</Text>
                     </View>
                 </View>
             }

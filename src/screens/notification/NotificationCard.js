@@ -48,7 +48,7 @@ export default function NotificationCard(props) {
         />
         <NotificationIcon type={type} />
       </TouchableOpacity>
-
+       
       <View style={styles.bodyContainer}>
         <View style={styles.headerContainer}>
           <Text style={styles.header}>{notification.user.name}</Text>
@@ -60,7 +60,7 @@ export default function NotificationCard(props) {
             />
           </TouchableOpacity> */}
         </View>
-
+        
         <View style={styles.detailsContainer}>
           <Text style={styles.details}>{notification.user.name + notification.details}</Text>
         </View>

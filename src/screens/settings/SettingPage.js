@@ -1,10 +1,21 @@
-import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View, Alert } from "react-native";
+import React, {useEffect} from "react";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Alert,
+  I18nManager,
+} from "react-native";
 import UserAvatar from "@muhzi/react-native-user-avatar";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import AppHeader from "../../components/AppHeader";
-import ar from "../../strings/ar";
+import languages from "../../strings/LanguagesController";
+// import ar from "../../strings/ar";
 // import HeaderSection from "../Classes/headerSection";
+
+const isRTL = I18nManager.isRTL;
+// const currLang = languages.currLang();
 
 export default function SettingPage({ navigation }) {
   const onAccount = () => {
@@ -14,8 +25,13 @@ export default function SettingPage({ navigation }) {
     navigation.navigate("LanguagePage");
   };
   const onChats = () => {
-    // navigation.navigate('ChatsSettingPage');
+    navigation.navigate("ChatsSettingPage");
   };
+
+  let currLang = languages.currLang();
+  useEffect(() => {
+    currLang = languages.currLang();
+  });
 
   return (
     <View style={styles.container}>
@@ -39,7 +55,7 @@ export default function SettingPage({ navigation }) {
               <Ionicons size={60} name={"person-circle"} color={"#660032"} />
             </View>
             <View style={styles.textAccountContainer}>
-              <Text style={styles.text}>Account</Text>
+              <Text style={styles.text}>{currLang.settingPage.account}</Text>
             </View>
           </TouchableOpacity>
 
@@ -51,7 +67,7 @@ export default function SettingPage({ navigation }) {
               <Ionicons size={50} name={"language"} color={"#660032"} />
             </View>
             <View style={styles.textLanguageContainer}>
-              <Text style={styles.text}>Language</Text>
+              <Text style={styles.text}>{currLang.settingPage.language}</Text>
             </View>
           </TouchableOpacity>
 
@@ -60,7 +76,7 @@ export default function SettingPage({ navigation }) {
               <Ionicons size={45} name={"chatbubbles"} color={"#660032"} />
             </View>
             <View style={styles.textChatsContainer}>
-              <Text style={styles.text}>Chats</Text>
+              <Text style={styles.text}>{currLang.settingPage.chats}</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -110,6 +126,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 26,
     color: "#660032",
+    textAlign: "left",
   },
 
   btnsBody: {
@@ -138,6 +155,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 24,
     color: "#660032",
+    textAlign: "left",
   },
   languageContainer: {
     flex: 1,

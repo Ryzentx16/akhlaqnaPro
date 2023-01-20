@@ -1,4 +1,5 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, AsyncStorage, useEffect } from "react";
+// import AsyncStorage from '@react-native-community/async-storage';
 import {
   Alert,
   Dimensions,
@@ -13,18 +14,47 @@ import {
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import PhoneInput from "react-native-phone-number-input";
-// import {SvgXml} from "react-native-svg";
-const windowHeight = Dimensions.get("screen").height;
-// import SELECTquery from "../../server/SELECTquery";
+import languages from "../strings/LanguagesController";
 
+const windowHeight = Dimensions.get("screen").height;
 const isRTL = I18nManager.isRTL;
 
 export default function LoginPage({ navigation }) {
+  /* #region  Testing AsyncStroage */
+  // const _storeData = async () => {
+  //   try {
+  //     await AsyncStorage.setItem(
+  //       '@MySuperStore:key',
+  //       'I like to save it.',
+  //     );
+  //   } catch (error) {
+  //     console.error(error);
+  //     // Error saving data
+  //   }
+  // };
+
+  // const _retrieveData = async () => {
+  //   try {
+  //     const value = await AsyncStorage.getItem('@MySuperStore:key');
+  //     if (value !== null) {
+  //       // We have data!!
+  //       console.log(value);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     // Error retrieving data
+  //   }
+  // };
+
+  // _storeData();
+  // console.warn(_retrieveData());
+  /* #endregion */
+
   const [value, setValue] = useState("");
-  const [formattedValue, setFormattedValue] = useState("");
+  const [formattedValue, setFormattedValue] = useState("+97470031251");
   const [valid, setValid] = useState(false);
   const phoneInput = useRef(PhoneInput);
-
+  
   const [phoneNumber, setPhoneNumber] = useState("70031251");
   const [password, setPassword] = useState("12345");
 
@@ -34,7 +64,7 @@ export default function LoginPage({ navigation }) {
     axios
       .get(
         "http://ryzentx.online/?phoneNumber=" +
-          phoneNumber +
+          formattedValue +
           "&password=" +
           password
       )
@@ -51,6 +81,12 @@ export default function LoginPage({ navigation }) {
         console.error(error);
       });
   };
+
+
+  let currLang = languages.currLang();
+  useEffect(() => {
+    currLang = languages.currLang();
+  });
 
   return (
     <View style={styles.background}>
@@ -74,13 +110,15 @@ export default function LoginPage({ navigation }) {
         </View>
 
         <View style={styles.title}>
-          <Text style={styles.titleText}>Login</Text>
+          <Text style={styles.titleText}>{currLang.loginPage.title}</Text>
         </View>
 
         <View style={styles.inputsArea}>
           <View style={[styles.inputSection, { justifyContent: "center" }]}>
             <View style={styles.phoneInput}>
-              <View style={[styles.iconHolder, {marginLeft: 40, marginRight: 0}]}>
+              <View
+                style={[styles.iconHolder, { marginLeft: 40, marginRight: 0 }]}
+              >
                 <MaterialCommunityIcons
                   size={30}
                   name={"phone"}
@@ -88,31 +126,31 @@ export default function LoginPage({ navigation }) {
                 />
               </View>
               {/* <View style={{justifyContent: 'center'}}> */}
-                <PhoneInput
-                  ref={phoneInput}
-                  defaultValue={phoneNumber}
-                  defaultCode="QA"
-                  layout="second"
-                  onChangeText={(text) => {
-                    console.log(phoneNumber);
-                    setValid(phoneInput.current?.isValidNumber(text));
-                  }}
-                  onChangeFormattedText={(text) => {
-                    setPhoneNumber(text);
-                    setFormattedValue(text);
-                  }}
-                  textContainerStyle={{ backgroundColor: "white" }}
-                  textInputStyle={{
-                    fontSize: 16,
-                    height: 50,
-                    backgroundColor: "white",
-                    textAlign: isRTL ? 'right' : 'left',
-                  }}
-                  textInputProps={{
-                    placeholder: "Phone Number *",
-                    placeholderTextColor: "rgba(102,0,50,0.75)",
-                  }}
-                />
+              <PhoneInput
+                ref={phoneInput}
+                defaultValue={phoneNumber}
+                defaultCode="QA"
+                layout="second"
+                onChangeText={(text) => {
+                  console.log(phoneNumber);
+                  setValid(phoneInput.current?.isValidNumber(text));
+                }}
+                onChangeFormattedText={(text) => {
+                  setPhoneNumber(text);
+                  setFormattedValue(text);
+                }}
+                textContainerStyle={{ backgroundColor: "white" }}
+                textInputStyle={{
+                  fontSize: 16,
+                  height: 50,
+                  backgroundColor: "white",
+                  textAlign: isRTL ? "right" : "left",
+                }}
+                textInputProps={{
+                  placeholder: currLang.loginPage.phonenumber + " *",
+                  placeholderTextColor: "rgba(102,0,50,0.75)",
+                }}
+              />
               {/* </View> */}
             </View>
           </View>
@@ -126,11 +164,11 @@ export default function LoginPage({ navigation }) {
                 />
               </View>
               <TextInput
-                placeholder={"Password *"}
+                placeholder={currLang.loginPage.password + " *"}
                 placeholderTextColor={"#660032"}
                 value={password}
                 onChangeText={(text) => {
-                  setPassword(text)
+                  setPassword(text);
                 }}
                 secureTextEntry={true}
                 style={{ textAlign: isRTL ? "right" : "left", flex: 1 }}
@@ -141,19 +179,26 @@ export default function LoginPage({ navigation }) {
 
         <View style={styles.buttonsArea}>
           <TouchableOpacity onPress={checkLogin} style={styles.loginButton}>
-            <Text style={styles.textLogin}>Login</Text>
+            <Text style={styles.textLogin}>{currLang.loginPage.login}</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigation.navigate("SignUpConfirmation")}
+            onPress={() =>
+              navigation.navigate("SignUpConfirmation", {
+                isChangePass: true,
+                phoneNumber: formattedValue,
+              })
+            }
             style={styles.forgetButton}
           >
-            <Text style={styles.textForget}>Forget Password</Text>
+            <Text style={styles.textForget}>
+              {currLang.loginPage.forgetpassword}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.signupButton}
             onPress={() => navigation.navigate("SignUpPage")}
           >
-            <Text style={styles.textSignup}>Sign Up</Text>
+            <Text style={styles.textSignup}>{currLang.loginPage.signup}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -232,7 +277,7 @@ const styles = StyleSheet.create({
   iconHolder: {
     // flex: 1,
     width: 32,
-    justifyContent: 'center',
+    justifyContent: "center",
     // backgroundColor: 'red',
     // marginRight: 7,
   },
@@ -265,7 +310,7 @@ const styles = StyleSheet.create({
     // paddingRight: 13,
     // paddingBottom: 7,
 
-    overflow: 'hidden'
+    overflow: "hidden",
   },
 
   buttonsArea: {

@@ -1,3 +1,4 @@
+import UserAvatar from "@muhzi/react-native-user-avatar";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Image,
@@ -10,31 +11,32 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import { FontAwesome, Entypo } from "react-native-vector-icons";
+import { FontAwesome, Entypo, Ionicons } from "react-native-vector-icons";
 
 const isRTL = I18nManager.isRTL;
 
 export default function AppHeader(props, ) {
   const { navigation, isDrawer } = props;
 
-  const onSignOut = () => {
-    Alert.alert("Sign Out", "Are you Sure You Want to Sign Out ?", [
-      {
-        text: 'Yes',
-        onPress: () => navigation.navigate("LoginPage")
-      },
-      {
-        text: 'Cancel',
-        onPress: null
-      }
-    ])
+  const onProfile = () => {
+    // Alert.alert("Sign Out", "Are you Sure You Want to Sign Out ?", [
+    //   {
+    //     text: 'Yes',
+    //     onPress: () => navigation.navigate("LoginPage")
+    //   },
+    //   {
+    //     text: 'Cancel',
+    //     onPress: null
+    //   }
+    // ])
 
-    navigation.navigate('Login');
+    navigation.navigate('MyProfile');
   };
-
   const onToggleDrawer = () => {
     navigation.toggleDrawer();
   };
+
+  const isSettings = props.hasOwnProperty("isSettings");
 
   return (
     <>
@@ -47,12 +49,13 @@ export default function AppHeader(props, ) {
         />
         {/*<AmanatiLogo style={styles.imageLogo}/>*/}
       </View>
-      <TouchableOpacity style={styles.signOutContainer} onPress={onSignOut}>
-        <FontAwesome
-          name="sign-out"
-          size={30}
-          color={"#660032"}
-          style={styles.signOutIcon}
+      <TouchableOpacity style={styles.profileContainer} onPress={onProfile}>
+        <UserAvatar 
+          src={"http://ryzentx.online/myProfileExample.png"}
+          // initialName={"Abdulrahman .M"}
+          size={50}
+          // fontSize={36}
+          style={styles.profileIcon}
         />
       </TouchableOpacity>
       <TouchableOpacity style={styles.menuContainer} onPress={onToggleDrawer}>
@@ -63,6 +66,14 @@ export default function AppHeader(props, ) {
           style={styles.menutIcon}
         />
       </TouchableOpacity>
+      {isSettings && <TouchableOpacity style={styles.backContainer} onPress={() => navigation.goBack()}>
+      <Ionicons
+          name="arrow-back"
+          size={45}
+          color={"#660032"}
+          style={styles.backIcon}
+        />
+      </TouchableOpacity>}
     </View> : null}
     </>
   );
@@ -102,23 +113,30 @@ const styles = StyleSheet.create({
     marginLeft: isRTL ? -5 : 5,
   },
 
-  signOutContainer: {
+  profileContainer: {
     position: "absolute",
-    // alignSelf: "flex-end",
-    top: 50,
-    left: 100,
+    top: 40,
+    left: 84,
   },
-  signOutIcon: {
+  profileIcon: {
     transform: [{ rotateY: isRTL ? "0deg" : "180deg" }],
   },
 
   menuContainer: {
     position: "absolute",
-    // alignSelf: "flex-end",
     top: 50,
     right: 100,
   },
   menuIcon: {
     // transform: [{ rotateY: isRTL ? "0deg" : "180deg" }],
   },
+
+  backContainer: {
+    position: "absolute",
+    top: 100,
+    left: 20,
+  },
+  backIcon: {
+    transform: [{ rotateY: isRTL ? "180deg" : "0deg" }],
+  }  
 });

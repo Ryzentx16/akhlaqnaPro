@@ -1,87 +1,63 @@
-import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { MaterialCommunityIcons } from "react-native-vector-icons";
+import React, { useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View, Switch } from "react-native";
+import { Ionicons } from "react-native-vector-icons";
 import AppHeader from "../../components/AppHeader";
+import languages from "../../strings/LanguagesController";
+
+const currLang = languages.currLang();
 
 export default function ChatsSettingPage({ navigation }) {
-  const onSignOut = () => {
-    Alert.alert("Sign Out", "Are you Sure You Want to Sign Out ?", [
-      {
-        text: "Yes",
-        onPress: () => navigation.navigate("LoginPage"),
-      },
-      {
-        text: "Cancel",
-        onPress: null,
-      },
-    ]);
-  };
-
-  const onToggleDrawer = () => {
-    navigation.toggleDrawer();
-  };
+  const [switchValue, setSwitchValue] = useState(false);
 
   return (
     <View style={styles.container}>
-      <AppHeader onSignOut={onSignOut} onToggleDrawer={onToggleDrawer} />
+      <AppHeader navigation={navigation} isDrawer={true} isSettings />
 
-      <View style={{ flex: 1, paddingHorizontal: 42, marginTop: 9 }}>
+      <View
+        style={{
+          flex: 1,
+          paddingHorizontal: 42,
+          marginTop: 9,
+          marginBottom: 30,
+          maxHeight: "50%",
+        }}
+      >
         <View style={{ flex: 1, alignItems: "center" }}>
-          <MaterialCommunityIcons
-            name={"account"}
-            size={80}
-            color={"#660032"}
-          />
-          <Text style={{ fontSize: 36, color: "#660032" }}>Account</Text>
+          <Ionicons size={80} name={"chatbubbles"} color={"#660032"} />
+          <Text style={{ fontSize: 36, color: "#660032" }}>Chats</Text>
         </View>
-        <View style={{ flex: 2 }}>
+        <View
+          style={{
+            flex: 1,
+            maxHeight: 80,
+          }}
+        >
           <View
-            style={{ flex: 1, justifyContent: "flex-end", marginBottom: 18 }}
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
           >
-            <TouchableOpacity
+            <Text
               style={{
-                flex: 1,
-                flexDirection: "row",
-                alignItems: "center",
-                maxHeight: 60,
+                fontSize: 22,
+                color: "#660032",
+                alignSelf: "center",
+                marginBottom: 20,
               }}
             >
-              <View style={{ flex: 1 }}>
-                <MaterialCommunityIcons
-                  name={"delete"}
-                  size={40}
-                  color={"#660032"}
-                />
-              </View>
-              <View style={{ flex: 5 }}>
-                <Text style={{ fontSize: 20, color: "#660032" }}>
-                  Delete my account
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-          <View style={{ flex: 1, justifyContent: "flex-start" }}>
-            <TouchableOpacity
+              Theme: Dark/Light
+            </Text>
+            <Switch
+              thumbColor={"#660032"}
               style={{
-                flex: 1,
-                flexDirection: "row",
-                alignItems: "center",
-                maxHeight: 60,
+                alignSelf: "flex-start",
+                transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
               }}
-            >
-              <View style={{ flex: 1 }}>
-                <MaterialCommunityIcons
-                  name={"lock"}
-                  size={40}
-                  color={"#660032"}
-                />
-              </View>
-              <View style={{ flex: 5 }}>
-                <Text style={{ fontSize: 20, color: "#660032" }}>
-                  Change my password
-                </Text>
-              </View>
-            </TouchableOpacity>
+              value={switchValue}
+              onValueChange={(value) => setSwitchValue(value)}
+            />
           </View>
         </View>
       </View>

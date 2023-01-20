@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -14,6 +14,9 @@ import Entypo from "react-native-vector-icons/Entypo";
 import users from "../data/users";
 // import AddPost from "../../API/AddPost";
 import Adding from "../../API/Adding";
+import languages from "../strings/LanguagesController";
+
+// const currLang = languages.currLang();
 
 const AddPostPage = ({ navigation }) => {
   const user = users[0];
@@ -21,6 +24,11 @@ const AddPostPage = ({ navigation }) => {
   const [content, setContent] = useState("fake content");
   const [image, setImage] = useState("null image");
   const [createdDateTime, setcreatedDateTime] = useState(Date.now());
+
+  let currLang = languages.currLang();
+    useEffect(() => {
+      currLang = languages.currLang();
+    });
 
   const onPost = () => {
     let data = new FormData();
@@ -51,7 +59,7 @@ const AddPostPage = ({ navigation }) => {
         <View style={styles.content}>
           <TextInput
             style={styles.contentInput}
-            placeholder={"What did you lost/find today ?"}
+            placeholder={currLang.addpostPage.hint}
             multiline={true}
             onChangeText={(text) => {
               setContent(text);
@@ -78,7 +86,7 @@ const AddPostPage = ({ navigation }) => {
         </View>
 
         <TouchableOpacity style={styles.postBtnContaianer}>
-          <Text style={styles.postText}>POST</Text>
+          <Text style={styles.postText}>{currLang.addpostPage.post}</Text>
         </TouchableOpacity>
       </View>
     </View>

@@ -1,30 +1,52 @@
-import React, { useState } from "react";
-import { StyleSheet, Switch, Text, TouchableOpacity, View } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, Switch, Text, TouchableOpacity, View, Alert } from "react-native";
 import { MaterialCommunityIcons, Ionicons } from "react-native-vector-icons";
 import AppHeader from "../../components/AppHeader";
+import languages from "../../strings/LanguagesController";
 
 export default function AccountPage({ navigation }) {
   const [switchValue, setSwitchValue] = useState(false);
+  const [switchChanged, setSwitchChanged] = useState(false);
 
-  const onSignOut = () => {
-    Alert.alert("Sign Out", "Are you Sure You Want to Sign Out ?", [
-      {
-        text: "Yes",
-        onPress: () => navigation.navigate("LoginPage"),
-      },
-      {
-        text: "Cancel",
-        onPress: null,
-      },
-    ]);
+  const onApplyChange = () => {
+    Alert.alert(
+      currLang.languagepage.applychangealert.title,
+      currLang.languagepage.applychangealert.content,
+      [
+        {
+          text: currLang.languagepage.applychangealert.buttons.yessingout,
+          onPress: () => {
+            if (!switchValue) {
+              languages.currLang("Ar");
+              console.warn("Changed to Ar");
+            } else {
+              languages.currLang("En");
+              console.warn("Changed to En");
+            }
+            navigation.replace('AppStartupNavigator');
+          },
+        },
+        {
+          text: currLang.languagepage.applychangealert.buttons.cancel,
+          onPress: null,
+        },
+      ]
+    );
   };
-  const onToggleDrawer = () => {
-    navigation.toggleDrawer();
-  };
+
+  let currLang = languages.currLang();
+  useEffect(() => {
+    currLang = languages.currLang();
+    console.warn(languages.langType());
+
+    if (languages.langType() === 'En') {
+      setSwitchValue(true);
+    }
+  });
 
   return (
     <View style={styles.container}>
-      <AppHeader onSignOut={onSignOut} onToggleDrawer={onToggleDrawer} />
+      <AppHeader navigation={navigation} isDrawer={true} isSettings />
 
       <View
         style={{
@@ -39,11 +61,10 @@ export default function AccountPage({ navigation }) {
           <Ionicons size={80} name={"language"} color={"#660032"} />
           <Text style={{ fontSize: 36, color: "#660032" }}>Language</Text>
         </View>
+
         <View
           style={{
             flex: 1,
-            // marginTop: 30,
-            // backgroundColor: "red",
             maxHeight: 80,
           }}
         >
@@ -62,20 +83,45 @@ export default function AccountPage({ navigation }) {
                 marginBottom: 20,
               }}
             >
-              English/العربية
+              {"العربية " + '/' + " English"}
             </Text>
             <Switch
-              //   trackColor={""}
               thumbColor={"#660032"}
               style={{
                 alignSelf: "flex-start",
-                transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
+                transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }, { rotateY: "180deg" }],
               }}
               value={switchValue}
-              onValueChange={(value) => setSwitchValue(value)}
+              onValueChange={(value) => {
+                setSwitchChanged(true);
+                setSwitchValue(value);
+              }}
             />
           </View>
         </View>
+
+        {switchChanged && (
+          <View style={{ backgroundColor: "red", alignItems: "flex-end" }}>
+            <TouchableOpacity
+              style={{
+                position: "absolute",
+                maxheight: 60,
+                borderRadius: 99,
+                backgroundColor: "#660032",
+                top: 150,
+                justifyContent: "center",
+                alignItems: "center",
+                paddingHorizontal: 10,
+                paddingVertical: 5,
+              }}
+              onPress={onApplyChange}
+            >
+              <Text style={{ fontSize: 22, color: "white" }}>
+                {currLang.languagepage.applychange}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </View>
   );

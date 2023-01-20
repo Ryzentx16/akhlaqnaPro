@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -13,7 +13,7 @@ import Entypo from "react-native-vector-icons/Entypo";
 import Fontisto from "react-native-vector-icons/Fontisto";
 import users from "../../data/users";
 
-// import AddComment from "../../../API/AddComment"; 
+import languages from "../../strings/LanguagesController";
 import Adding from "../../../API/Adding"; // API
 
 const isRTL = I18nManager.isRTL;
@@ -25,7 +25,12 @@ export default function InputBox(props) {
   const [createdDateTime, setcreatedDateTime] = useState(Date.now());
   const [textInputHeight, setTextInputHeight] = useState(20);
 
-  var placeholder = isComment ? "Type a message" : "Type a comment";
+  let currLang = languages.currLang();
+  useEffect(() => {
+    currLang = languages.currLang();
+  });
+
+  var placeholder = !isComment ? "Type a message" : "Type a comment";
 
   const onSend = () => {
     setcreatedDateTime(Date.now());
@@ -39,6 +44,7 @@ export default function InputBox(props) {
       : null;
   };
 
+  
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}

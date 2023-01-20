@@ -10,6 +10,7 @@ import SettingPage from "../screens/settings/SettingPage";
 import AccountPage from "../screens/settings/AccountPage";
 import LanguagePage from "..//screens/settings/LanguagePage";
 import ChatsSettingPage from "../screens/settings/ChatsSettingPage";
+import AppStartupNavigator from "./AppStartupNavigator";
 
 const Stack = createStackNavigator();
 
@@ -41,42 +42,11 @@ export default function SettingNavigator({ navigation, route }) {
       tabbarop
       barStyle={{ backgroundColor: "black" }} //This is where you can manipulate its look.
     >
-      <Stack.Screen
-        name="Settings"
-        component={SettingPage}
-        options={{
-          header: () => {
-            return <AppHeader navigation={navigation} isDrawer={true} />;
-          },
-        }}
-      />
-      <Stack.Screen
-        name="AccountPage"
-        component={AccountPage}
-        options={{
-          header: () => {
-            return <AppHeader navigation={navigation} isDrawer={true} />;
-          },
-        }}
-      />
-      <Stack.Screen
-        name="LanguagePage"
-        component={LanguagePage}
-        options={{
-          header: () => {
-            return <AppHeader navigation={navigation} isDrawer={true} />;
-          },
-        }}
-      />
-      <Stack.Screen
-        name="ChatsSettingPage"
-        component={ChatsSettingPage}
-        options={{
-          header: () => {
-            return <AppHeader navigation={navigation} isDrawer={true} />;
-          },
-        }}
-      />
+      <Stack.Screen name="Settings" component={SettingPage} />
+      <Stack.Screen name="AccountPage" component={AccountPage} />
+      <Stack.Screen name="LanguagePage" component={LanguagePage} />
+      <Stack.Screen name="ChatsSettingPage" component={ChatsSettingPage} />
+      <Stack.Screen name="AppStartupNavigator" component={AppStartupNavigator} />
     </Stack.Navigator>
   );
 }
