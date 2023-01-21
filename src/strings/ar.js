@@ -9,6 +9,7 @@ const ar = {
   },
   signupPage: {
     title: "إنشاء حساب جديد",
+    editprofile: 'تعديل الحساب',
     firstname: "الاسم الاول",
     lastname: "الاسم الاخير",
     phonenumber: "رقم الهاتف",
@@ -17,6 +18,10 @@ const ar = {
     confirmpassword: "تأكيد كلمة المرور",
     submit: "المتابعة",
     login: "تسجيل الدخول",
+    editalert: {
+      title: "! مبروك",
+      content: "لقد تم تعديل الحساب بنجاح"
+    }
   },
   otpPage: {
     wesentotp: "لقد ارسلنا اليك رسالة نصية.",
@@ -74,6 +79,17 @@ const ar = {
   },
   messageinput: {
     content: "اكتب رسالة" 
+  },
+
+  personprofilepage: {
+    applychangealert: {
+      title: "إنذار",
+      content: "من أجل التغيير انت تحتاج إلى تسجيل الخروج",
+      buttons: {
+        yessingout: 'نعم, تسجيل خروجك',
+        cancel: 'إلغاء',
+      }
+    },
   }
 };
 

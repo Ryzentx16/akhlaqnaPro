@@ -3,6 +3,10 @@ import { StyleSheet, Switch, Text, TouchableOpacity, View, Alert } from "react-n
 import { MaterialCommunityIcons, Ionicons } from "react-native-vector-icons";
 import AppHeader from "../../components/AppHeader";
 import languages from "../../strings/LanguagesController";
+import themes from "../../ThemeController";
+
+let textColor = themes._currTextTheme;
+let backColor = themes._currBackColorTheme;
 
 export default function AccountPage({ navigation }) {
   const [switchValue, setSwitchValue] = useState(false);
@@ -38,11 +42,15 @@ export default function AccountPage({ navigation }) {
   useEffect(() => {
     currLang = languages.currLang();
     console.warn(languages.langType());
+    textColor = themes._currTextTheme;
+    backColor = themes._currBackColorTheme;
+  });
 
+  useEffect(() => {
     if (languages.langType() === 'En') {
       setSwitchValue(true);
     }
-  });
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -58,8 +66,8 @@ export default function AccountPage({ navigation }) {
         }}
       >
         <View style={{ flex: 1, alignItems: "center" }}>
-          <Ionicons size={80} name={"language"} color={"#660032"} />
-          <Text style={{ fontSize: 36, color: "#660032" }}>Language</Text>
+          <Ionicons size={80} name={"language"} color={textColor} />
+          <Text style={{ fontSize: 36, color: textColor }}>Language</Text>
         </View>
 
         <View
@@ -78,7 +86,7 @@ export default function AccountPage({ navigation }) {
             <Text
               style={{
                 fontSize: 22,
-                color: "#660032",
+                color: textColor,
                 alignSelf: "center",
                 marginBottom: 20,
               }}
@@ -86,7 +94,7 @@ export default function AccountPage({ navigation }) {
               {"العربية " + '/' + " English"}
             </Text>
             <Switch
-              thumbColor={"#660032"}
+              thumbColor={textColor}
               style={{
                 alignSelf: "flex-start",
                 transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }, { rotateY: "180deg" }],
@@ -107,7 +115,7 @@ export default function AccountPage({ navigation }) {
                 position: "absolute",
                 maxheight: 60,
                 borderRadius: 99,
-                backgroundColor: "#660032",
+                backgroundColor: textColor,
                 top: 150,
                 justifyContent: "center",
                 alignItems: "center",
@@ -130,7 +138,7 @@ export default function AccountPage({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: backColor,
 
     paddingBottom: "72%",
   },

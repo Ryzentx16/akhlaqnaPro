@@ -1,13 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, Switch } from "react-native";
 import { Ionicons } from "react-native-vector-icons";
 import AppHeader from "../../components/AppHeader";
 import languages from "../../strings/LanguagesController";
+import themes from "../../ThemeController";
 
 const currLang = languages.currLang();
+let textColor = themes._currTextTheme;
+let backColor = themes._currBackColorTheme;
 
 export default function ChatsSettingPage({ navigation }) {
   const [switchValue, setSwitchValue] = useState(false);
+
+  useEffect(() => {
+    textColor = themes._currTextTheme;
+    backColor = themes._currBackColorTheme;
+  });
 
   return (
     <View style={styles.container}>
@@ -23,8 +31,8 @@ export default function ChatsSettingPage({ navigation }) {
         }}
       >
         <View style={{ flex: 1, alignItems: "center" }}>
-          <Ionicons size={80} name={"chatbubbles"} color={"#660032"} />
-          <Text style={{ fontSize: 36, color: "#660032" }}>Chats</Text>
+          <Ionicons size={80} name={"chatbubbles"} color={textColor} />
+          <Text style={{ fontSize: 36, color: textColor }}>Chats</Text>
         </View>
         <View
           style={{
@@ -42,7 +50,7 @@ export default function ChatsSettingPage({ navigation }) {
             <Text
               style={{
                 fontSize: 22,
-                color: "#660032",
+                color: textColor,
                 alignSelf: "center",
                 marginBottom: 20,
               }}
@@ -50,7 +58,7 @@ export default function ChatsSettingPage({ navigation }) {
               Theme: Dark/Light
             </Text>
             <Switch
-              thumbColor={"#660032"}
+              thumbColor={textColor}
               style={{
                 alignSelf: "flex-start",
                 transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
@@ -68,7 +76,7 @@ export default function ChatsSettingPage({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: backColor,
 
     paddingBottom: "72%",
   },

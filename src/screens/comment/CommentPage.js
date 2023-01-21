@@ -1,10 +1,16 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState, useEffect } from "react";
 import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import CommentCard from "./CommentCard";
 import comments from "../../data/comments";
 import InputBox from "../chat/inputBox";
+
+import themes from "../../ThemeController";
+
+let textColor = themes._currTextTheme;
+let backColor = themes._currBackColorTheme;
+let themeColor = themes._currTheme;
 
 function getCommentsGroup(post) {
   // console.log(comments.length);
@@ -13,14 +19,17 @@ function getCommentsGroup(post) {
     console.log("element: " + element.postId);
 
     if (post.commentsId === element.postId) {
-      console.log("post.commentsId === element.postId: " + post.commentsId === element.postId);
+      console.log(
+        "post.commentsId === element.postId: " + post.commentsId ===
+          element.postId
+      );
       return element.comments;
     }
   }
 }
 
 function Comments(props) {
-  const { post } = props
+  const { post } = props;
   console.log("Commetns length: " + comments.length);
 
   return (
@@ -37,7 +46,7 @@ function Comments(props) {
         />
       </View>
 
-      <InputBox isComment={true} post={post}/>
+      <InputBox isComment={true} post={post} />
     </SafeAreaView>
   );
 }
@@ -50,7 +59,13 @@ export default function CommentPage(props) {
   const onCommentClose = () => {
     isClosed(false);
     console.log("Comment Clsoed: CommentPage");
-  }
+  };
+
+  useEffect(() => {
+    textColor = themes._currTextTheme;
+    backColor = themes._currBackColorTheme;
+    themeColor = themes._currTheme
+  });
 
   return (
     <>
@@ -73,7 +88,7 @@ const commentsStyles = StyleSheet.create({
     flex: 1,
     paddingBottom: 10,
     paddingTop: 17,
-    backgroundColor: "#F0F2F5",
+    backgroundColor: themeColor === 'light' ? '#f0f2f5' : "#A1A1A1",
   },
 
   commentsContainer: {

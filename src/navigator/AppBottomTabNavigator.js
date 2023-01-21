@@ -57,7 +57,7 @@ export default function AppBottomTabNavigator({ navigation }) {
           borderTopColor: "#660032",
           borderTopWidth: 3,
         },
-        header: () => <AppHeader navigation={navigation} isDrawer={true}/>,
+        header: () => <AppHeader navigation={navigation} isDrawer={true} />,
       }}
       tabbarop
       barStyle={{ backgroundColor: "black" }} //This is where you can manipulate its look.
@@ -96,15 +96,7 @@ export default function AppBottomTabNavigator({ navigation }) {
         options={{
           tabBarShowLabel: false,
           tabBarIcon: ({ focused }) => (
-            // <Ionicons
-            //   name={focused ? "home" : "home-outline"}
-            //   color={iconcolor}
-            //   size={iconsize}
-            // />
-            // <SvgXml xml={logo} /> // Why i can't use svgxml ? it throw error [TypeError: source.split is not a function. (In 'source.split('\n')', 'source.split' is undefined)]
             <View>
-              {/* <Image source={require("../../assets/akhlaqna-outline.png")} style={{height: 40, width: 38.5}}/> */}
-              {/* <View style={styles.circle}></View> */}
               <View>
                 {!focused ? (
                   <Image
@@ -117,7 +109,6 @@ export default function AppBottomTabNavigator({ navigation }) {
                     style={styles.imageLogo}
                   />
                 )}
-                {/*<AmanatiLogo style={styles.imageLogo}/>*/}
               </View>
             </View>
           ),
@@ -181,7 +172,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   imageLogo: {
-    height: 33, 
+    height: 33,
     width: 32,
     marginBottom: 2,
     marginLeft: isRTL ? -2 : 2,

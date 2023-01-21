@@ -29,9 +29,9 @@ export default function SearchPage({ navigation }) {
                                 text === 'exit code 1' ? navigation.navigate("LoginPage") : null
                             }} />
                     </View>
-                    <View style={styles.filterContainer}>
+                    {/* <View style={styles.filterContainer}>
                         <FontAwesome5 name={"filter"} size={30} color={"#660032"} />
-                    </View>
+                    </View> */}
                 </View>
             </View>
 
@@ -149,7 +149,11 @@ const styles = StyleSheet.create({
         borderTopWidth: 1,
         borderBottomWidth: 1,
         borderLeftWidth: 1,
-        // backgroundColor: 'red',
+        borderRightWidth: 1,
+
+        borderTopEndRadius: 99,
+        borderBottomEndRadius: 99,
+
         justifyContent: 'center',
         paddingLeft: 8,
     },
@@ -162,7 +166,7 @@ const styles = StyleSheet.create({
         borderLeftWidth: 0,
         borderTopEndRadius: 99,
         borderBottomEndRadius: 99,
-        // backgroundColor: '#846568',
+        
         justifyContent: 'center',
         alignItems: 'center',
         paddingRight: 7,
@@ -170,7 +174,6 @@ const styles = StyleSheet.create({
 
     searchResultContainer: {
         flex: 1,
-        // backgroundColor: 'green',
 
         marginBottom: 20,
         marginHorizontal: 30,

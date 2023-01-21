@@ -1,11 +1,14 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { StyleSheet, Text, TouchableOpacity, View, Alert } from "react-native";
 import { MaterialCommunityIcons } from "react-native-vector-icons";
 import AppHeader from "../../components/AppHeader";
 import users from "../../data/users";
 import languages from "../../strings/LanguagesController";
+import themes from "../../ThemeController";
 
 const currLang = languages.currLang();
+let textColor = themes._currTextTheme;
+let backColor = themes._currBackColorTheme;
 
 export default function AccountPage({ navigation }) {
   const onChangePass = () => {
@@ -30,6 +33,11 @@ export default function AccountPage({ navigation }) {
     );
   };
 
+  useEffect(() => {
+    textColor = themes._currTextTheme;
+    backColor = themes._currBackColorTheme;
+  });
+
   return (
     <View style={styles.container}>
       <AppHeader navigation={navigation} isDrawer={true} isSettings />
@@ -39,9 +47,9 @@ export default function AccountPage({ navigation }) {
           <MaterialCommunityIcons
             name={"account"}
             size={80}
-            color={"#660032"}
+            color={textColor}
           />
-          <Text style={{ fontSize: 36, color: "#660032" }}>{currLang.settingPage.account}</Text>
+          <Text style={{ fontSize: 36, color: textColor }}>{currLang.settingPage.account}</Text>
         </View>
         <View style={{ flex: 2 }}>
           <View
@@ -59,11 +67,11 @@ export default function AccountPage({ navigation }) {
                 <MaterialCommunityIcons
                   name={"delete"}
                   size={40}
-                  color={"#660032"}
+                  color={textColor}
                 />
               </View>
               <View style={{ flex: 5 }}>
-                <Text style={{ fontSize: 20, color: "#660032", textAlign: 'left' }}>
+                <Text style={{ fontSize: 20, color: textColor, textAlign: 'left' }}>
                   {currLang.accountPage.delete}
                 </Text>
               </View>
@@ -82,11 +90,11 @@ export default function AccountPage({ navigation }) {
                 <MaterialCommunityIcons
                   name={"lock"}
                   size={40}
-                  color={"#660032"}
+                  color={textColor}
                 />
               </View>
               <TouchableOpacity style={{ flex: 5 }} onPress={onChangePass}>
-                <Text style={{ fontSize: 20, color: "#660032", textAlign: 'left'}}>
+                <Text style={{ fontSize: 20, color: textColor, textAlign: 'left'}}>
                   {currLang.accountPage.changepassword}
                 </Text>
               </TouchableOpacity>
@@ -101,7 +109,7 @@ export default function AccountPage({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: backColor,
 
     paddingBottom: "72%",
   },

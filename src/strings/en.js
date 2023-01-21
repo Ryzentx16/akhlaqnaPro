@@ -9,6 +9,7 @@ const en = {
   },
   signupPage: {
     firstname: "First Name",
+    editprofile: 'Edit profile',
     lastname: "Last Name",
     phonenumber: "Phone Numebr",
     birthday: "Birthday",
@@ -16,6 +17,10 @@ const en = {
     confirmpassword: "Confirm Password",
     submit: "Submit",
     login: "Login",
+    editalert: {
+      title: "Congratulations !",
+      content: "Your account changed successfully"
+    }
   },
   otpPage: {
     wesentotp: "Your OTP: ",
@@ -73,6 +78,17 @@ const en = {
   },
   messageinput: {
     content: "Type a message" 
+  },
+
+  personprofilepage: {
+    applychangealert: {
+      title: "Warning",
+      content: "In order to Change you need to sign out",
+      buttons: {
+        yessingout: 'Yes, Sign out',
+        cancel: 'Cancel',
+      }
+    },
   }
 };
 

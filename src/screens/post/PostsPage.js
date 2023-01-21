@@ -1,4 +1,10 @@
-import React, { useState, useRef, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useRef,
+  useMemo,
+  useCallback,
+  useEffect,
+} from "react";
 import { Image, StyleSheet, View, SafeAreaView, FlatList } from "react-native";
 // import { FlatList } from "react-native-gesture-handler";
 import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
@@ -10,6 +16,12 @@ import InputBox from "../chat/inputBox";
 import posts from "../../data/posts";
 import PostCard from "./PostCard";
 import CommentPage from "../comment/CommentPage";
+
+import themes from "../../ThemeController";
+
+let textColor = themes._currTextTheme;
+let backColor = themes._currBackColorTheme;
+let themeColor = themes._currTheme;
 
 function preperTempData() {
   let _posts = [];
@@ -43,6 +55,12 @@ export default function PostsPage({ navigation }) {
 
   console.log("Comment State: " + (isCommentOpen ? "Opened" : "Closed"));
 
+  useEffect(() => {
+    textColor = themes._currTextTheme;
+    backColor = themes._currBackColorTheme;
+    themeColor = themes._currTheme;
+  });
+
   return (
     <SafeAreaView style={commentsStyles.container}>
       <FlatList
@@ -65,10 +83,14 @@ export default function PostsPage({ navigation }) {
         }}
       />
       {!isCommentOpen ? console.log("Comment Clsoed: PostsPage") : null}
-      {isCommentOpen &&
-        <CommentPage post={commentPost} isClosed={(state) => { setIsCommentOpen(state) }} />
-      }
-
+      {isCommentOpen && (
+        <CommentPage
+          post={commentPost}
+          isClosed={(state) => {
+            setIsCommentOpen(state);
+          }}
+        />
+      )}
     </SafeAreaView>
   );
 }
@@ -78,7 +100,7 @@ const commentsStyles = StyleSheet.create({
     flex: 1,
     paddingBottom: 10,
     paddingTop: 17,
-    backgroundColor: "#F0F2F5",
+    backgroundColor: themeColor === "light" ? "#CCCCCC" : "#B1B1B1",
   },
 
   commentsContainer: {
@@ -95,7 +117,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingBottom: 10,
     paddingTop: 5,
-    backgroundColor: "#CCCCCC",
+    backgroundColor: "red",
   },
 
   scrollContainer: {

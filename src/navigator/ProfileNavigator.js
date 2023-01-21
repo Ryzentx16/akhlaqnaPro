@@ -3,10 +3,13 @@ import { Alert } from "react-native";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import PersonProfile from "../screens/Profiles/PersonProfile";
+import SignUpPage from "../screens/SignUpPage";
+import AppStartupNavigator from "./AppStartupNavigator";
 
 const Stack = createStackNavigator();
 
 export default function ProfileNavigator({ navigation, route }) {
+  // console.warn(route);
 
   return (
     <Stack.Navigator
@@ -33,9 +36,17 @@ export default function ProfileNavigator({ navigation, route }) {
           title: "Profile",
           headerBlurEffect: true,
           headerTitleAlign: "center",
-          // header: () => <AppHeader navigation={navigation} />,
         }}
       />
+      
+      <Stack.Screen
+        name="AppStartupNavigator"
+        component={AppStartupNavigator}
+        options={{
+          headerShown: false,
+        }}
+      />
+
     </Stack.Navigator>
   );
 }

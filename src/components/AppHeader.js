@@ -13,23 +13,19 @@ import {
 } from "react-native";
 import { FontAwesome, Entypo, Ionicons } from "react-native-vector-icons";
 
+import themes from "../ThemeController";
+
+let textColor = themes._currTextTheme;
+let backColor = themes._currBackColorTheme;
 const isRTL = I18nManager.isRTL;
 
-export default function AppHeader(props, ) {
+export default function AppHeader(props) {
   const { navigation, isDrawer } = props;
 
+  const onLogo = () => {
+    navigation.navigate('PostsPage');
+  };
   const onProfile = () => {
-    // Alert.alert("Sign Out", "Are you Sure You Want to Sign Out ?", [
-    //   {
-    //     text: 'Yes',
-    //     onPress: () => navigation.navigate("LoginPage")
-    //   },
-    //   {
-    //     text: 'Cancel',
-    //     onPress: null
-    //   }
-    // ])
-
     navigation.navigate('MyProfile');
   };
   const onToggleDrawer = () => {
@@ -38,17 +34,22 @@ export default function AppHeader(props, ) {
 
   const isSettings = props.hasOwnProperty("isSettings");
 
+  useEffect(() => {
+    textColor = themes._currTextTheme;
+    backColor = themes._currBackColorTheme;
+  });
+
   return (
     <>
     {isDrawer ? <View style={[styles.container, props.style]}>
       <View style={styles.circle}></View>
-      <View style={styles.logo}>
+      <TouchableOpacity style={styles.logo} onPress={onLogo}>
         <Image
           source={require("../../assets/Logo.png")}
           style={styles.imageLogo}
         />
         {/*<AmanatiLogo style={styles.imageLogo}/>*/}
-      </View>
+      </TouchableOpacity>
       <TouchableOpacity style={styles.profileContainer} onPress={onProfile}>
         <UserAvatar 
           src={"http://ryzentx.online/myProfileExample.png"}
@@ -62,15 +63,15 @@ export default function AppHeader(props, ) {
         <Entypo
           name="menu"
           size={30}
-          color={"#660032"}
-          style={styles.menutIcon}
+          color={textColor}
+          style={styles.menuIcon}
         />
       </TouchableOpacity>
       {isSettings && <TouchableOpacity style={styles.backContainer} onPress={() => navigation.goBack()}>
       <Ionicons
           name="arrow-back"
           size={45}
-          color={"#660032"}
+          color={textColor}
           style={styles.backIcon}
         />
       </TouchableOpacity>}
@@ -83,13 +84,13 @@ const styles = StyleSheet.create({
   container: {
     height: 140,
     justifyContent: "center",
-    backgroundColor: "white",
+    backgroundColor: backColor,
   },
   circle: {
     width: 750,
     height: 800,
     borderRadius: 800,
-    borderColor: "#660032",
+    borderColor: textColor,
     borderWidth: 2,
     alignSelf: "center",
     marginTop: -700,
@@ -100,7 +101,7 @@ const styles = StyleSheet.create({
     height: 70,
     width: 70,
     alignSelf: "center",
-    borderColor: "#660032",
+    borderColor: textColor,
     borderWidth: 2,
     borderRadius: 150 / 2,
 

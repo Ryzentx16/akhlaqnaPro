@@ -40,9 +40,9 @@ export default function PostNavigator({ navigation, route }) {
       <Stack.Screen name="PostsPage" component={PostsPage} />
       <Stack.Screen
         name="PersonProfile"
-        component={PersonProfile}
+        component={ProfileNavigator}
         options={{
-          headerShown: true,
+          headerShown: false,
           title: "",
           headerBlurEffect: true,
           headerTitleAlign: "center",

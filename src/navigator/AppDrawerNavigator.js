@@ -14,6 +14,7 @@ import SettingNavigator from "./SettingNavigator.js";
 
 import users from "../data/users.js";
 import languages from "../strings/LanguagesController";
+import ProfileNavigator from "./ProfileNavigator.js";
 
 const Drawer = createDrawerNavigator();
 const isRTL = I18nManager.isRTL;
@@ -79,7 +80,7 @@ export default function AppDrawerNavigator() {
       />
       <Drawer.Screen
         name="MyProfile"
-        component={PersonProfile}
+        component={ProfileNavigator}
         initialParams={{ user: users[0], isDrawer: true }}
         options={{ title: "My Profile", drawerItemStyle: { display: "none" } }}
       />

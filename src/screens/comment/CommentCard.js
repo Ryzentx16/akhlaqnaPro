@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {
   FlatList,
   StyleSheet,
@@ -12,6 +12,12 @@ import SeeMoreText from "../../components/SeeMoreText";
 import Helper from "../../shared/helpers";
 import ReplyCard from "./ReplyCard";
 
+import themes from "../../ThemeController";
+
+let textColor = themes._currTextTheme;
+let backColor = themes._currBackColorTheme;
+let themeColor = themes._currTheme;
+
 export default function CommentCard(props) {
   const { comment } = props;
   // const replies = [];
@@ -19,6 +25,12 @@ export default function CommentCard(props) {
   var postDuration = Helper.getPostDuration(comment.createdAt);
 
   const isReply = comment.hasOwnProperty("replies");
+
+  useEffect(() => {
+    textColor = themes._currTextTheme;
+    backColor = themes._currBackColorTheme;
+    themeColor = themes._currTheme;
+  });
 
   return (
     <>
@@ -42,7 +54,7 @@ export default function CommentCard(props) {
             <TouchableOpacity style={detailsStyles.replybutton}>
               <MaterialCommunityIcons
                 name={"reply"}
-                color={"#65676b"}
+                color={themeColor === 'light' ? "#65676b" : '#FFFFFF'}
                 size={20}
               />
               <Text style={detailsStyles.replybuttonText}>Reply</Text>
@@ -70,7 +82,7 @@ const detailsStyles = StyleSheet.create({
     marginLeft: 5,
     marginRight: 20,
     borderRadius: 18,
-    backgroundColor: "#fff",
+    backgroundColor: themeColor === 'light' ? '#ffffff' : "#CCCCCC",
   },
 
   headerContainer: {
@@ -93,18 +105,18 @@ const detailsStyles = StyleSheet.create({
   userName: {
     fontSize: 12,
     fontWeight: "bold",
-    color: "#660032",
+    color: textColor,
     marginRight: 5,
   },
 
   postTime: {
     fontSize: 9,
-    color: "#65676b",
+    color: themeColor === 'light' ? "#65676b" : '#FFFFFF',
   },
 
   detailsText: {
     fontSize: 13,
-    color: "#660032",
+    color: textColor,
     lineHeight: 18,
   },
 
@@ -114,7 +126,7 @@ const detailsStyles = StyleSheet.create({
   replybuttonText: {
     fontSize: 12,
     fontWeight: "bold",
-    color: "#65676b",
+    color: themeColor === 'light' ? "#65676b" : '#FFFFFF',
     marginLeft: 5,
   },
 });

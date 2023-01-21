@@ -16,6 +16,11 @@ import users from "../../data/users";
 import languages from "../../strings/LanguagesController";
 import Adding from "../../../API/Adding"; // API
 
+import themes from "../../ThemeController";
+
+let textColor = themes._currTextTheme;
+let backColor = themes._currBackColorTheme;
+let themeColor = themes._currTheme;
 const isRTL = I18nManager.isRTL;
 
 export default function InputBox(props) {
@@ -28,6 +33,9 @@ export default function InputBox(props) {
   let currLang = languages.currLang();
   useEffect(() => {
     currLang = languages.currLang();
+    textColor = themes._currTextTheme;
+    backColor = themes._currBackColorTheme;
+    themeColor = themes._currTheme;
   });
 
   var placeholder = !isComment ? "Type a message" : "Type a comment";
@@ -44,7 +52,6 @@ export default function InputBox(props) {
       : null;
   };
 
-  
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -106,6 +113,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     flex: 1,
+    backgroundColor: themeColor === "light" ? "#ffffff" : "#CCCCCC",
     marginHorizontal: 10,
   },
   icon: {
@@ -114,7 +122,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     height: 40,
     width: 40,
-    backgroundColor: "#660032",
+    backgroundColor: textColor,
     borderRadius: 50,
     justifyContent: "center",
     alignItems: "center",

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
@@ -14,12 +14,19 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import UserAvatar from "@muhzi/react-native-user-avatar";
 import posts from "../../data/posts";
 import PostCard from "../../screens/post/PostCard";
+import languages from "../../strings/LanguagesController";
 import AppHeader from "../../components/AppHeader";
+import users from "../../data/users";
+
+// import comments from "../../data/comments";
+import CommentPage from "../comment/CommentPage";
 
 const isRTL = I18nManager.isRTL;
 
 export default function PersonProfile({ navigation, route }) {
-  // console.log(route);
+  const [isCommentOpen, setIsCommentOpen] = useState(false);
+  const [commentPost, setCommentPost] = useState(null);
+
   const ourUser = route.params?.user;
   const isDrawer = route.params?.isDrawer;
   const isUserMe = ourUser.id === "u1" ? true : false;
@@ -32,7 +39,35 @@ export default function PersonProfile({ navigation, route }) {
       x.push(posts[i]);
     }
   }
-  
+
+  let currLang = languages.currLang();
+  useEffect(() => {
+    currLang = languages.currLang();
+  });
+
+  const onEdit = () => {
+    Alert.alert(
+      currLang.languagepage.applychangealert.title,
+      currLang.languagepage.applychangealert.content,
+      [
+        {
+          text: currLang.languagepage.applychangealert.buttons.yessingout,
+          onPress: () => {
+            navigation.replace("Sign Out", {
+              screen: "SignUpPage",
+              params: {
+                user: users[0],
+              },
+            });
+          },
+        },
+        {
+          text: currLang.languagepage.applychangealert.buttons.cancel,
+          onPress: null,
+        },
+      ]
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -53,11 +88,11 @@ export default function PersonProfile({ navigation, route }) {
                 </View>
                 <View style={headerStyles.detailsContaienr}>
                   <Text style={headerStyles.name}>{ourUser.name}</Text>
-                  <MaterialCommunityIcons
+                  {/* <MaterialCommunityIcons
                     name={"dots-vertical"}
                     color={"#660032"}
                     size={50}
-                  />
+                  /> */}
                 </View>
               </View>
               <View style={headerStyles.actionContaienr}>
@@ -77,7 +112,10 @@ export default function PersonProfile({ navigation, route }) {
                     </TouchableOpacity>
                   </>
                 ) : (
-                  <TouchableOpacity style={headerStyles.myBtnStyle}>
+                  <TouchableOpacity
+                    style={headerStyles.myBtnStyle}
+                    onPress={onEdit}
+                  >
                     <View style={headerStyles.editProfileButton}>
                       <Text style={headerStyles.editProfileText}>
                         Edit Profile
@@ -92,9 +130,29 @@ export default function PersonProfile({ navigation, route }) {
         data={x}
         keyExtractor={(item, index) => index}
         renderItem={(item, index) => {
-          return <PostCard post={item.item} key={index} />;
+          return (
+            <PostCard
+              navigation={navigation}
+              post={item.item}
+              key={index}
+              onPressComment={(clickedPost) => {
+                setCommentPost(clickedPost);
+                setIsCommentOpen(true);
+                console.log("Comment Pressed: " + clickedPost.commentsId);
+              }}
+            />
+          );
         }}
       />
+      {!isCommentOpen ? console.log("Comment Clsoed: PostsPage") : null}
+      {isCommentOpen && (
+        <CommentPage
+          post={commentPost}
+          isClosed={(state) => {
+            setIsCommentOpen(state);
+          }}
+        />
+      )}
     </View>
   );
 }

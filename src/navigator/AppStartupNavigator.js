@@ -27,7 +27,13 @@ export default function AppStartupNavigator({ navigation, route }) {
       barStyle={{ backgroundColor: "black" }} //This is where you can manipulate its look.
     >
       <Stack.Screen name="LoginPage" component={LoginPage} />
-      <Stack.Screen name="SignUpPage" component={SignUpPage} />
+      <Stack.Screen
+        name="SignUpPage"
+        component={SignUpPage}
+        initialParams={{
+          user: null,
+        }}
+      />
       <Stack.Screen name="SignUpConfirmation" component={SignUpConfirmation} />
       <Stack.Screen name="ChangePasswordPage" component={ChangePasswordPage} />
       <Stack.Screen name="Home" component={AppDrawerNavigator} />
