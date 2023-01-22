@@ -1,26 +1,35 @@
-import { useEffect } from 'react';
-import { BackHandler, Alert } from 'react-native';
+import { useEffect } from "react";
+import {
+  BackHandler,
+  Alert,
+  Image,
+  View,
+  StyleSheet,
+  I18nManager,
+} from "react-native";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import SearchPage from "../screens/search/SearchPage";
 import AddPostPage from "../screens/AddpostPage";
-import chatRoom from "../screens/chat/chatRoom"
+import chatRoom from "../screens/chat/chatRoom";
 import commentPage from "../screens/comment/CommentPage";
 import NotificationsPage from "../screens/notification/NotificationsPage";
 import AppHeader from "../components/AppHeader";
 import ChatNavigator from "./ChatNavigator";
 import PostNavigator from "./PostNavigator";
+import AppDrawerNavigator from "./AppDrawerNavigator";
 
-import logo from "../../assets/logo.js"
-import { SvgXml } from "react-native-svg";
+import logo from "../../assets/logo.js";
+import Svg, { Ellipse, Path, SvgXml } from "react-native-svg";
 
 const Tab = createBottomTabNavigator();
 const iconsize = 30;
 const iconcolor = "#660032";
+const isRTL = I18nManager.isRTL;
 
-export default function AppBottomTabNavigator({navigation}) {
+export default function AppBottomTabNavigator({ navigation }) {
   useEffect(() => {
     // console.log(logo);
     const backAction = () => {
@@ -28,8 +37,8 @@ export default function AppBottomTabNavigator({navigation}) {
     };
 
     const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction,
+      "hardwareBackPress",
+      backAction
     );
 
     return () => backHandler.remove();
@@ -48,7 +57,7 @@ export default function AppBottomTabNavigator({navigation}) {
           borderTopColor: "#660032",
           borderTopWidth: 3,
         },
-        header: () => <AppHeader navigation={navigation}/>,
+        header: () => <AppHeader navigation={navigation} isDrawer={true} />,
       }}
       tabbarop
       barStyle={{ backgroundColor: "black" }} //This is where you can manipulate its look.
@@ -87,12 +96,21 @@ export default function AppBottomTabNavigator({navigation}) {
         options={{
           tabBarShowLabel: false,
           tabBarIcon: ({ focused }) => (
-            <Ionicons
-              name={focused ? "home" : "home-outline"}
-              color={iconcolor}
-              size={iconsize}
-            />
-            // <SvgXml xml={logo} /> // Why i can't use svgxml ? it throw error [TypeError: source.split is not a function. (In 'source.split('\n')', 'source.split' is undefined)]
+            <View>
+              <View>
+                {!focused ? (
+                  <Image
+                    source={require("../../assets/Logo1.png")}
+                    style={styles.imageLogo}
+                  />
+                ) : (
+                  <Image
+                    source={require("../../assets/akhlaqna.png")}
+                    style={styles.imageLogo}
+                  />
+                )}
+              </View>
+            </View>
           ),
         }}
       />
@@ -129,3 +147,34 @@ export default function AppBottomTabNavigator({navigation}) {
     </Tab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  circle: {
+    width: 70,
+    height: 85,
+    borderRadius: 800,
+    borderColor: "#660032",
+    borderWidth: 2,
+    alignSelf: "center",
+    marginTop: -700,
+  },
+
+  logo: {
+    // position: "absolute",
+    height: 42,
+    width: 42,
+    alignSelf: "center",
+    borderColor: "#660032",
+    borderWidth: 2,
+    borderRadius: 150 / 2,
+
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  imageLogo: {
+    height: 33,
+    width: 32,
+    marginBottom: 2,
+    marginLeft: isRTL ? -2 : 2,
+  },
+});

@@ -1,3 +1,4 @@
+import UserAvatar from "@muhzi/react-native-user-avatar";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Image,
@@ -8,41 +9,74 @@ import {
   View,
   I18nManager,
   TouchableOpacity,
-  Alert
+  Alert,
 } from "react-native";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { FontAwesome, Entypo, Ionicons } from "react-native-vector-icons";
+
+import themes from "../ThemeController";
+
+let textColor = themes._currTextTheme;
+let backColor = themes._currBackColorTheme;
 const isRTL = I18nManager.isRTL;
 
 export default function AppHeader(props) {
-  const { navigation } = props;
+  const { navigation, isDrawer } = props;
 
-  const onSignOut = () => {
-    Alert.alert("Sign Out", "Are you Sure You Want to Sign Out ?", [
-      {
-        text: 'Yes',
-        onPress: () => navigation.navigate("LoginPage")
-      },
-      {
-        text: 'Cancel',
-        onPress: null
-      }
-    ])
-  }
+  const onLogo = () => {
+    navigation.navigate('PostsPage');
+  };
+  const onProfile = () => {
+    navigation.navigate('MyProfile');
+  };
+  const onToggleDrawer = () => {
+    navigation.toggleDrawer();
+  };
+
+  const isSettings = props.hasOwnProperty("isSettings");
+
+  useEffect(() => {
+    textColor = themes._currTextTheme;
+    backColor = themes._currBackColorTheme;
+  });
 
   return (
-    <View style={styles.container}>
+    <>
+    {isDrawer ? <View style={[styles.container, props.style]}>
       <View style={styles.circle}></View>
-      <View style={styles.logo}>
+      <TouchableOpacity style={styles.logo} onPress={onLogo}>
         <Image
           source={require("../../assets/Logo.png")}
           style={styles.imageLogo}
         />
         {/*<AmanatiLogo style={styles.imageLogo}/>*/}
-      </View>
-      <TouchableOpacity style={styles.signOutContainer} onPress={onSignOut}>
-        <FontAwesome name="sign-out" size={30} color={'#660032'} style={styles.signOutIcon} />
       </TouchableOpacity>
-    </View>
+      <TouchableOpacity style={styles.profileContainer} onPress={onProfile}>
+        <UserAvatar 
+          src={"http://ryzentx.online/myProfileExample.png"}
+          // initialName={"Abdulrahman .M"}
+          size={50}
+          // fontSize={36}
+          style={styles.profileIcon}
+        />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.menuContainer} onPress={onToggleDrawer}>
+        <Entypo
+          name="menu"
+          size={30}
+          color={textColor}
+          style={styles.menuIcon}
+        />
+      </TouchableOpacity>
+      {isSettings && <TouchableOpacity style={styles.backContainer} onPress={() => navigation.goBack()}>
+      <Ionicons
+          name="arrow-back"
+          size={45}
+          color={textColor}
+          style={styles.backIcon}
+        />
+      </TouchableOpacity>}
+    </View> : null}
+    </>
   );
 }
 
@@ -50,13 +84,13 @@ const styles = StyleSheet.create({
   container: {
     height: 140,
     justifyContent: "center",
-    backgroundColor: "white"
+    backgroundColor: backColor,
   },
   circle: {
     width: 750,
     height: 800,
     borderRadius: 800,
-    borderColor: "#660032",
+    borderColor: textColor,
     borderWidth: 2,
     alignSelf: "center",
     marginTop: -700,
@@ -67,7 +101,7 @@ const styles = StyleSheet.create({
     height: 70,
     width: 70,
     alignSelf: "center",
-    borderColor: "#660032",
+    borderColor: textColor,
     borderWidth: 2,
     borderRadius: 150 / 2,
 
@@ -80,13 +114,30 @@ const styles = StyleSheet.create({
     marginLeft: isRTL ? -5 : 5,
   },
 
-  signOutContainer: {
-    position: 'absolute',
-    alignSelf: 'flex-end',
+  profileContainer: {
+    position: "absolute",
+    top: 40,
+    left: 84,
+  },
+  profileIcon: {
+    transform: [{ rotateY: isRTL ? "0deg" : "180deg" }],
+  },
+
+  menuContainer: {
+    position: "absolute",
     top: 50,
     right: 100,
   },
-  signOutIcon: {
-    transform: [{ rotateY: isRTL ? '180deg' : '0deg' }]
-  }
+  menuIcon: {
+    // transform: [{ rotateY: isRTL ? "0deg" : "180deg" }],
+  },
+
+  backContainer: {
+    position: "absolute",
+    top: 100,
+    left: 20,
+  },
+  backIcon: {
+    transform: [{ rotateY: isRTL ? "180deg" : "0deg" }],
+  }  
 });

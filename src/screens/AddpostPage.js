@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,10 +12,40 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Entypo from "react-native-vector-icons/Entypo";
 
 import users from "../data/users";
+// import AddPost from "../../API/AddPost";
+import Adding from "../../API/Adding";
+import languages from "../strings/LanguagesController";
+
+// const currLang = languages.currLang();
 
 const AddPostPage = ({ navigation }) => {
   const user = users[0];
-  
+
+  const [content, setContent] = useState("fake content");
+  const [image, setImage] = useState("null image");
+  const [createdDateTime, setcreatedDateTime] = useState(Date.now());
+
+  let currLang = languages.currLang();
+  useEffect(() => {
+    currLang = languages.currLang();
+  });
+
+  const onPost = () => {
+    // let data = new FormData();
+    // data.append("userId", user.id);
+    // data.append("content", content);
+    // data.append("createdDateTime", createdDateTime);
+    // data.append("image", {
+    //   uri: "http://ryzentx.online/image_1.png",
+    //   name: "profileExample.png",
+    //   type: "image/png",
+    // });
+
+    // Adding("addPost", data, () => navigation.navigate("Post"));
+
+    console.log("toto");
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.headContainer}>
@@ -31,8 +61,11 @@ const AddPostPage = ({ navigation }) => {
         <View style={styles.content}>
           <TextInput
             style={styles.contentInput}
-            placeholder={"What did you lost/find today ?"}
+            placeholder={currLang.addpostPage.hint}
             multiline={true}
+            onChangeText={(text) => {
+              setContent(text);
+            }}
           />
         </View>
       </View>
@@ -54,8 +87,8 @@ const AddPostPage = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.postBtnContaianer}>
-          <Text style={styles.postText}>POST</Text>
+        <TouchableOpacity style={styles.postBtnContaianer} onPress={onPost}>
+          <Text style={styles.postText}>{currLang.addpostPage.post}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -89,7 +122,7 @@ const styles = StyleSheet.create({
   headerDetailsContainer: {
     flex: 1,
     justifyContent: "center",
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
     paddingLeft: 5,
   },
 

@@ -1,13 +1,20 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { FlatList, Image, ScrollView, StyleSheet, Text, I18nManager, TextInput, View } from 'react-native';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import SearchCard from "./SearchCard";
 import SearchCardData from "./SearchCardData";
+import languages from '../../strings/LanguagesController';
 
 const isRTL = I18nManager.isRTL;
+// const currLang = languages.currLang();
 
 export default function SearchPage({ navigation }) {
+    let currLang = languages.currLang();
+    useEffect(() => {
+      currLang = languages.currLang();
+    });
+
     return (
         <View style={styles.background}>
             <View style={styles.headerContainer}>
@@ -22,9 +29,9 @@ export default function SearchPage({ navigation }) {
                                 text === 'exit code 1' ? navigation.navigate("LoginPage") : null
                             }} />
                     </View>
-                    <View style={styles.filterContainer}>
+                    {/* <View style={styles.filterContainer}>
                         <FontAwesome5 name={"filter"} size={30} color={"#660032"} />
-                    </View>
+                    </View> */}
                 </View>
             </View>
 
@@ -35,7 +42,7 @@ export default function SearchPage({ navigation }) {
             <FlatList ListHeaderComponent={
                 <View>
                     <View style={styles.historyContainer}>
-                        <Text style={styles.historyTitle}>History</Text>
+                        <Text style={styles.historyTitle}>{currLang.searchPage.history}</Text>
                         <SearchCard contentName={"samsung product"}
                             searchType={"history"} />
                         <SearchCard contentName={"bag"}
@@ -54,7 +61,7 @@ export default function SearchPage({ navigation }) {
                             searchType={"history"} />
                     </View>
                     <View style={styles.suggestedContainer}>
-                        <Text style={styles.suggestedTitle}>Suggested For You</Text>
+                        <Text style={styles.suggestedTitle}>{currLang.searchPage.suggestedforyou}</Text>
                     </View>
                 </View>
             }
@@ -142,7 +149,11 @@ const styles = StyleSheet.create({
         borderTopWidth: 1,
         borderBottomWidth: 1,
         borderLeftWidth: 1,
-        // backgroundColor: 'red',
+        borderRightWidth: 1,
+
+        borderTopEndRadius: 99,
+        borderBottomEndRadius: 99,
+
         justifyContent: 'center',
         paddingLeft: 8,
     },
@@ -155,7 +166,7 @@ const styles = StyleSheet.create({
         borderLeftWidth: 0,
         borderTopEndRadius: 99,
         borderBottomEndRadius: 99,
-        // backgroundColor: '#846568',
+        
         justifyContent: 'center',
         alignItems: 'center',
         paddingRight: 7,
@@ -163,7 +174,6 @@ const styles = StyleSheet.create({
 
     searchResultContainer: {
         flex: 1,
-        // backgroundColor: 'green',
 
         marginBottom: 20,
         marginHorizontal: 30,

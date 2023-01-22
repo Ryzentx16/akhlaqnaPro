@@ -1,49 +1,34 @@
-import React, {
-  useState,
-  useRef,
-  useMemo,
-  useCallback,
-  useEffect,
-} from "react";
-import { Image, StyleSheet, View, SafeAreaView, FlatList } from "react-native";
-// import { FlatList } from "react-native-gesture-handler";
-import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-
-import CommentCard from "../comment/CommentCard";
-import comments from "../../data/comments";
-import InputBox from "../chat/inputBox";
-import posts from "../../data/posts";
+import React, { useMemo, useRef, useState } from "react";
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  Alert,
+  View,
+  SafeAreaView,
+  FlatList
+} from "react-native";
+// import foundPosts from "../data/foundPosts";
 import PostCard from "./PostCard";
+
 import CommentPage from "../comment/CommentPage";
+import posts from "../../data/posts";
+import AppHeader from "../../components/AppHeader";
 
-import themes from "../../ThemeController";
-
-let textColor = themes._currTextTheme;
-let backColor = themes._currBackColorTheme;
-let themeColor = themes._currTheme;
-
-function preperTempData() {
-  let _posts = [];
-
-  for (let i = 0; i < posts.length * 5; i++) {
-    _posts.push(posts[i % posts.length]);
+const foundPosts = () => {
+  let value = [];
+  for (let index = 0; index < posts.length*4; index++) {
+    const element = posts[index % posts.length];
+    if (element.type === "found") {
+      value.push(element);
+    }
   }
 
-  return _posts;
-}
+  return value;
+};
 
-function prepercomentsTempData() {
-  let coments = [];
-  // console.warn("here");
-  for (let i = 0; i < comments.length * 5; i++) {
-    coments.push(comments[i % comments.length]);
-  }
-
-  return coments;
-}
-
-export default function PostsPage({ navigation }) {
+function FoundPage({ navigation }) {
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [commentPost, setCommentPost] = useState(null);
   const commentSheetRef = useRef(null);
@@ -55,16 +40,15 @@ export default function PostsPage({ navigation }) {
 
   console.log("Comment State: " + (isCommentOpen ? "Opened" : "Closed"));
 
-  useEffect(() => {
-    textColor = themes._currTextTheme;
-    backColor = themes._currBackColorTheme;
-    themeColor = themes._currTheme;
-  });
-
   return (
     <SafeAreaView style={commentsStyles.container}>
+      <AppHeader
+        style={{ top: -17 }}
+        navigation={navigation}
+        isDrawer
+      />
       <FlatList
-        data={preperTempData()}
+        data={foundPosts()}
         style={styles.scrollContainer}
         keyExtractor={(item, index) => index}
         renderItem={(item, index) => {
@@ -78,6 +62,7 @@ export default function PostsPage({ navigation }) {
                 setIsCommentOpen(true);
                 console.log("Comment Pressed: " + clickedPost.commentsId);
               }}
+              isFound
             />
           );
         }}
@@ -100,7 +85,7 @@ const commentsStyles = StyleSheet.create({
     flex: 1,
     paddingBottom: 10,
     paddingTop: 17,
-    backgroundColor: themeColor === "light" ? "#CCCCCC" : "#B1B1B1",
+    backgroundColor: "#F0F2F5",
   },
 
   commentsContainer: {
@@ -117,10 +102,12 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingBottom: 10,
     paddingTop: 5,
-    backgroundColor: "red",
+    backgroundColor: "#CCCCCC",
   },
 
   scrollContainer: {
     flex: 1,
   },
 });
+
+export default FoundPage;

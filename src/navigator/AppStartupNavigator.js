@@ -2,8 +2,10 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import LoginPage from "../screens/LoginPage";
 import SignUpPage from "../screens/SignUpPage";
-import SignUpConfirmation from "../screens/SignUpConfirmation"
-import AppBottomTabNavigator from "./AppBottomTabNavigator"
+import SignUpConfirmation from "../screens/SignUpConfirmation";
+import AppBottomTabNavigator from "./AppBottomTabNavigator";
+import ChangePasswordPage from "../screens/ChangePasswordPage";
+import AppDrawerNavigator from "./AppDrawerNavigator";
 
 const Stack = createStackNavigator();
 
@@ -25,9 +27,16 @@ export default function AppStartupNavigator({ navigation, route }) {
       barStyle={{ backgroundColor: "black" }} //This is where you can manipulate its look.
     >
       <Stack.Screen name="LoginPage" component={LoginPage} />
-      <Stack.Screen name="SignUpPage" component={SignUpPage} />
+      <Stack.Screen
+        name="SignUpPage"
+        component={SignUpPage}
+        initialParams={{
+          user: null,
+        }}
+      />
       <Stack.Screen name="SignUpConfirmation" component={SignUpConfirmation} />
-      <Stack.Screen name="Home" component={AppBottomTabNavigator} />
+      <Stack.Screen name="ChangePasswordPage" component={ChangePasswordPage} />
+      <Stack.Screen name="Home" component={AppDrawerNavigator} />
     </Stack.Navigator>
   );
 }

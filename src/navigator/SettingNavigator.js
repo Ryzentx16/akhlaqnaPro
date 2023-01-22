@@ -4,13 +4,17 @@ import { createStackNavigator } from "@react-navigation/stack";
 import PostsPage from "../screens/post/PostsPage";
 import CommentPage from "../screens/comment/tempcommentwithbottomsheet";
 
-import PersonProfile from "../screens/Profiles/PersonProfile";
-import ProfileNavigator from "./ProfileNavigator";
 import AppHeader from "../components/AppHeader";
+
+import SettingPage from "../screens/settings/SettingPage";
+import AccountPage from "../screens/settings/AccountPage";
+import LanguagePage from "..//screens/settings/LanguagePage";
+import ChatsSettingPage from "../screens/settings/ChatsSettingPage";
+import AppStartupNavigator from "./AppStartupNavigator";
 
 const Stack = createStackNavigator();
 
-export default function PostNavigator({ navigation, route }) {
+export default function SettingNavigator({ navigation, route }) {
   React.useLayoutEffect(() => {
     const tabHiddenRoutes = ["CommentPage"];
 
@@ -23,6 +27,7 @@ export default function PostNavigator({ navigation, route }) {
 
   return (
     <Stack.Navigator
+      initialRouteName="Settings"
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: "red",
@@ -37,23 +42,11 @@ export default function PostNavigator({ navigation, route }) {
       tabbarop
       barStyle={{ backgroundColor: "black" }} //This is where you can manipulate its look.
     >
-      <Stack.Screen name="PostsPage" component={PostsPage} />
-      <Stack.Screen
-        name="PersonProfile"
-        component={ProfileNavigator}
-        options={{
-          headerShown: false,
-          title: "",
-          headerBlurEffect: true,
-          headerTitleAlign: "center",
-          presentation: "Modal",
-        }}
-      />
-      <Stack.Screen
-        name="CommentPage"
-        component={CommentPage}
-        options={{ headerShown: false }}
-      />
+      <Stack.Screen name="Settings" component={SettingPage} />
+      <Stack.Screen name="AccountPage" component={AccountPage} />
+      <Stack.Screen name="LanguagePage" component={LanguagePage} />
+      <Stack.Screen name="ChatsSettingPage" component={ChatsSettingPage} />
+      <Stack.Screen name="AppStartupNavigator" component={AppStartupNavigator} />
     </Stack.Navigator>
   );
 }

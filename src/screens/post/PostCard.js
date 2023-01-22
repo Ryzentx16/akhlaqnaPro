@@ -1,11 +1,27 @@
-import React, { useState } from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View, I18nManager } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  I18nManager,
+} from "react-native";
 import UserAvatar from "@muhzi/react-native-user-avatar";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import {
+  Ionicons,
+  AntDesign,
+  MaterialCommunityIcons,
+} from "react-native-vector-icons";
 import SeeMoreText from "../../components/SeeMoreText";
 import Helper from "../../shared/helpers";
+
+import themes from "../../ThemeController";
+
+let textColor = themes._currTextTheme;
+let backColor = themes._currBackColorTheme;
+let timeColor = themes._currTimeTheme;
 const isRTL = I18nManager.isRTL;
 
 function ActionButton(props) {
@@ -13,19 +29,19 @@ function ActionButton(props) {
 
   switch (props.type) {
     case "share":
-      CurrentIcon = <FontAwesome5 size={30} name={"share"} color={"#660032"} />;
+      CurrentIcon = <FontAwesome5 size={30} name={"share"} color={textColor} />;
       break;
     case "not-liked":
       CurrentIcon = (
-        <Ionicons size={30} name={"heart-outline"} color={"#660032"} />
+        <Ionicons size={30} name={"heart-outline"} color={textColor} />
       );
       break;
     case "liked":
-      CurrentIcon = <Ionicons size={30} name={"heart"} color={"#660032"} />;
+      CurrentIcon = <Ionicons size={30} name={"heart"} color={textColor} />;
       break;
     case "comment":
       CurrentIcon = (
-        <Ionicons size={30} name={"chatbubbles-outline"} color={"#660032"} />
+        <Ionicons size={30} name={"chatbubbles-outline"} color={textColor} />
       );
       break;
   }
@@ -39,8 +55,7 @@ function ActionButton(props) {
 }
 
 export default function PostCard(props) {
-  let { post, navigation, onPressComment } = props;
-
+  let { post, navigation, onPressComment, isLostOrFound } = props;
   const [numOfLikes, setNumOfLikes] = useState(post.numberOfLikes); //To show ur remaining Text
   const [isLiked, setIsLiked] = useState(false);
   const onMakeLike = () => {
@@ -60,24 +75,45 @@ export default function PostCard(props) {
     imageHeight = Image.resolveAssetSource(post.image).height;
   }
 
+
+  useEffect(() => {
+    textColor = themes._currTextTheme;
+    backColor = themes._currBackColorTheme;
+  });
+
   return (
     <View style={styles.container}>
       <View style={headerStyles.container}>
-        <TouchableOpacity style={headerStyles.avatarContainer} onPress={() => navigation.navigate("PersonProfile", { user: post.user })}>
+        <TouchableOpacity
+          style={headerStyles.avatarContainer}
+          onPress={() =>
+            navigation.navigate("PersonProfile", { user: post.user })
+          }
+        >
           <UserAvatar size={35} src={post.user.profileImage} fontSize={15} />
         </TouchableOpacity>
         <View style={headerStyles.headerDetailsContainer}>
           <Text style={headerStyles.userName}>{post.user.name}</Text>
 
-          <Text style={headerStyles.postTime}>{postDuration + " (Al Rayaan)"}</Text>
+          <Text style={headerStyles.postTime}>
+            {postDuration + " (Al Rayaan)"}
+          </Text>
         </View>
-        <TouchableOpacity style={headerStyles.headerDotsContainer}>
+        <View style={headerStyles.headerIconContainer}>
+          {props.hasOwnProperty("isFound") ? (
+            <Ionicons name="checkmark-circle" size={25} color={textColor} />
+          ) : null}
+          {props.hasOwnProperty("isLost") ? (
+            <AntDesign name="questioncircle" size={25} color={textColor} />
+          ) : null}
+        </View>
+        {/* <TouchableOpacity style={headerStyles.headerDotsContainer}>
           <MaterialCommunityIcons
             name={"dots-vertical"}
-            color={"#660032"}
+            color={textColor}
             size={25}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       <View style={styles.detailsContainer}>
@@ -105,10 +141,14 @@ export default function PostCard(props) {
           details={numOfLikes}
           onPress={onMakeLike}
         />
-        <ActionButton type={"comment"} details={post.numberOfComments} onPress={() => {
-          onPressComment(post);
-          console.log("Action Pressed");
-        }} />
+        <ActionButton
+          type={"comment"}
+          details={post.numberOfComments}
+          onPress={() => {
+            onPressComment(post);
+            console.log("Action Pressed");
+          }}
+        />
         <ActionButton type={"share"} details={post.numberOfShares} />
       </View>
     </View>
@@ -120,7 +160,7 @@ const headerStyles = StyleSheet.create({
     flex: 1,
     minHeight: 40,
     maxHeight: 40,
-    flexDirection: 'row',
+    flexDirection: "row",
     justifyContent: "space-between",
     marginHorizontal: 10,
     marginBottom: 10,
@@ -136,7 +176,7 @@ const headerStyles = StyleSheet.create({
   headerDetailsContainer: {
     flex: 1,
     justifyContent: "center",
-    alignItems: 'flex-start', //for RTL
+    alignItems: "flex-start", //for RTL
     paddingLeft: 5,
   },
 
@@ -145,14 +185,21 @@ const headerStyles = StyleSheet.create({
     maxWidth: 20,
   },
 
+  headerIconContainer: {
+    flex: 1,
+    maxWidth: 25,
+    // backgroundColor: 'red',
+    marginEnd: 10,
+  },
+
   userName: {
     fontSize: 12,
     fontWeight: "bold",
-    color: "#660032",
+    color: textColor,
   },
   postTime: {
     fontSize: 9,
-    color: "#65676b",
+    color: timeColor,
   },
 });
 
@@ -166,7 +213,7 @@ const actionBtnStyles = StyleSheet.create({
 
   actionText: {
     fontSize: 12,
-    color: "#660032",
+    color: textColor,
     marginLeft: 10,
   },
 });
@@ -174,7 +221,7 @@ const actionBtnStyles = StyleSheet.create({
 const styles = StyleSheet.create({
   container: {
     flexShrink: 1,
-    backgroundColor: "white",
+    backgroundColor: backColor,
     marginBottom: 17,
     paddingVertical: 10,
   },
@@ -212,7 +259,7 @@ const styles = StyleSheet.create({
 
   detailsText: {
     fontSize: 13,
-    color: "#660032",
+    color: textColor,
     lineHeight: 18,
   },
 });

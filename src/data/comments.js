@@ -78,13 +78,13 @@ const comments =
                         {
                             id: "r1",
                             user: users[0],
-                            createdAt: '2023:01:02 12:30:00',
+                            createdAt: '2023/01/07 12:32:00',
                             content: 'Unfortunately, it still hasn\'t been found. But I appreciate the support.',
                         },
                         {
                             id: "r2",
                             user: users[1],
-                            createdAt: '2023:01:02 12:30:00',
+                            createdAt: '2023/01/07 12:35:00',
                             content: 'Thank you, I hope so too!',
                         },
                     ],
@@ -102,7 +102,7 @@ const comments =
             comments: []
         },
         {
-            postId: 'p2',
+            postId: 'p3',
             comments: [
                 {
                     id: "c1",
@@ -125,15 +125,21 @@ const comments =
                         {
                             id: "r1",
                             user: users[0],
-                            createdAt: '2023:01:02 12:30:00',
+                            createdAt: '2023/01/02 12:30:00',
                             content: 'Unfortunately, it still hasn\'t been found. But I appreciate the support.',
                         },
                         {
                             id: "r2",
                             user: users[1],
-                            createdAt: '2023:01:02 12:30:00',
+                            createdAt: '2023/01/02 12:30:00',
                             content: 'Thank you, I hope so too!',
                         },
+                        {
+                            id: "r3",
+                            user: users[2],
+                            createdAt: '2023/01/02 12:30:00',
+                            content: 'Thank you, I hope so too!',
+                        }
                     ],
                 },
                 {
@@ -145,7 +151,7 @@ const comments =
             ]
         },
         {
-            postId: 'p3',
+            postId: 'p4',
             comments: [
                 {
                     id: "c1",

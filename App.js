@@ -1,96 +1,109 @@
-import "react-native-gesture-handler";
-import { NavigationContainer } from "@react-navigation/native";
-import { StatusBar } from "expo-status-bar";
-import { SafeAreaView, StyleSheet, Text, View, I18nManager } from "react-native";
-import AppStartupNavigator from "./src/navigator/AppStartupNavigator";
-// import i18next from "./src/languages/i18n";
+// import "react-native-gesture-handler";
+// import { NavigationContainer } from "@react-navigation/native";
+// import { StatusBar } from "expo-status-bar";
+// import { SafeAreaView, StyleSheet, Text, View, I18nManager } from "react-native";
+// import AppStartupNavigator from "./src/navigator/AppStartupNavigator";
+// // import i18next from "./src/languages/i18n";
 
-export default function App() {
-  return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar barStyle="light-content" />
-      <NavigationContainer style={styles.container}>
-        <AppStartupNavigator />
-      </NavigationContainer>
-    </SafeAreaView>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
-
-// import React, { useCallback, useMemo, useRef, useState } from "react";
-// import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-// import BottomSheet, { BottomSheetModal,BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-// import { GestureHandlerRootView } from "react-native-gesture-handler";
-
-// const App = () => {
-//   const bottomSheetRef = useRef(null);
-
-//   const snapPoints = useMemo(() => ["95"], []);
-
-//   const handleSheetChanges = useCallback((index) => {
-//     console.log("handleSheetChanges", index);
-//   }, []);
-
-//   const handlePresentModalPress = useCallback(() => {
-//     bottomSheetRef.current?.present();
-//   }, []);
-
+// export default function App() {
 //   return (
-//     <GestureHandlerRootView style={styles.container}>
-//       <BottomSheetModalProvider>
-//         <Text>hakljasdf</Text>
-//         <TouchableOpacity
-//           style={styles.button}
-//           onPress={handlePresentModalPress}
-//         >
-//           <Text style={{ color: "#0080FB", fontSize: 16, fontWeight: "600" }}>
-//             GET
-//           </Text>
-//         </TouchableOpacity>
-
-//         <BottomSheetModal
-//           ref={bottomSheetRef}
-//           index={0}
-//           snapPoints={snapPoints}
-//           onChange={handleSheetChanges}
-//         >
-//           <View style={styles.contentContainer}>
-//             <Text>Awesome 🎉</Text>
-//           </View>
-//         </BottomSheetModal>
-//       </BottomSheetModalProvider>
-//     </GestureHandlerRootView>
+//     <SafeAreaView style={{ flex: 1 }}>
+//       <StatusBar barStyle="light-content" />
+//       <NavigationContainer style={styles.container}>
+//         <AppStartupNavigator />
+//       </NavigationContainer>
+//     </SafeAreaView>
 //   );
-// };
+// }
 
 // const styles = StyleSheet.create({
 //   container: {
 //     flex: 1,
-//     padding: 24,
-//     backgroundColor: "grey",
-//   },
-//   contentContainer: {
-//     flex: 1,
-//     alignItems: "center",
-//   },
-//   button: {
-//     marginTop: 20,
-//     backgroundColor: "#f4f4f4",
-//     width: 80,
-//     height: 30,
+//     backgroundColor: "#fff",
 //     alignItems: "center",
 //     justifyContent: "center",
-//     alignSelf: "center",
-//     borderRadius: 15,
 //   },
-// });
+// });.
 
-// export default App;
+import React, { useState, useEffect } from "react";
+import { Button, Image, View, Platform } from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import axios from "axios";
+
+export default function App() {
+  const [image, setImage] = useState(null);
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
+  const takeImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchCameraAsync({
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
+  const sendbackEndo = () => {
+    let data = new FormData();
+    data.append("userId", "tamborea");
+    data.append("content", "aslkdjfkljasdjfklk;jadsjflja;ldjflk;jadlkjf");
+    data.append("createdDateTime", new Date().toUTCString());
+
+    if (image) {
+      data.append("image", {
+        uri: image,
+        name: "profileExample.png",
+        type: "image/png",
+      });
+    }
+
+    axios
+      .post("http://2c0f-156-192-171-226.eu.ngrok.io/addPost", data, {
+        //config
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => {
+        if (res) {
+          console.log("a7awy");
+        } else {
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        alert(err);
+      });
+  };
+
+  return (
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Button title="Pick an image from camera roll" onPress={pickImage} />
+      <Button title="take an image from camera roll" onPress={takeImage} />
+      {image && (
+        <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+      )}
+      <Button title="send back endo" onPress={sendbackEndo} />
+    </View>
+  );
+}

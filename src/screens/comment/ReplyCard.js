@@ -1,16 +1,9 @@
 import React, {useEffect} from "react";
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import UserAvatar from "@muhzi/react-native-user-avatar";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import SeeMoreText from "../../components/SeeMoreText";
 import Helper from "../../shared/helpers";
-import ReplyCard from "./ReplyCard";
 
 import themes from "../../ThemeController";
 
@@ -18,13 +11,9 @@ let textColor = themes._currTextTheme;
 let backColor = themes._currBackColorTheme;
 let themeColor = themes._currTheme;
 
-export default function CommentCard(props) {
-  const { comment } = props;
-  // const replies = [];
-  // const isCommentReply = false;
-  var postDuration = Helper.getPostDuration(comment.createdAt);
-
-  const isReply = comment.hasOwnProperty("replies");
+export default function ReplyCard(props) {
+  const { reply } = props;
+  var postDuration = Helper.getPostDuration(reply.createdAt);
 
   useEffect(() => {
     textColor = themes._currTextTheme;
@@ -33,44 +22,24 @@ export default function CommentCard(props) {
   });
 
   return (
-    <>
-      <View style={styles.container}>
-        <View style={styles.avatarContainer}>
-          <UserAvatar size={35} src={comment.user.profileImage} fontSize={15} />
+    <View style={styles.container}>
+      <View style={styles.avatarContainer}>
+        <UserAvatar size={35} src={reply.user.profileImage} fontSize={15} />
+      </View>
+      <View style={detailsStyles.container}>
+        <View style={detailsStyles.headerContainer}>
+          <Text style={detailsStyles.userName}>{reply.user.name}</Text>
+          <Text style={detailsStyles.postTime}>{postDuration}</Text>
         </View>
-        <View style={detailsStyles.container}>
-          <View style={detailsStyles.headerContainer}>
-            <Text style={detailsStyles.userName}>{comment.user.name}</Text>
-            <Text style={detailsStyles.postTime}>{postDuration}</Text>
-          </View>
-          <View style={detailsStyles.commentDetailsContainer}>
-            <SeeMoreText
-              textStyle={detailsStyles.detailsText}
-              text={comment.content}
-              numberOfLines={6}
-            />
-          </View>
-          <View style={detailsStyles.actionContainer}>
-            <TouchableOpacity style={detailsStyles.replybutton}>
-              <MaterialCommunityIcons
-                name={"reply"}
-                color={themeColor === 'light' ? "#65676b" : '#FFFFFF'}
-                size={20}
-              />
-              <Text style={detailsStyles.replybuttonText}>Reply</Text>
-            </TouchableOpacity>
-          </View>
+        <View style={detailsStyles.commentDetailsContainer}>
+          <SeeMoreText
+            textStyle={detailsStyles.detailsText}
+            text={reply.content}
+            numberOfLines={6}
+          />
         </View>
       </View>
-      <FlatList
-        data={comment.replies}
-        keyExtractor={(item, index) => index}
-        renderItem={(item, index) => {
-          console.log(item.item);
-          return <ReplyCard reply={item.item} />;
-        }}
-      />
-    </>
+    </View>
   );
 }
 
@@ -105,7 +74,7 @@ const detailsStyles = StyleSheet.create({
   userName: {
     fontSize: 12,
     fontWeight: "bold",
-    color: textColor,
+    color: "#660032",
     marginRight: 5,
   },
 
@@ -140,7 +109,7 @@ const styles = StyleSheet.create({
     marginBottom: 17,
     paddingLeft: 10,
     // backgroundColor:'red',
-    // marginLeft: is Reply ? ,
+    marginLeft: 60 ,
   },
 
   avatarContainer: {
