@@ -90,7 +90,7 @@ export default function App() {
       })
       .then((res) => {
         if (res) {
-          console.log("a7awy");
+          console.log("donawy");
         } else {
         }
       })
