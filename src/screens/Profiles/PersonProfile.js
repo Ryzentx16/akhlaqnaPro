@@ -53,7 +53,7 @@ export default function PersonProfile({ navigation, route }) {
         {
           text: currLang.languagepage.applychangealert.buttons.yessingout,
           onPress: () => {
-            navigation.replace("Sign Out", {
+            navigation.replace("AppStartupNavigator", {
               screen: "SignUpPage",
               params: {
                 user: users[0],
