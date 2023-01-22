@@ -23,7 +23,11 @@
 //     alignItems: "center",
 //     justifyContent: "center",
 //   },
-// });.
+// });.     
+
+
+
+
 
 import React, { useState, useEffect } from "react";
 import { Button, Image, View, Platform } from "react-native";
