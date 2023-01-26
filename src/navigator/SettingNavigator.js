@@ -46,7 +46,7 @@ export default function SettingNavigator({ navigation, route }) {
       <Stack.Screen name="AccountPage" component={AccountPage} />
       <Stack.Screen name="LanguagePage" component={LanguagePage} />
       <Stack.Screen name="ChatsSettingPage" component={ChatsSettingPage} />
-      <Stack.Screen name="AppStartupNavigator" component={AppStartupNavigator} />
+      {/* <Stack.Screen name="AppStartupNavigator" component={AppStartupNavigator} /> */}
     </Stack.Navigator>
   );
 }

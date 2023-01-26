@@ -59,27 +59,27 @@ export default function LoginPage({ navigation }) {
   const [password, setPassword] = useState("12345");
 
   const checkLogin = () => {
-    // navigation.navigate("Home");
-    const axios = require("axios").default;
-    axios
-      .get(
-        "http://ryzentx.online/?phoneNumber=" +
-          formattedValue +
-          "&password=" +
-          password
-      )
-      .then(function (response) {
-        if (response.data === 1) {
-          // redirect to Dashboard
-          navigation.navigate("Home");
-        } else {
-          // alert something is wrong
-          Alert.alert("Error", "Username/Password Wrong");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    navigation.navigate("Home");
+    // const axios = require("axios").default;
+    // axios
+    //   .get(
+    //     "http://ryzentx.online/?phoneNumber=" +
+    //       formattedValue +
+    //       "&password=" +
+    //       password
+    //   )
+    //   .then(function (response) {
+    //     if (response.data === 1) {
+    //       // redirect to Dashboard
+    //       navigation.navigate("Home");
+    //     } else {
+    //       // alert something is wrong
+    //       Alert.alert("Error", "Username/Password Wrong");
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //   });
   };
 
 
@@ -125,7 +125,6 @@ export default function LoginPage({ navigation }) {
                   color={"#660032"}
                 />
               </View>
-              {/* <View style={{justifyContent: 'center'}}> */}
               <PhoneInput
                 ref={phoneInput}
                 defaultValue={phoneNumber}
@@ -354,7 +353,7 @@ const styles = StyleSheet.create({
     borderColor: "#660032",
     borderWidth: 2,
     borderRadius: 30,
-    marginTop: 100,
+    marginTop: '28%',
   },
   textSignup: {
     fontSize: 18,

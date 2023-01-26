@@ -36,14 +36,14 @@ export default function SignUpConfirmation({ navigation, route }) {
 
   const checkOTP = () => {
     navigation.navigate("Home");
-    CheckOTP(
-      {
-        otp: OTP,
-        phoneNumber: route.params?.phoneNumber,
-      },
-      () => navigation.navigate("Home")
-    );
-    return;
+    // CheckOTP(
+    //   {
+    //     otp: OTP,
+    //     phoneNumber: route.params?.phoneNumber,
+    //   },
+    //   () => navigation.navigate("Home")
+    // );
+    // return;
   };
   const onResend = () => {
     //fake OTP generator:

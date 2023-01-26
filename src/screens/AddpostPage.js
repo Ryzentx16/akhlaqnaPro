@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  I18nManager,
   StyleSheet,
   Text,
   TextInput,
@@ -16,7 +17,7 @@ import users from "../data/users";
 import Adding from "../../API/Adding";
 import languages from "../strings/LanguagesController";
 
-// const currLang = languages.currLang();
+const isRTL = I18nManager.isRTL;
 
 const AddPostPage = ({ navigation }) => {
   const user = users[0];
@@ -146,9 +147,10 @@ const styles = StyleSheet.create({
   },
 
   contentInput: {
-    height: "100%",
+    // height: "100%",
     fontSize: 16,
     textAlignVertical: "top",
+    textAlign: 'auto',
   },
 
   actionsContainer: {

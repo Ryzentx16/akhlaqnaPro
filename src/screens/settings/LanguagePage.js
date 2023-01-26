@@ -97,8 +97,9 @@ export default function AccountPage({ navigation }) {
               thumbColor={textColor}
               style={{
                 alignSelf: "flex-start",
-                transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }, { rotateY: "180deg" }],
+                transform: [ { rotateY: "180deg" }],
               }}
+              
               value={switchValue}
               onValueChange={(value) => {
                 setSwitchChanged(true);

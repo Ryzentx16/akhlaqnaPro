@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, Alert } from "react-native";
 import { MaterialCommunityIcons } from "react-native-vector-icons";
 import AppHeader from "../../components/AppHeader";
@@ -13,6 +13,7 @@ let backColor = themes._currBackColorTheme;
 export default function AccountPage({ navigation }) {
   const onChangePass = () => {
     console.warn(users[0].phoneNumber);
+
     Alert.alert(
       "Warning",
       "In order to Change The password you need to sign out",
@@ -20,10 +21,27 @@ export default function AccountPage({ navigation }) {
         {
           text: "Yes, Sign Out",
           onPress: () =>
-            navigation.navigate("AppStartupNavigator", {
-              screen: "ChangePasswordPage",
-              params: {phoneNumber: users[0].phoneNumber},
-            }),
+            navigation.dispatch(
+              // navigation.replace("AppStartupNavigator", {
+              //   screen: "SignUpConfirmation",
+              //   params: {
+              //     isChangePass: true,
+              //     phoneNumber: users[0].phoneNumber,
+              //   },
+              // })
+              navigation.reset({
+                index: 1,
+                routes: [
+                  {
+                    name: "SignUpConfirmation",
+                    params: {
+                      isChangePass: true,
+                      phoneNumber: users[0].phoneNumber,
+                    },
+                  },
+                ],
+              })
+            ),
         },
         {
           text: "Cancel",
@@ -49,7 +67,9 @@ export default function AccountPage({ navigation }) {
             size={80}
             color={textColor}
           />
-          <Text style={{ fontSize: 36, color: textColor }}>{currLang.settingPage.account}</Text>
+          <Text style={{ fontSize: 36, color: textColor }}>
+            {currLang.settingPage.account}
+          </Text>
         </View>
         <View style={{ flex: 2 }}>
           <View
@@ -71,7 +91,9 @@ export default function AccountPage({ navigation }) {
                 />
               </View>
               <View style={{ flex: 5 }}>
-                <Text style={{ fontSize: 20, color: textColor, textAlign: 'left' }}>
+                <Text
+                  style={{ fontSize: 20, color: textColor, textAlign: "left" }}
+                >
                   {currLang.accountPage.delete}
                 </Text>
               </View>
@@ -94,7 +116,9 @@ export default function AccountPage({ navigation }) {
                 />
               </View>
               <TouchableOpacity style={{ flex: 5 }} onPress={onChangePass}>
-                <Text style={{ fontSize: 20, color: textColor, textAlign: 'left'}}>
+                <Text
+                  style={{ fontSize: 20, color: textColor, textAlign: "left" }}
+                >
                   {currLang.accountPage.changepassword}
                 </Text>
               </TouchableOpacity>

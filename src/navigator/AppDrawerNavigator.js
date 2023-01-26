@@ -1,7 +1,12 @@
 import { useEffect } from "react";
 import { BackHandler, Alert, I18nManager } from "react-native";
 
-import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
+import {
+  createDrawerNavigator,
+  DrawerItem,
+  DrawerContentScrollView,
+  DrawerItemList,
+} from "@react-navigation/drawer";
 
 import AppHeader from "../components/AppHeader.js";
 import PersonProfile from "../screens/Profiles/PersonProfile.js";
@@ -18,8 +23,23 @@ import ProfileNavigator from "./ProfileNavigator.js";
 
 const Drawer = createDrawerNavigator();
 const isRTL = I18nManager.isRTL;
+let currLang = languages.currLang();
 
-// const currLang = languages.currLang();
+function CustomDrawerContent(props) {
+  const { navigation } = props;
+
+  return (
+    <DrawerContentScrollView {...props}>
+      <DrawerItemList {...props} />
+      <DrawerItem
+        label={currLang.drawer.singout}
+        onPress={() => navigation.popToTop()}
+        labelStyle={{ textAlign: isRTL ? "right" : "left" }}
+        style={isRTL ? {left: 0} : {right: 0}}
+      />
+    </DrawerContentScrollView>
+  );
+}
 
 export default function AppDrawerNavigator() {
   useEffect(() => {
@@ -36,7 +56,6 @@ export default function AppDrawerNavigator() {
     return () => backHandler.remove();
   }, []);
 
-  let currLang = languages.currLang();
   useEffect(() => {
     currLang = languages.currLang();
   });
@@ -44,6 +63,7 @@ export default function AppDrawerNavigator() {
   return (
     <Drawer.Navigator
       initialRouteName="Pages"
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
         headerShown: false,
         drawerType: "front",
@@ -82,7 +102,7 @@ export default function AppDrawerNavigator() {
         name="MyProfile"
         component={ProfileNavigator}
         initialParams={{ user: users[0], isDrawer: true }}
-        options={{ title: "My Profile", drawerItemStyle: { display: "none" } }}
+        options={{ title: "My Profile", drawerItemStyle: { display: "none" }, swipeEnabled: false }}
       />
 
       <Drawer.Screen
@@ -109,12 +129,7 @@ export default function AppDrawerNavigator() {
         component={SettingNavigator}
         options={{ title: currLang.drawer.settings }}
       />
-
-      <Drawer.Screen
-        name="Sign Out"
-        component={AppStartupNavigator}
-        options={{ title: currLang.drawer.singout }}
-      />
+      
     </Drawer.Navigator>
   );
 }

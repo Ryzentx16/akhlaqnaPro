@@ -1,15 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Alert } from "react-native";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import PersonProfile from "../screens/Profiles/PersonProfile";
 import SignUpPage from "../screens/SignUpPage";
 import AppStartupNavigator from "./AppStartupNavigator";
+import { BackHandler } from "react-native";
 
 const Stack = createStackNavigator();
 
 export default function ProfileNavigator({ navigation, route }) {
-  // console.warn(route);
+  useEffect(() => {
+    const backAction = () => {
+      return false;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   return (
     <Stack.Navigator
@@ -38,15 +50,15 @@ export default function ProfileNavigator({ navigation, route }) {
           headerTitleAlign: "center",
         }}
       />
-      
-      <Stack.Screen
+
+      {/* <Stack.Screen
         name="AppStartupNavigator"
         component={AppStartupNavigator}
         options={{
           headerShown: false,
         }}
-      />
-
+      /> */}
+      
     </Stack.Navigator>
   );
 }

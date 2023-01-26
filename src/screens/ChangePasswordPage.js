@@ -17,33 +17,30 @@ const windowHeight = Dimensions.get("window").height;
 const isRTL = I18nManager.isRTL;
 
 export default function ChangePasswordPage({ navigation, route }) {
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const isValide = () => {
-    if (newPassword === '' || confirmPassword === '') {
-        return false;
+    if (newPassword === "" || confirmPassword === "") {
+      return false;
     } else if (newPassword === confirmPassword) {
-        return true;
+      return true;
     } else {
-        // console.warn("result: " + )
+      // console.warn("result: " + )
     }
 
     return null;
   };
 
   const onSubmit = () => {
-    setNewPassword('');
-    setConfirmPassword('');
+    setNewPassword("");
+    setConfirmPassword("");
     isValide()
-      ? navigation.replace('AppStartupNavigator')
+      ? navigation.dispatch(navigation.reset({
+        index: 0,
+        routes: [{ name: "LoginPage" }],
+      }))
       : Alert.alert("Error", "Password doesn't match or its an empty");
-  };
-
-  const onResend = () => {
-    //fake OTP generator:
-    otp = Math.floor(Math.random() * 1000000).toString();
-    Alert.alert("OTP number", otp);
   };
 
   return (
@@ -68,7 +65,9 @@ export default function ChangePasswordPage({ navigation, route }) {
             </View>
           </View>
           <View style={styles.textContainer}>
-            <Text style={styles.text}>Change Password for {route.params?.phoneNumber}</Text>
+            <Text style={styles.text}>
+              Change Password for {route.params?.phoneNumber}
+            </Text>
           </View>
         </View>
 
@@ -77,6 +76,7 @@ export default function ChangePasswordPage({ navigation, route }) {
             <TextInput
               placeholder={"New Password *"}
               placeholderTextColor={"#660032"}
+              value={newPassword}
               onChangeText={(text) => {
                 setNewPassword(text);
               }}
@@ -89,6 +89,7 @@ export default function ChangePasswordPage({ navigation, route }) {
             <TextInput
               placeholder={"Confirm Password *"}
               placeholderTextColor={"#660032"}
+              value={confirmPassword}
               onChangeText={(text) => {
                 setConfirmPassword(text);
               }}

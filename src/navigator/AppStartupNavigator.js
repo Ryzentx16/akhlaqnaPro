@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import LoginPage from "../screens/LoginPage";
 import SignUpPage from "../screens/SignUpPage";
@@ -6,10 +6,24 @@ import SignUpConfirmation from "../screens/SignUpConfirmation";
 import AppBottomTabNavigator from "./AppBottomTabNavigator";
 import ChangePasswordPage from "../screens/ChangePasswordPage";
 import AppDrawerNavigator from "./AppDrawerNavigator";
+import { BackHandler, Alert, I18nManager } from "react-native";
 
 const Stack = createStackNavigator();
 
 export default function AppStartupNavigator({ navigation, route }) {
+  useEffect(() => {
+    const backAction = () => {
+      return false;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
   return (
     <Stack.Navigator
       screenOptions={{

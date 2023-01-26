@@ -14,6 +14,7 @@ import {
   Alert,
 } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+// import { NavigationActions } from '@react-navigation';
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 import PhoneInput from "react-native-phone-number-input";
@@ -50,7 +51,10 @@ export default function SignUpPage({ navigation, route }) {
     isEditProfile ? ourUser.username : ""
   );
   const [lastName, setLastName] = useState(
-    isEditProfile ? ourUser.name.charAt(ourUser.name.length - 2) + ourUser.name.charAt(ourUser.name.length - 1) : ""
+    isEditProfile
+      ? ourUser.name.charAt(ourUser.name.length - 2) +
+          ourUser.name.charAt(ourUser.name.length - 1)
+      : ""
   );
   const [phoneNumber, setPhoneNumber] = useState(
     isEditProfile ? ourUser.phoneNumber : ""
@@ -76,7 +80,6 @@ export default function SignUpPage({ navigation, route }) {
     setShow(false);
     setDate(currentDate);
     setbirthday(currentDate);
-    // const test = new Date(date).getUTCDay();
   };
 
   const showMode = (currentMode) => {
@@ -129,21 +132,24 @@ export default function SignUpPage({ navigation, route }) {
         );
         return;
       }
-  
+
       var data = {
         firstName: firstName,
         lastName: lastName,
         phoneNumber: phoneNumber,
         password: confirmPassword,
       };
-  
+
       Adding("addUser", data, () => {
         navigation.navigate("SignUpConfirmation", {
           phoneNumber: data.phoneNumber,
         });
       });
-    }else{
-      Alert.alert(currLang.signupPage.editalert.title, currLang.signupPage.editalert.content)
+    } else {
+      Alert.alert(
+        currLang.signupPage.editalert.title,
+        currLang.signupPage.editalert.content
+      );
       navigation.popToTop();
     }
   };
@@ -174,7 +180,11 @@ export default function SignUpPage({ navigation, route }) {
         </View>
 
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>{isEditProfile ? currLang.signupPage.editprofile : currLang.signupPage.title}</Text>
+          <Text style={styles.title}>
+            {isEditProfile
+              ? currLang.signupPage.editprofile
+              : currLang.signupPage.title}
+          </Text>
         </View>
 
         <View style={styles.inputsContainer}>
@@ -244,11 +254,12 @@ export default function SignUpPage({ navigation, route }) {
                 <TextInput
                   placeholder={"DD/MM/YYYY *"}
                   placeholderTextColor={"rgba(102,0,50,0.75)"}
-                  value={birthday.toLocaleDateString()}
-                  onChange={(text) => {
-                    setbirthday(text);
-                  }}
+                  value={birthday.toLocaleDateString("en-US")}
+                  // onEndEditing={(text) => {
+                  //   setbirthday(text);
+                  // }}
                   style={{ textAlign: isRTL ? "right" : "left" }}
+                  readOnly={true}
                 />
               </View>
               <View style={styles.birthdayIcon}>
@@ -263,6 +274,8 @@ export default function SignUpPage({ navigation, route }) {
                     value={date}
                     mode={mode}
                     onChange={onChange}
+                    minimumDate={new Date(1943, 5, 3)}
+                    maximumDate={new Date()}
                   />
                 )}
               </View>

@@ -54,7 +54,7 @@ export default function InputBox(props) {
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={"height"}
       keyboardVerticalOffset={100}
       style={[styles.container, { width: "100%" }]}
     >

@@ -29,6 +29,7 @@ export default function PersonProfile({ navigation, route }) {
 
   const ourUser = route.params?.user;
   const isDrawer = route.params?.isDrawer;
+
   const isUserMe = ourUser.id === "u1" ? true : false;
   let x = [];
 
@@ -53,12 +54,14 @@ export default function PersonProfile({ navigation, route }) {
         {
           text: currLang.languagepage.applychangealert.buttons.yessingout,
           onPress: () => {
-            navigation.replace("AppStartupNavigator", {
-              screen: "SignUpPage",
-              params: {
-                user: users[0],
-              },
-            });
+            navigation.dispatch(
+              // navigation.reset({
+              //   index: 0,
+              //   routes: [],
+              //   actions: [],
+              // })
+              navigation.navigate({ name: "SignUpPage", params: {user: users[0]} })
+            );
           },
         },
         {
