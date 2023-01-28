@@ -28,6 +28,12 @@ const en = {
     changemyphone: "Change my phone number",
     submit: "Submit",
   },
+  changepasswordpage: {
+    changepasswordfor: "Change Password for",
+    createnewpassword: "Create New Password",
+    confirmpassword: "Confirm Password",
+    submit: 'Submit'
+  },
   searchPage: {
     history: "History",
     suggestedforyou: "Suggested for you",

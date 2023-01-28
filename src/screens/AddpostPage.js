@@ -13,7 +13,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Entypo from "react-native-vector-icons/Entypo";
 
 import users from "../data/users";
-// import AddPost from "../../API/AddPost";
+
 import Adding from "../../API/Adding";
 import languages from "../strings/LanguagesController";
 

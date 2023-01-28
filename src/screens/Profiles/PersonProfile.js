@@ -18,7 +18,7 @@ import languages from "../../strings/LanguagesController";
 import AppHeader from "../../components/AppHeader";
 import users from "../../data/users";
 
-// import comments from "../../data/comments";
+import { useNavigation } from '@react-navigation/native';
 import CommentPage from "../comment/CommentPage";
 
 const isRTL = I18nManager.isRTL;
@@ -29,6 +29,7 @@ export default function PersonProfile({ navigation, route }) {
 
   const ourUser = route.params?.user;
   const isDrawer = route.params?.isDrawer;
+  const globleNavigation = useNavigation();
 
   const isUserMe = ourUser.id === "u1" ? true : false;
   let x = [];
@@ -54,13 +55,12 @@ export default function PersonProfile({ navigation, route }) {
         {
           text: currLang.languagepage.applychangealert.buttons.yessingout,
           onPress: () => {
-            navigation.dispatch(
-              // navigation.reset({
-              //   index: 0,
-              //   routes: [],
-              //   actions: [],
-              // })
-              navigation.navigate({ name: "SignUpPage", params: {user: users[0]} })
+            globleNavigation.dispatch(
+              globleNavigation.reset({
+                index: 0,
+                routes: [{ name: "SignUpPage", params: {user: users[0]} }],
+              })
+              // navigation.navigate({ name: "SignUpPage", params: {user: users[0]} })
             );
           },
         },

@@ -6,11 +6,15 @@ import users from "../../data/users";
 import languages from "../../strings/LanguagesController";
 import themes from "../../ThemeController";
 
+import { useNavigation } from '@react-navigation/native';
+
 const currLang = languages.currLang();
 let textColor = themes._currTextTheme;
 let backColor = themes._currBackColorTheme;
 
-export default function AccountPage({ navigation }) {
+export default function AccountPage() {
+  const navigation = useNavigation();
+
   const onChangePass = () => {
     console.warn(users[0].phoneNumber);
 

@@ -14,7 +14,12 @@ import AppStartupNavigator from "./AppStartupNavigator";
 
 const Stack = createStackNavigator();
 
-export default function SettingNavigator({ navigation, route }) {
+export default function SettingNavigator({
+  navigation,
+  route,
+  drawerNavigation,
+}) {
+  // console.warn(drawerNavigation);
   React.useLayoutEffect(() => {
     const tabHiddenRoutes = ["CommentPage"];
 
@@ -44,7 +49,11 @@ export default function SettingNavigator({ navigation, route }) {
     >
       <Stack.Screen name="Settings" component={SettingPage} />
       <Stack.Screen name="AccountPage" component={AccountPage} />
-      <Stack.Screen name="LanguagePage" component={LanguagePage} />
+      <Stack.Screen
+        name="LanguagePage"
+        component={LanguagePage}
+        initialParams={{ drawerNavigation: drawerNavigation }}
+      />
       <Stack.Screen name="ChatsSettingPage" component={ChatsSettingPage} />
       {/* <Stack.Screen name="AppStartupNavigator" component={AppStartupNavigator} /> */}
     </Stack.Navigator>

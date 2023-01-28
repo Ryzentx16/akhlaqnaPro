@@ -7,6 +7,7 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from "@react-navigation/drawer";
+// import { useNavigation } from '@react-navigation/native';
 
 import AppHeader from "../components/AppHeader.js";
 import PersonProfile from "../screens/Profiles/PersonProfile.js";
@@ -35,13 +36,13 @@ function CustomDrawerContent(props) {
         label={currLang.drawer.singout}
         onPress={() => navigation.popToTop()}
         labelStyle={{ textAlign: isRTL ? "right" : "left" }}
-        style={isRTL ? {left: 0} : {right: 0}}
+        style={isRTL ? { left: 0 } : { right: 0 }}
       />
     </DrawerContentScrollView>
   );
 }
 
-export default function AppDrawerNavigator() {
+export default function AppDrawerNavigator({ navigation }) {
   useEffect(() => {
     // console.log(logo);
     const backAction = () => {
@@ -55,7 +56,7 @@ export default function AppDrawerNavigator() {
 
     return () => backHandler.remove();
   }, []);
-
+  // console.warn(navigation);
   useEffect(() => {
     currLang = languages.currLang();
   });
@@ -101,8 +102,16 @@ export default function AppDrawerNavigator() {
       <Drawer.Screen
         name="MyProfile"
         component={ProfileNavigator}
-        initialParams={{ user: users[0], isDrawer: true }}
-        options={{ title: "My Profile", drawerItemStyle: { display: "none" }, swipeEnabled: false }}
+        initialParams={{
+          user: users[0],
+          isDrawer: true,
+          // drawerNavigation: navigation,
+        }}
+        options={{
+          title: "My Profile",
+          drawerItemStyle: { display: "none" },
+          swipeEnabled: false,
+        }}
       />
 
       <Drawer.Screen
@@ -127,9 +136,11 @@ export default function AppDrawerNavigator() {
       <Drawer.Screen
         name="SettingPage"
         component={SettingNavigator}
+        initialParams={{
+          drawerNavigation: navigation,
+        }}
         options={{ title: currLang.drawer.settings }}
       />
-      
     </Drawer.Navigator>
   );
 }

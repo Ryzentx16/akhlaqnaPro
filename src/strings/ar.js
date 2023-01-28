@@ -29,6 +29,12 @@ const ar = {
     changemyphone: "تغيير رقم الهاتف",
     submit: "المتابعة",
   },
+  changepasswordpage: {
+    changepasswordfor: "تغيير كلمة المرور ل",
+    createnewpassword: "ادخل كلمة مرور",
+    confirmpassword: "تأكيد كلمة المرور",
+    submit: 'المتابعة'
+  },
   searchPage: {
     history: "البحث السابق",
     suggestedforyou: "إقتراحات من اجلك",

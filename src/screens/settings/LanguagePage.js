@@ -5,12 +5,16 @@ import AppHeader from "../../components/AppHeader";
 import languages from "../../strings/LanguagesController";
 import themes from "../../ThemeController";
 
+import { useNavigation } from '@react-navigation/native';
+
 let textColor = themes._currTextTheme;
 let backColor = themes._currBackColorTheme;
 
-export default function AccountPage({ navigation }) {
+export default function LanguagePage() {
   const [switchValue, setSwitchValue] = useState(false);
   const [switchChanged, setSwitchChanged] = useState(false);
+
+  const navigation = useNavigation();
 
   const onApplyChange = () => {
     Alert.alert(
@@ -27,7 +31,7 @@ export default function AccountPage({ navigation }) {
               languages.currLang("En");
               console.warn("Changed to En");
             }
-            navigation.replace('AppStartupNavigator');
+            navigation.navigate("LoginPage");
           },
         },
         {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Image,
   ScrollView,
@@ -11,10 +11,13 @@ import {
   View,
   Alert,
 } from "react-native";
-import users from "../data/users";
+import users from "../../data/users";
+
+import languages from "../../strings/LanguagesController";
 
 const windowHeight = Dimensions.get("window").height;
 const isRTL = I18nManager.isRTL;
+const isEdit = false;
 
 export default function ChangePasswordPage({ navigation, route }) {
   const [newPassword, setNewPassword] = useState("");
@@ -36,12 +39,19 @@ export default function ChangePasswordPage({ navigation, route }) {
     setNewPassword("");
     setConfirmPassword("");
     isValide()
-      ? navigation.dispatch(navigation.reset({
-        index: 0,
-        routes: [{ name: "LoginPage" }],
-      }))
+      ? navigation.dispatch(
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "LoginPage" }],
+          })
+        )
       : Alert.alert("Error", "Password doesn't match or its an empty");
   };
+
+  let currLang = languages.currLang();
+  useEffect(() => {
+    currLang = languages.currLang();
+  });
 
   return (
     <View style={styles.background}>
@@ -59,14 +69,15 @@ export default function ChangePasswordPage({ navigation, route }) {
           <View style={styles.logoContainer}>
             <View style={styles.logo}>
               <Image
-                source={require("../../assets/Logo.png")}
+                source={require("../../../assets/Logo.png")}
                 style={styles.imageLogo}
               />
             </View>
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.text}>
-              Change Password for {route.params?.phoneNumber}
+              {currLang.changepasswordpage.changepasswordfor + '(' +
+                route.params?.phoneNumber + ')'}
             </Text>
           </View>
         </View>
@@ -74,7 +85,7 @@ export default function ChangePasswordPage({ navigation, route }) {
         <View style={styles.inputContainer}>
           <View style={styles.newPasswordInput}>
             <TextInput
-              placeholder={"New Password *"}
+              placeholder={currLang.changepasswordpage.createnewpassword + " *"}
               placeholderTextColor={"#660032"}
               value={newPassword}
               onChangeText={(text) => {
@@ -87,7 +98,7 @@ export default function ChangePasswordPage({ navigation, route }) {
           </View>
           <View style={styles.confirmPasswordInput}>
             <TextInput
-              placeholder={"Confirm Password *"}
+              placeholder={currLang.changepasswordpage.confirmpassword + " *"}
               placeholderTextColor={"#660032"}
               value={confirmPassword}
               onChangeText={(text) => {
@@ -103,21 +114,11 @@ export default function ChangePasswordPage({ navigation, route }) {
         <View style={styles.actionsContainer}>
           <View style={styles.submitContainer}>
             <TouchableOpacity style={styles.submit} onPress={onSubmit}>
-              <Text style={{ color: "white", fontSize: 20 }}>Submit</Text>
-            </TouchableOpacity>
-          </View>
-          {/* <View style={styles.resendContainer}>
-            <TouchableOpacity style={styles.resend} onPress={onResend}>
-              <Text style={{ color: "#660032", fontSize: 20 }}>
-                Resend The OTP
+              <Text style={{ color: "white", fontSize: 15 }}>
+                {currLang.changepasswordpage.submit}
               </Text>
             </TouchableOpacity>
-          </View> */}
-          {/* <View style={styles.changePhoneContainer}>
-                        <TouchableOpacity style={styles.changePhone} onPress={() => navigation.goBack()}>
-                            <Text style={{ color: '#660032', fontSize: 20 }}>Change My Phone Number</Text>
-                        </TouchableOpacity>
-                    </View> */}
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -132,20 +133,20 @@ const styles = StyleSheet.create({
   },
 
   headContainer: {
-    flex: 3,
-    // backgroundColor: 'blue',
-    marginTop: 90,
+    flex: 4,
+    backgroundColor: isEdit ? "green" : "white",
+    // marginTop: 90,
   },
   backContainer: {
     marginTop: 10,
     justifyContent: "center",
   },
   logoContainer: {
-    // flex: 1,
+    flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-end",
 
-    // backgroundColor: 'green',
+    paddingBottom: 20,
   },
   logo: {
     height: 125,
@@ -165,9 +166,10 @@ const styles = StyleSheet.create({
   },
 
   textContainer: {
-    marginTop: "20%",
-    alignSelf: "center",
-    // backgroundColor: 'red',
+    // flex: 1,
+    marginBottom: 5,
+    alignItems: "center",
+    backgroundColor: isEdit ? "red" : "white",
   },
   text: {
     fontWeight: "bold",
@@ -177,7 +179,7 @@ const styles = StyleSheet.create({
 
   inputContainer: {
     flex: 2,
-    // backgroundColor: '#165815',
+    backgroundColor: isEdit ? "#165815" : "white",
     justifyContent: "center",
 
     paddingHorizontal: 90,
@@ -209,20 +211,27 @@ const styles = StyleSheet.create({
 
   actionsContainer: {
     flex: 4,
-    // backgroundColor: 'red'
+    backgroundColor: isEdit ? "blue" : "white",
+    alignItems: "center",
   },
   submitContainer: {
+    flex: 1,
     marginTop: 7,
-    justifyContent: "center",
-    paddingHorizontal: 130,
+    // justifyContent: "center",
+    // paddingHorizontal: 130,
   },
   submit: {
-    height: 40,
+    // flex: 1,
+    maxHeight: 35,
+    minHeight: 35,
+    maxWidth: "22%",
+    minWidth: "22%",
+
     backgroundColor: "#660032",
 
-    borderColor: "#660032",
-    borderWidth: 2,
-    borderRadius: 50,
+    // borderColor: "#660032",
+    // borderWidth: 2,
+    borderRadius: 99,
 
     justifyContent: "center",
     alignItems: "center",

@@ -12,11 +12,13 @@ import {
   Alert,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import CheckOTP from "../../API/CheckOTP";
-import languages from "../strings/LanguagesController";
+import CheckOTP from "../../../API/CheckOTP";
+import languages from "../../strings/LanguagesController";
 
 const windowHeight = Dimensions.get("window").height;
 const isRTL = I18nManager.isRTL;
+const isEdit = false;
+
 // const currLang = languages.currLang();
 
 export default function SignUpConfirmation({ navigation, route }) {
@@ -67,11 +69,12 @@ export default function SignUpConfirmation({ navigation, route }) {
           <View style={styles.logoContainer}>
             <View style={styles.logo}>
               <Image
-                source={require("../../assets/Logo.png")}
+                source={require("../../../assets/Logo.png")}
                 style={styles.imageLogo}
               />
             </View>
           </View>
+
           <View style={styles.textContainer}>
             <Text style={styles.text}>{currLang.otpPage.wesentotp}</Text>
           </View>
@@ -144,19 +147,17 @@ const styles = StyleSheet.create({
 
   headContainer: {
     flex: 3,
-    // backgroundColor: 'blue',
-    marginTop: 90,
-  },
-  backContainer: {
-    marginTop: 10,
-    justifyContent: "center",
+    backgroundColor: isEdit ? 'red' : 'white',
+    // marginTop: 90,
   },
   logoContainer: {
-    // flex: 1,
+    flex: 3,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: 'flex-end',
 
     // backgroundColor: 'green',
+
+    paddingBottom: 5,
   },
   logo: {
     height: 125,
@@ -176,11 +177,12 @@ const styles = StyleSheet.create({
     // marginTop: 12,
     marginLeft: isRTL ? -5 : 5,
   },
-
   textContainer: {
-    marginTop: "20%",
-    alignSelf: "center",
-    // backgroundColor: 'red',
+    flex: 1,
+    justifyContent: 'flex-end',
+    // marginTop: "20%",
+    alignItems: "center",
+    // backgroundColor: 'lightblue',
   },
   text: {
     fontWeight: "bold",
@@ -190,7 +192,7 @@ const styles = StyleSheet.create({
 
   inputContainer: {
     flex: 1,
-    // backgroundColor: '#165815',
+    backgroundColor: isEdit ? '#165815' : 'white',
     justifyContent: "center",
 
     paddingHorizontal: 90,
@@ -209,7 +211,9 @@ const styles = StyleSheet.create({
   },
 
   actionsContainer: {
-    flex: 4,
+    flex: 3,
+    backgroundColor: isEdit ? 'blue' : 'white',
+
   },
   submitContainer: {
     marginTop: 7,
@@ -221,7 +225,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#660032",
 
     borderColor: "#660032",
-    borderWidth: 2,
+    // borderWidth: 2,
     borderRadius: 50,
 
     justifyContent: "center",

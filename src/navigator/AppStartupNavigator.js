@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import LoginPage from "../screens/LoginPage";
-import SignUpPage from "../screens/SignUpPage";
-import SignUpConfirmation from "../screens/SignUpConfirmation";
+import LoginPage from "../screens/startup/LoginPage";
+import SignUpPage from "../screens/startup/SignUpPage";
+import SignUpConfirmation from "../screens/startup/SignUpConfirmation";
 import AppBottomTabNavigator from "./AppBottomTabNavigator";
-import ChangePasswordPage from "../screens/ChangePasswordPage";
+import ChangePasswordPage from "../screens/startup/ChangePasswordPage";
 import AppDrawerNavigator from "./AppDrawerNavigator";
 import { BackHandler, Alert, I18nManager } from "react-native";
 
