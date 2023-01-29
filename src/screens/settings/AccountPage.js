@@ -6,9 +6,9 @@ import users from "../../data/users";
 import languages from "../../strings/LanguagesController";
 import themes from "../../ThemeController";
 
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
 
-const currLang = languages.currLang();
+let currLang = languages.currLang();
 let textColor = themes._currTextTheme;
 let backColor = themes._currBackColorTheme;
 
@@ -56,6 +56,7 @@ export default function AccountPage() {
   };
 
   useEffect(() => {
+    currLang = languages.currLang();
     textColor = themes._currTextTheme;
     backColor = themes._currBackColorTheme;
   });

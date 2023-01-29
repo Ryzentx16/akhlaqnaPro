@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import {
   I18nManager,
+  Keyboard,
+  KeyboardAvoidingView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import UserAvatar from "@muhzi/react-native-user-avatar";
@@ -48,15 +51,26 @@ const AddPostPage = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.headContainer}>
-        <View style={styles.avatarContainer}>
-          <UserAvatar size={55} src={user.profileImage} fontSize={20} />
+    <KeyboardAvoidingView
+      behavior={"height"}
+      keyboardVerticalOffset={"100%"}
+      style={[styles.container, { width: "100%" }]}
+    >
+      {/* <View style={styles.container}> */}
+      <TouchableWithoutFeedback
+        onPress={Keyboard.dismiss}
+        accessible={false}
+        touchSoundDisabled={true}
+      >
+        <View style={styles.headContainer}>
+          <View style={styles.avatarContainer}>
+            <UserAvatar size={55} src={user.profileImage} fontSize={20} />
+          </View>
+          <View style={styles.headerDetailsContainer}>
+            <Text style={styles.userName}>{user.name}</Text>
+          </View>
         </View>
-        <View style={styles.headerDetailsContainer}>
-          <Text style={styles.userName}>{user.name}</Text>
-        </View>
-      </View>
+      </TouchableWithoutFeedback>
 
       <View style={styles.contentContainer}>
         <View style={styles.content}>
@@ -92,7 +106,8 @@ const AddPostPage = ({ navigation }) => {
           <Text style={styles.postText}>{currLang.addpostPage.post}</Text>
         </TouchableOpacity>
       </View>
-    </View>
+      {/* </View> */}
+    </KeyboardAvoidingView>
   );
 };
 
@@ -150,7 +165,7 @@ const styles = StyleSheet.create({
     // height: "100%",
     fontSize: 16,
     textAlignVertical: "top",
-    textAlign: 'auto',
+    textAlign: "auto",
   },
 
   actionsContainer: {

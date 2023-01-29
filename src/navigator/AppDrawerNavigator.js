@@ -42,11 +42,12 @@ function CustomDrawerContent(props) {
   );
 }
 
-export default function AppDrawerNavigator({ navigation }) {
+export default function AppDrawerNavigator() {
   useEffect(() => {
-    // console.log(logo);
+    currLang = languages.currLang();
+
     const backAction = () => {
-      return true;
+      return false;
     };
 
     const backHandler = BackHandler.addEventListener(
@@ -55,17 +56,18 @@ export default function AppDrawerNavigator({ navigation }) {
     );
 
     return () => backHandler.remove();
-  }, []);
-  // console.warn(navigation);
-  useEffect(() => {
-    currLang = languages.currLang();
   });
+  
+  // useEffect(() => {
+  // });
 
   return (
     <Drawer.Navigator
       initialRouteName="Pages"
       drawerContent={(props) => <CustomDrawerContent {...props} />}
+      screenListeners={{beforeRemove: null}}
       screenOptions={{
+        swipeEnabled: false,
         headerShown: false,
         drawerType: "front",
         drawerStyle: {
@@ -136,9 +138,9 @@ export default function AppDrawerNavigator({ navigation }) {
       <Drawer.Screen
         name="SettingPage"
         component={SettingNavigator}
-        initialParams={{
-          drawerNavigation: navigation,
-        }}
+        // initialParams={{
+        //   drawerNavigation: navigation,
+        // }}
         options={{ title: currLang.drawer.settings }}
       />
     </Drawer.Navigator>

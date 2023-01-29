@@ -96,6 +96,10 @@ const ar = {
         cancel: 'إلغاء',
       }
     },
+  },
+
+  postcard: {
+    readmore: 'قرأة المزيد'
   }
 };
 

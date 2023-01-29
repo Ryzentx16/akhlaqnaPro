@@ -12,9 +12,9 @@ import {
   View,
   I18nManager,
   Alert,
+  BackHandler,
 } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-// import { NavigationActions } from '@react-navigation';
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 import PhoneInput from "react-native-phone-number-input";
@@ -48,8 +48,6 @@ export default function SignUpPage({ navigation, route }) {
 
   const [birthday, setbirthday] = useState(new Date());
 
-  // const lastCharFromName = ;
-
   const [firstName, setFirstName] = useState(
     isEditProfile ? ourUser.username : ""
   );
@@ -76,6 +74,17 @@ export default function SignUpPage({ navigation, route }) {
   let currLang = languages.currLang();
   useEffect(() => {
     currLang = languages.currLang();
+
+    const backAction = () => {
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
   });
 
   const onChange = (event, selectedDate) => {

@@ -10,22 +10,23 @@ import { BackHandler } from "react-native";
 const Stack = createStackNavigator();
 
 export default function ProfileNavigator({ navigation, route }) {
-  useEffect(() => {
-    const backAction = () => {
-      return false;
-    };
+  // useEffect(() => {
+  //   const backAction = () => {
+  //     return false;
+  //   };
 
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
+  //   const backHandler = BackHandler.addEventListener(
+  //     "hardwareBackPress",
+  //     backAction
+  //   );
 
-    return () => backHandler.remove();
-  }, []);
+  //   return () => backHandler.remove();
+  // });
 
   return (
     <Stack.Navigator
       screenOptions={{
+        gestureEnabled: false,
         headerShown: false,
         tabBarActiveTintColor: "red",
         tabBarInactiveTintColor: "black",
@@ -36,6 +37,7 @@ export default function ProfileNavigator({ navigation, route }) {
           borderTopWidth: 3,
         },
       }}
+      screenListeners={{ beforeRemove: null }}
       tabbarop
       barStyle={{ backgroundColor: "black" }} //This is where you can manipulate its look.
     >
@@ -58,7 +60,6 @@ export default function ProfileNavigator({ navigation, route }) {
           headerShown: false,
         }}
       /> */}
-      
     </Stack.Navigator>
   );
 }

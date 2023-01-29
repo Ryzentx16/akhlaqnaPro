@@ -95,6 +95,10 @@ const en = {
         cancel: 'Cancel',
       }
     },
+  },
+
+  postcard: {
+    readmore: 'Read More'
   }
 };
 

@@ -58,6 +58,7 @@ export default function PostCard(props) {
   let { post, navigation, onPressComment, isLostOrFound } = props;
   const [numOfLikes, setNumOfLikes] = useState(post.numberOfLikes); //To show ur remaining Text
   const [isLiked, setIsLiked] = useState(false);
+
   const onMakeLike = () => {
     if (isLiked) {
       setNumOfLikes(numOfLikes - 1);
@@ -74,7 +75,6 @@ export default function PostCard(props) {
   if (post.hasOwnProperty("image") == true) {
     imageHeight = Image.resolveAssetSource(post.image).height;
   }
-
 
   useEffect(() => {
     textColor = themes._currTextTheme;
@@ -107,13 +107,6 @@ export default function PostCard(props) {
             <AntDesign name="questioncircle" size={25} color={textColor} />
           ) : null}
         </View>
-        {/* <TouchableOpacity style={headerStyles.headerDotsContainer}>
-          <MaterialCommunityIcons
-            name={"dots-vertical"}
-            color={textColor}
-            size={25}
-          />
-        </TouchableOpacity> */}
       </View>
 
       <View style={styles.detailsContainer}>
@@ -151,6 +144,7 @@ export default function PostCard(props) {
         />
         <ActionButton type={"share"} details={post.numberOfShares} />
       </View>
+
     </View>
   );
 }
@@ -261,5 +255,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: textColor,
     lineHeight: 18,
+    textAlign: 'auto',
   },
+  
 });
