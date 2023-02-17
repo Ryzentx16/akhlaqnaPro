@@ -41,6 +41,8 @@ export default function SignUpPage({ navigation, route }) {
   const isEditProfile = ourUser === null ? false : true;
   const globleNavigation = useNavigation();
 
+  const inputMaxLength = 55;
+
   const [value, setValue] = useState("");
   const [formattedValue, setFormattedValue] = useState("");
   const [valid, setValid] = useState(false);
@@ -70,7 +72,7 @@ export default function SignUpPage({ navigation, route }) {
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
-
+  // console.warn(isRTL)
   let currLang = languages.currLang();
   useEffect(() => {
     currLang = languages.currLang();
@@ -181,7 +183,9 @@ export default function SignUpPage({ navigation, route }) {
   };
 
   return (
+
     <View style={styles.background}>
+
       <ScrollView
         alwaysBounceHorizontal={false}
         alwaysBounceVertical={false}
@@ -214,26 +218,36 @@ export default function SignUpPage({ navigation, route }) {
             <View style={styles.firstnameContainer}>
               <View style={styles.firstname}>
                 <TextInput
+                  maxLength={inputMaxLength}
                   placeholder={currLang.signupPage.firstname + " *"}
                   placeholderTextColor={"rgba(102,0,50,0.75)"}
                   value={firstName}
                   onChangeText={(text) => {
                     setFirstName(text);
                   }}
-                  style={{ textAlign: isRTL ? "right" : "left" }}
+                  style={{
+                    flex: 1,
+                    textAlign: isRTL ? "right" : "left",
+                    // backgroundColor: "red",
+                  }}
                 />
               </View>
             </View>
             <View style={styles.lastnameContainer}>
               <View style={styles.lastname}>
                 <TextInput
+                  maxLength={inputMaxLength}
                   placeholder={currLang.signupPage.lastname + " *"}
                   placeholderTextColor={"rgba(102,0,50,0.75)"}
                   value={lastName}
                   onChangeText={(text) => {
                     setLastName(text);
                   }}
-                  style={{ textAlign: isRTL ? "right" : "left" }}
+                  style={{
+                    flex: 1,
+                    textAlign: isRTL ? "right" : "left",
+                    // backgroundColor: "red",
+                  }}
                 />
               </View>
             </View>
@@ -254,14 +268,15 @@ export default function SignUpPage({ navigation, route }) {
                     setPhoneNumber(text);
                     setFormattedValue(text);
                   }}
-                  textContainerStyle={{ backgroundColor: "white" }}
+                  textContainerStyle={{ flex: 1, backgroundColor: "white" }}
                   textInputStyle={{
                     fontSize: 16,
                     height: 50,
-                    backgroundColor: "white",
+                    // backgroundColor: "red",
                     textAlign: isRTL ? "right" : "left",
                   }}
                   textInputProps={{
+                    maxLength: inputMaxLength,
                     placeholder: currLang.signupPage.phonenumber + " *",
                     placeholderTextColor: "rgba(102,0,50,0.75)",
                   }}
@@ -272,15 +287,20 @@ export default function SignUpPage({ navigation, route }) {
 
           <View style={styles.birthdayContainer}>
             <TouchableOpacity style={styles.birthday} onPress={showDatepicker}>
-              <View style={{ flex: 8 }}>
+              <View style={{ flex: 1 }}>
                 <TextInput
+                  maxLength={inputMaxLength}
                   placeholder={"DD/MM/YYYY *"}
                   placeholderTextColor={"rgba(102,0,50,0.75)"}
                   value={birthday.toLocaleDateString("en-US")}
                   // onEndEditing={(text) => {
                   //   setbirthday(text);
                   // }}
-                  style={{ textAlign: isRTL ? "right" : "left" }}
+                  style={{
+                    flex: 1,
+                    textAlign: isRTL ? "right" : "left",
+                    // backgroundColor: "red",
+                  }}
                   readOnly={true}
                 />
               </View>
@@ -309,24 +329,33 @@ export default function SignUpPage({ navigation, route }) {
               <>
                 <View style={styles.newPasswordContainer}>
                   <TextInput
-                    placeholder={currLang.signupPage.createnewpassword + " *"}
+                    maxLength={inputMaxLength}
+                    placeholder={currLang.signupPage.createnewpassword}
                     placeholderTextColor={"rgba(102,0,50,0.75)"}
                     onChangeText={(text) => {
                       setNewPassword(text);
                     }}
                     secureTextEntry={true}
-                    style={{ textAlign: isRTL ? "right" : "left" }}
+                    style={{
+                      flex: 1,
+                      textAlign: isRTL ? "right" : "left",
+                      // backgroundColor: "red",
+                    }}
                   />
                 </View>
                 <View style={styles.confirmPasswordContainer}>
                   <TextInput
-                    placeholder={currLang.signupPage.confirmpassword + " *"}
+                    placeholder={currLang.signupPage.confirmpassword}
                     placeholderTextColor={"rgba(102,0,50,0.75)"}
                     onChangeText={(text) => {
                       setConfirmPassword(text);
                     }}
                     secureTextEntry={true}
-                    style={{ textAlign: isRTL ? "right" : "left" }}
+                    style={{
+                      flex: 1,
+                      textAlign: isRTL ? "right" : "left",
+                      // backgroundColor: "red",
+                    }}
                   />
                 </View>
               </>
@@ -352,7 +381,9 @@ export default function SignUpPage({ navigation, route }) {
           </View>
         </View>
       </ScrollView>
+      
     </View>
+
   );
 }
 
@@ -441,7 +472,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
 
     paddingHorizontal: 16,
-    padding: 8,
+    padding: 4,
   },
   lastnameContainer: {
     flex: 1,
@@ -461,7 +492,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
 
     paddingHorizontal: 16,
-    padding: 8,
+    padding: 4,
   },
   phonenumberContainer: {
     flex: 1,
@@ -516,10 +547,10 @@ const styles = StyleSheet.create({
     borderRadius: 50,
 
     paddingHorizontal: 16,
-    padding: 8,
+    padding: 4,
   },
   birthdayIcon: {
-    flex: 1,
+    // flex: 1,
     // position: 'absolute',
     // backgroundColor: 'red',
 
@@ -550,7 +581,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
 
     paddingHorizontal: 16,
-    padding: 8,
+    padding: 4,
     marginBottom: 18,
   },
   confirmPasswordContainer: {
@@ -564,7 +595,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
 
     paddingHorizontal: 16,
-    padding: 8,
+    padding: 4,
   },
 
   actionContainer: {
@@ -572,7 +603,7 @@ const styles = StyleSheet.create({
     maxHeight: "5%",
     minHeight: "5%",
     flexDirection: isRTL ? "row-reverse" : "row",
-    // backgroundColor: "",
+
     backgroundColor: isEdit ? "lightblue" : "white",
     marginTop: 30,
     justifyContent: "space-evenly",

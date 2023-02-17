@@ -63,7 +63,7 @@ export default function SettingNavigator({ navigation, route }) {
       <Stack.Screen
         name="LanguagePage"
         component={LanguagePage}
-        initialParams={{ drawerNavigation: drawerNavigation }}
+        // initialParams={{ drawerNavigation: drawerNavigation }}
       />
       <Stack.Screen name="ChatsSettingPage" component={ChatsSettingPage} />
       {/* <Stack.Screen name="AppStartupNavigator" component={AppStartupNavigator} /> */}

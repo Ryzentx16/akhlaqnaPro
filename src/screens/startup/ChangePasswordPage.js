@@ -20,8 +20,15 @@ const isRTL = I18nManager.isRTL;
 const isEdit = false;
 
 export default function ChangePasswordPage({ navigation, route }) {
+  let currLang = languages.currLang();
+  useEffect(() => {
+    currLang = languages.currLang();
+  });
+
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const inputMaxLength = 55;
 
   const isValide = () => {
     if (newPassword === "" || confirmPassword === "") {
@@ -45,13 +52,11 @@ export default function ChangePasswordPage({ navigation, route }) {
             routes: [{ name: "LoginPage" }],
           })
         )
-      : Alert.alert("Error", "Password doesn't match or its an empty");
+      : Alert.alert(
+          currLang.changepasswordpage.submitalert.title,
+          currLang.changepasswordpage.submitalert.content
+        );
   };
-
-  let currLang = languages.currLang();
-  useEffect(() => {
-    currLang = languages.currLang();
-  });
 
   return (
     <View style={styles.background}>
@@ -76,8 +81,10 @@ export default function ChangePasswordPage({ navigation, route }) {
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.text}>
-              {currLang.changepasswordpage.changepasswordfor + '(' +
-                route.params?.phoneNumber + ')'}
+              {currLang.changepasswordpage.changepasswordfor +
+                "(" +
+                route.params?.phoneNumber +
+                ")"}
             </Text>
           </View>
         </View>
@@ -85,7 +92,8 @@ export default function ChangePasswordPage({ navigation, route }) {
         <View style={styles.inputContainer}>
           <View style={styles.newPasswordInput}>
             <TextInput
-              placeholder={currLang.changepasswordpage.createnewpassword + " *"}
+              maxLength={inputMaxLength}
+              placeholder={currLang.changepasswordpage.createnewpassword}
               placeholderTextColor={"#660032"}
               value={newPassword}
               onChangeText={(text) => {
@@ -98,7 +106,8 @@ export default function ChangePasswordPage({ navigation, route }) {
           </View>
           <View style={styles.confirmPasswordInput}>
             <TextInput
-              placeholder={currLang.changepasswordpage.confirmpassword + " *"}
+              maxLength={inputMaxLength}
+              placeholder={currLang.changepasswordpage.confirmpassword}
               placeholderTextColor={"#660032"}
               value={confirmPassword}
               onChangeText={(text) => {

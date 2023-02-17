@@ -12,18 +12,18 @@ import AppHeader from "../components/AppHeader";
 const Stack = createStackNavigator();
 
 export default function PostNavigator({ navigation, route }) {
-  // useEffect(() => {
-  //   const backAction = () => {
-  //     return true;
-  //   };
+  useEffect(() => {
+    const backAction = () => {
+      return false;
+    };
 
-  //   const backHandler = BackHandler.addEventListener(
-  //     "hardwareBackPress",
-  //     backAction
-  //   );
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
 
-  //   return () => backHandler.remove();
-  // });
+    return () => backHandler.remove();
+  });
 
   React.useLayoutEffect(() => {
     const tabHiddenRoutes = ["CommentPage"];

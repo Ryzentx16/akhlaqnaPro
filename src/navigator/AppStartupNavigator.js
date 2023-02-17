@@ -7,23 +7,23 @@ import AppBottomTabNavigator from "./AppBottomTabNavigator";
 import ChangePasswordPage from "../screens/startup/ChangePasswordPage";
 import AppDrawerNavigator from "./AppDrawerNavigator";
 import { BackHandler, Alert, I18nManager } from "react-native";
-import { Flag } from "react-native-country-picker-modal";
+// import { Flag } from "react-native-country-picker-modal";
 
 const Stack = createStackNavigator();
 
 export default function AppStartupNavigator({ navigation, route }) {
-  // useEffect(() => {
-  //   const backAction = () => {
-  //     return null;
-  //   };
+  useEffect(() => {
+    const backAction = () => {
+      return false;
+    };
 
-  //   const backHandler = BackHandler.addEventListener(
-  //     "hardwareBackPress",
-  //     backAction
-  //   );
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
 
-  //   return () => backHandler.remove();
-  // });
+    return () => backHandler.remove();
+  });
 
   return (
     <Stack.Navigator

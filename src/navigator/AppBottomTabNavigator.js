@@ -30,18 +30,18 @@ const iconcolor = "#660032";
 const isRTL = I18nManager.isRTL;
 
 export default function AppBottomTabNavigator({ navigation }) {
-  // useEffect(() => {
-  //   const backAction = () => {
-  //     return true;
-  //   };
+  useEffect(() => {
+    const backAction = () => {
+      return false;
+    };
 
-  //   const backHandler = BackHandler.addEventListener(
-  //     "hardwareBackPress",
-  //     backAction
-  //   );
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
 
-  //   return () => backHandler.remove();
-  // });
+    return () => backHandler.remove();
+  });
 
   return (
     <Tab.Navigator

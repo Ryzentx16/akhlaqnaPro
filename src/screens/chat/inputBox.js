@@ -7,7 +7,9 @@ import {
   TouchableOpacity,
   View,
   I18nManager,
+  Keyboard,
 } from "react-native";
+import { useHeaderHeight } from "@react-navigation/elements";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Entypo from "react-native-vector-icons/Entypo";
 import Fontisto from "react-native-vector-icons/Fontisto";
@@ -23,12 +25,36 @@ let backColor = themes._currBackColorTheme;
 let themeColor = themes._currTheme;
 const isRTL = I18nManager.isRTL;
 
+function useKeyboardHeight() {
+  /* #region  get keybaord height test */
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener("keyboardDidShow", (e) =>
+      setKeyboardHeight(e.endCoordinates.height)
+    );
+    const hideSubscription = Keyboard.addListener("keyboardWillHide", () =>
+      setKeyboardHeight(0)
+    );
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, [setKeyboardHeight]);
+
+  /* #endregion */
+
+  return keyboardHeight;
+}
+
 export default function InputBox(props) {
-  var heightLimit = 130;
+  var heightLimit = 135;
+  // const headerHeight = useHeaderHeight();
+
   const [message, setMessage] = useState("");
   const [isComment, setIsComment] = useState(props.hasOwnProperty("isComment"));
   const [createdDateTime, setcreatedDateTime] = useState(Date.now());
-  const [textInputHeight, setTextInputHeight] = useState(20);
+  const [textInputHeight, setTextInputHeight] = useState(25);
 
   let currLang = languages.currLang();
   useEffect(() => {
@@ -41,6 +67,7 @@ export default function InputBox(props) {
   var placeholder = !isComment ? "Type a message" : "Type a comment";
 
   const onSend = () => {
+    setMessage("");
     setcreatedDateTime(Date.now());
     isComment
       ? Adding("addComment", {
@@ -53,13 +80,15 @@ export default function InputBox(props) {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={"100%"}
-      style={[styles.container, { width: "100%" }]}
-    >
+    // <KeyboardAvoidingView
+    //   behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    //   keyboardVerticalOffset={useKeyboardHeight() * -1}
+    //   style={[styles.container, { flex: 1 }]}
+    // >
+    <View style={styles.container}>
       <View style={styles.mainContainer}>
         <TextInput
+          maxLength={2500}
           placeholder={placeholder}
           multiline={true}
           value={message}
@@ -90,13 +119,15 @@ export default function InputBox(props) {
           style={{ transform: [{ rotateY: isRTL ? "180deg" : "0deg" }] }}
         />
       </TouchableOpacity>
-    </KeyboardAvoidingView>
+    </View>
+    // </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flexShrink: 1,
+    // flexShrink: 1,
+    // flex: 1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -115,6 +146,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: themeColor === "light" ? "#ffffff" : "#CCCCCC",
     marginHorizontal: 10,
+    textAlign: "auto",
   },
   icon: {
     marginHorizontal: 5,

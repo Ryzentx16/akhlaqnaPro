@@ -320,7 +320,7 @@ const inputsStyle = StyleSheet.create({
     // minWidth: 300,
     // maxWidth: 300,
     justifyContent: "center",
-    backgroundColor: "grey",
+    // backgroundColor: "grey",
   },
 
   passInputSection: {

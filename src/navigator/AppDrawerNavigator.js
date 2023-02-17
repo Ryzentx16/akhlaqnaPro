@@ -19,6 +19,7 @@ import FoundPage from "../../src/screens/post/FoundPage";
 import SettingNavigator from "./SettingNavigator.js";
 
 import users from "../data/users.js";
+import OurUser from "../OurUser";
 import languages from "../strings/LanguagesController";
 import ProfileNavigator from "./ProfileNavigator.js";
 
@@ -57,9 +58,6 @@ export default function AppDrawerNavigator() {
 
     return () => backHandler.remove();
   });
-  
-  // useEffect(() => {
-  // });
 
   return (
     <Drawer.Navigator
@@ -72,25 +70,23 @@ export default function AppDrawerNavigator() {
         drawerType: "front",
         drawerStyle: {
           backgroundColor: "white",
-          borderWidth: 5,
-
-          borderRightWidth: isRTL ? 5 : 0,
-          borderLeftWidth: isRTL ? 0 : 5,
+          
+          borderLeftWidth: 5,
+          borderTopWidth: 5,
+          borderBottomWidth: 5,
 
           borderColor: "#660032",
 
-          borderTopRightRadius: isRTL ? 15 : 0,
-          borderBottomRightRadius: isRTL ? 15 : 0,
-
-          borderTopLeftRadius: isRTL ? 0 : 15,
-          borderBottomLeftRadius: isRTL ? 0 : 15,
+          borderTopLeftRadius:  15,
+          borderBottomLeftRadius:  15,
 
           marginTop: 80,
-          minHeight: "20%",
-          maxHeight: "65%",
+          minHeight: "18%",
+          maxHeight: "67%",
           width: 240,
         },
         drawerLabelStyle: {
+          flex: 1,
           textAlign: isRTL ? "right" : "left",
         },
         drawerPosition: isRTL ? "left" : "right",
@@ -105,9 +101,8 @@ export default function AppDrawerNavigator() {
         name="MyProfile"
         component={ProfileNavigator}
         initialParams={{
-          user: users[0],
+          user: OurUser.user,
           isDrawer: true,
-          // drawerNavigation: navigation,
         }}
         options={{
           title: "My Profile",
