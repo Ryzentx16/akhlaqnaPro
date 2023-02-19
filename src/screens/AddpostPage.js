@@ -16,6 +16,7 @@ import {
 import UserAvatar from "@muhzi/react-native-user-avatar";
 import { FontAwesome, MaterialIcons, Entypo } from "react-native-vector-icons";
 import * as ImagePicker from "expo-image-picker";
+import { Loader } from "@googlemaps/js-api-loader";
 
 import users from "../data/users";
 
@@ -28,6 +29,7 @@ const AddPostPage = ({ navigation }) => {
   const user = users[0];
   const [content, setContent] = useState("");
   const [test, setTest] = useState("");
+  const [status, setStatus] = useState(false);
   const [image, setImage] = useState(null);
   const [createdDateTime, setcreatedDateTime] = useState(Date.now());
 
@@ -109,6 +111,23 @@ const AddPostPage = ({ navigation }) => {
     console.log("toto");
   };
 
+  const onLocation = () => {
+    let map;
+
+    const loader = new Loader({
+      apiKey: "AIzaSyBb2lef_VaN4m9OlvngArW3h84ul1DHZIo",
+      version: "weekly",
+      // ...additionalOptions,
+    });
+
+    loader.load().then(() => {
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: -34.397, lng: 150.644 },
+        zoom: 8,
+      });
+    });
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={"height"}
@@ -182,7 +201,10 @@ const AddPostPage = ({ navigation }) => {
               color={"#660032"}
             />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.actionBtnContainer}>
+          <TouchableOpacity
+            style={styles.actionBtnContainer}
+            onPress={onLocation}
+          >
             <Entypo name={"location"} size={30} color={"#660032"} />
           </TouchableOpacity>
         </View>
@@ -191,6 +213,21 @@ const AddPostPage = ({ navigation }) => {
           <Text style={styles.postText}>{currLang.addpostPage.post}</Text>
         </TouchableOpacity>
       </View>
+
+      <Modal
+        isVisible={status}
+        animationIn={"zoomIn"}
+        animationOut={"zoomOut"}
+        useNativeDriver={true}
+        hideModalContentWhileAnimating={true}
+        swipeDirection={["up", "down"]}
+        backdropColor={"#4b4b4a"}
+        backdropOpacity={0.9}
+      >
+        <View style={styles.contentContainer}>
+          
+        </View>
+      </Modal>
     </KeyboardAvoidingView>
   );
 };

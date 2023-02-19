@@ -9,6 +9,7 @@
     "web": "npx expo start --web"
   },
   "dependencies": {
+    "@googlemaps/js-api-loader": "^1.15.1",
     "@gorhom/bottom-sheet": "^4.4.5",
     "@muhzi/react-native-user-avatar": "^1.0.7",
     "@openspacelabs/react-native-zoomable-view": "^2.1.1",

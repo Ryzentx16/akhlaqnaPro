@@ -70,7 +70,7 @@ export default function PostsPage({ navigation }) {
   const [image, setImage] = useState({ uri: null, height: 1, width: 1 });
 
   const onPressComment = () => {
-    console.log("Comment Pressed");
+    // console.log("Comment Pressed");
   };
 
   const onPressImage = ({ data }) => {
@@ -78,7 +78,7 @@ export default function PostsPage({ navigation }) {
     setIsModalVisible(true);
   };
 
-  console.log("Comment State: " + (isCommentOpen ? "Opened" : "Closed"));
+  // console.log("Comment State: " + (isCommentOpen ? "Opened" : "Closed"));
 
   useEffect(() => {
     textColor = themes._currTextTheme;
@@ -102,13 +102,13 @@ export default function PostsPage({ navigation }) {
               onPressComment={(clickedPost) => {
                 setCommentPost(clickedPost);
                 setIsCommentOpen(true);
-                console.log("Comment Pressed: " + clickedPost.commentsId);
+                // console.log("Comment Pressed: " + clickedPost.commentsId);
               }}
             />
           );
         }}
       />
-      {!isCommentOpen ? console.log("Comment Clsoed: PostsPage") : null}
+      {/* {!isCommentOpen ? console.log("Comment Clsoed: PostsPage") : null} */}
       {isCommentOpen && (
         <CommentPage
           post={commentPost}

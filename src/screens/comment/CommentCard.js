@@ -1,8 +1,10 @@
-import React, {useEffect} from "react";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
+  KeyboardAvoidingView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -14,17 +16,29 @@ import ReplyCard from "./ReplyCard";
 
 import themes from "../../ThemeController";
 
+import {
+  BottomSheetTextInput,
+  BottomSheetFlatList,
+} from "@gorhom/bottom-sheet";
+
 let textColor = themes._currTextTheme;
 let backColor = themes._currBackColorTheme;
 let themeColor = themes._currTheme;
 
 export default function CommentCard(props) {
-  const { comment } = props;
-  // const replies = [];
-  // const isCommentReply = false;
+  const { comment, onReply } = props;
+  const [isReplying, setIsReplying] = useState(false);
+  const [replyContent, setReplyContent] = useState("");
   var postDuration = Helper.getPostDuration(comment.createdAt);
 
-  const isReply = comment.hasOwnProperty("replies");
+  const haveReplies = comment.hasOwnProperty("replies");
+  // const onReply = () => {
+  //   // setIsReplying(true);
+  // };
+  const onSendReply = () => {
+    setIsReplying(false);
+    setReplyContent("");
+  };
 
   useEffect(() => {
     textColor = themes._currTextTheme;
@@ -51,25 +65,57 @@ export default function CommentCard(props) {
             />
           </View>
           <View style={detailsStyles.actionContainer}>
-            <TouchableOpacity style={detailsStyles.replybutton}>
-              <MaterialCommunityIcons
-                name={"reply"}
-                color={themeColor === 'light' ? "#65676b" : '#FFFFFF'}
-                size={20}
-              />
-              <Text style={detailsStyles.replybuttonText}>Reply</Text>
-            </TouchableOpacity>
+            {!isReplying && (
+              <TouchableOpacity
+                style={detailsStyles.replybutton}
+                onPress={() => onReply(comment.user)}
+              >
+                <MaterialCommunityIcons
+                  name={"reply"}
+                  color={themeColor === "light" ? "#65676b" : "#FFFFFF"}
+                  size={20}
+                />
+                <Text style={detailsStyles.replybuttonText}>Reply</Text>
+              </TouchableOpacity>
+            )}
+            {/* {isReplying && (
+              <View style={detailsStyles.replyContainer}>
+                <View style={detailsStyles.replyInput}>
+                  <BottomSheetTextInput
+                    placeholder={"Reply"}
+                    placeholderTextColor={"#660032"}
+                    style={{
+                      // textAlignVertical: "top",
+                      // justifyContent: "center",
+                    }}
+                    value={replyContent}
+                    // onChangeText={(t) => setReplyContent(t)}
+                    // onSubmitEditing={() => onSendReply()}
+                  />
+                </View>
+                <TouchableOpacity
+                  style={detailsStyles.sendContainer}
+                  onPress={() => onSendReply()}
+                >
+                  <Text>Send</Text>
+                </TouchableOpacity>
+              </View>
+            )} */}
           </View>
         </View>
       </View>
-      <FlatList
-        data={comment.replies}
-        keyExtractor={(item, index) => index}
-        renderItem={(item, index) => {
-          console.log(item.item);
-          return <ReplyCard reply={item.item} />;
-        }}
-      />
+      {haveReplies && (
+        <FlatList
+          style={{ marginTop: -10 }}
+          data={comment.replies}
+          keyExtractor={(item, index) => index}
+          renderItem={(item, index) => {
+            // console.log(item.item);
+            return <ReplyCard reply={item.item} />;
+          }}
+          scrollEnabled={false}
+        />
+      )}
     </>
   );
 }
@@ -82,7 +128,9 @@ const detailsStyles = StyleSheet.create({
     marginLeft: 5,
     marginRight: 20,
     borderRadius: 18,
-    backgroundColor: themeColor === 'light' ? '#ffffff' : "#CCCCCC",
+    backgroundColor: themeColor === "light" ? "#ffffff" : "#CCCCCC",
+
+    overflow: "hidden",
   },
 
   headerContainer: {
@@ -111,7 +159,7 @@ const detailsStyles = StyleSheet.create({
 
   postTime: {
     fontSize: 9,
-    color: themeColor === 'light' ? "#65676b" : '#FFFFFF',
+    color: themeColor === "light" ? "#65676b" : "#FFFFFF",
   },
 
   detailsText: {
@@ -126,8 +174,36 @@ const detailsStyles = StyleSheet.create({
   replybuttonText: {
     fontSize: 12,
     fontWeight: "bold",
-    color: themeColor === 'light' ? "#65676b" : '#FFFFFF',
+    color: themeColor === "light" ? "#65676b" : "#FFFFFF",
     marginLeft: 5,
+  },
+
+  replyContainer: {
+    flex: 1,
+    flexDirection: "row",
+    // width: "100%",
+    backgroundColor: "green",
+    // borderBottomLeftRadius: 18,
+    // borderBottomRightRadius: 18,
+    marginHorizontal: -12,
+    marginBottom: -7,
+  },
+
+  replyInput: {
+    flex: 7,
+    // backgroundColor: 'blue',
+    justifyContent: "center",
+    paddingLeft: 9,
+    paddingRight: 7,
+  },
+
+  sendContainer: {
+    flex: 1,
+    backgroundColor: "red",
+    alignItems: "flex-start",
+    justifyContent: "center",
+    paddingRight: 8,
+    paddingLeft: 4,
   },
 });
 

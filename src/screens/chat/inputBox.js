@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -49,12 +49,16 @@ function useKeyboardHeight() {
 
 export default function InputBox(props) {
   var heightLimit = 135;
-  // const headerHeight = useHeaderHeight();
 
   const [message, setMessage] = useState("");
   const [isComment, setIsComment] = useState(props.hasOwnProperty("isComment"));
   const [createdDateTime, setcreatedDateTime] = useState(Date.now());
   const [textInputHeight, setTextInputHeight] = useState(25);
+  const [isFocus, setIsFocus] = useState(props.onFocus);
+  const [bPlaceholder, setBplaceholder] = useState(
+    isComment ? "Type a comment" : "Type a message"
+  );
+  const ref = useRef(TextInput);
 
   let currLang = languages.currLang();
   useEffect(() => {
@@ -62,34 +66,55 @@ export default function InputBox(props) {
     textColor = themes._currTextTheme;
     backColor = themes._currBackColorTheme;
     themeColor = themes._currTheme;
+
+    setIsFocus(props.onFocus);
+
+    if (!ref.current.isFocused()) {
+      if (isFocus) {
+        ref.current.focus();
+      } else {
+        Keyboard.dismiss();
+      }
+    }
+
+    if (
+      props.hasOwnProperty("replyPlaceHolder") &&
+      props.replyPlaceHolder !== null
+    ) {
+      setBplaceholder(props.replyPlaceHolder);
+      return;
+    } else {
+      if (isComment) {
+        setBplaceholder("Type a comment");
+        return;
+      } else {
+        setBplaceholder("Type a message");
+        return;
+      }
+    }
   });
 
-  var placeholder = !isComment ? "Type a message" : "Type a comment";
+  // var placeholder = () => {
+  //   return "error";
+  // };
 
   const onSend = () => {
+    props.onEndReply();
+    Keyboard.dismiss();
+    setIsFocus(false);
+    setBplaceholder(isComment ? "Type a comment" : "Type a message");
+
     setMessage("");
     setcreatedDateTime(Date.now());
-    isComment
-      ? Adding("addComment", {
-          userId: users[0].id,
-          postId: props.post.id,
-          content: message,
-          createdDateTime: createdDateTime,
-        })
-      : null;
   };
 
   return (
-    // <KeyboardAvoidingView
-    //   behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    //   keyboardVerticalOffset={useKeyboardHeight() * -1}
-    //   style={[styles.container, { flex: 1 }]}
-    // >
-    <View style={styles.container}>
+    <View style={[styles.container, props.style]}>
       <View style={styles.mainContainer}>
         <TextInput
+          ref={ref}
           maxLength={2500}
-          placeholder={placeholder}
+          placeholder={bPlaceholder}
           multiline={true}
           value={message}
           onChangeText={setMessage}
@@ -120,7 +145,6 @@ export default function InputBox(props) {
         />
       </TouchableOpacity>
     </View>
-    // </KeyboardAvoidingView>
   );
 }
 
