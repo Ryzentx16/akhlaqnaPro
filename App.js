@@ -23,20 +23,17 @@
 //     alignItems: "center",
 //     justifyContent: "center",
 //   },
-// });.     
-
-
-
-
+// });.
 
 import React, { useState, useEffect } from "react";
 import { Button, Image, View, Platform } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { Buffer } from "buffer";
 import axios from "axios";
 
 export default function App() {
   const [image, setImage] = useState(null);
-
+  const [downloadedImage, setDownloadedImage] = useState(null);
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -56,7 +53,7 @@ export default function App() {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchCameraAsync({
       aspect: [4, 3],
-      quality: 1,
+      quality: 0.7,
     });
 
     console.log(result);
@@ -81,7 +78,7 @@ export default function App() {
     }
 
     axios
-      .post("http://2c0f-156-192-171-226.eu.ngrok.io/addPost", data, {
+      .post("http://45e0-156-192-148-78.eu.ngrok.io/addPost", data, {
         //config
         headers: {
           Accept: "application/json",
@@ -100,6 +97,26 @@ export default function App() {
       });
   };
 
+  const getData = () => {
+    axios
+      .get("http://45e0-156-192-148-78.eu.ngrok.io/getPost", {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      })
+      .then((res) => {
+        if (res) {
+          setDownloadedImage(
+            "http://45e0-156-192-148-78.eu.ngrok.io/getPost" +
+              `?time=${new Date().getTime()}`
+          );
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        alert(err);
+      });
+  };
+
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Button title="Pick an image from camera roll" onPress={pickImage} />
@@ -108,6 +125,16 @@ export default function App() {
         <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
       )}
       <Button title="send back endo" onPress={sendbackEndo} />
+      <Button title="retrieve image form server" onPress={getData} />
+      {downloadedImage && (
+        <Image
+          source={{
+            uri: downloadedImage,
+            cache: "only-if-cached",
+          }}
+          style={{ width: 200, height: 200 }}
+        />
+      )}
     </View>
   );
 }
