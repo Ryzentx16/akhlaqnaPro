@@ -1,16 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Switch, Text, TouchableOpacity, View, Alert } from "react-native";
+import {
+  StyleSheet,
+  Switch,
+  Text,
+  TouchableOpacity,
+  View,
+  Alert,
+} from "react-native";
 import { MaterialCommunityIcons, Ionicons } from "react-native-vector-icons";
 import AppHeader from "../../components/AppHeader";
 import languages from "../../strings/LanguagesController";
 import themes from "../../ThemeController";
 
+import { useNavigation } from "@react-navigation/native";
+
 let textColor = themes._currTextTheme;
 let backColor = themes._currBackColorTheme;
 
-export default function AccountPage({ navigation }) {
+export default function LanguagePage() {
   const [switchValue, setSwitchValue] = useState(false);
   const [switchChanged, setSwitchChanged] = useState(false);
+
+  const navigation = useNavigation();
 
   const onApplyChange = () => {
     Alert.alert(
@@ -27,7 +38,7 @@ export default function AccountPage({ navigation }) {
               languages.currLang("En");
               console.warn("Changed to En");
             }
-            navigation.replace('AppStartupNavigator');
+            navigation.reset({ index: 0, routes: [{ name: "LoginPage" }] });
           },
         },
         {
@@ -47,7 +58,7 @@ export default function AccountPage({ navigation }) {
   });
 
   useEffect(() => {
-    if (languages.langType() === 'En') {
+    if (languages.langType() === "En") {
       setSwitchValue(true);
     }
   }, []);
@@ -91,13 +102,13 @@ export default function AccountPage({ navigation }) {
                 marginBottom: 20,
               }}
             >
-              {"العربية " + '/' + " English"}
+              {"العربية " + "/" + " English"}
             </Text>
             <Switch
               thumbColor={textColor}
               style={{
                 alignSelf: "flex-start",
-                transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }, { rotateY: "180deg" }],
+                transform: [{ rotateY: "180deg" }],
               }}
               value={switchValue}
               onValueChange={(value) => {

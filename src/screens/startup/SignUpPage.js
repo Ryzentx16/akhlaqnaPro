@@ -12,17 +12,20 @@ import {
   View,
   I18nManager,
   Alert,
+  BackHandler,
 } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 import PhoneInput from "react-native-phone-number-input";
 
-import Adding from "../../API/Adding";
-import languages from "../strings/LanguagesController";
+import Adding from "../../../API/Adding";
+import languages from "../../strings/LanguagesController";
+import { useNavigation } from "@react-navigation/native";
 
 const windowHeight = Dimensions.get("window").height;
 const isRTL = I18nManager.isRTL;
+const isEdit = false;
 
 // {
 //   id: 'u1',
@@ -36,6 +39,9 @@ const isRTL = I18nManager.isRTL;
 export default function SignUpPage({ navigation, route }) {
   const ourUser = route.params?.user;
   const isEditProfile = ourUser === null ? false : true;
+  const globleNavigation = useNavigation();
+
+  const inputMaxLength = 55;
 
   const [value, setValue] = useState("");
   const [formattedValue, setFormattedValue] = useState("");
@@ -44,13 +50,14 @@ export default function SignUpPage({ navigation, route }) {
 
   const [birthday, setbirthday] = useState(new Date());
 
-  // const lastCharFromName = ;
-
   const [firstName, setFirstName] = useState(
     isEditProfile ? ourUser.username : ""
   );
   const [lastName, setLastName] = useState(
-    isEditProfile ? ourUser.name.charAt(ourUser.name.length - 2) + ourUser.name.charAt(ourUser.name.length - 1) : ""
+    isEditProfile
+      ? ourUser.name.charAt(ourUser.name.length - 2) +
+          ourUser.name.charAt(ourUser.name.length - 1)
+      : ""
   );
   const [phoneNumber, setPhoneNumber] = useState(
     isEditProfile ? ourUser.phoneNumber : ""
@@ -65,10 +72,21 @@ export default function SignUpPage({ navigation, route }) {
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
-
+  // console.warn(isRTL)
   let currLang = languages.currLang();
   useEffect(() => {
     currLang = languages.currLang();
+
+    const backAction = () => {
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
   });
 
   const onChange = (event, selectedDate) => {
@@ -76,7 +94,6 @@ export default function SignUpPage({ navigation, route }) {
     setShow(false);
     setDate(currentDate);
     setbirthday(currentDate);
-    // const test = new Date(date).getUTCDay();
   };
 
   const showMode = (currentMode) => {
@@ -129,31 +146,46 @@ export default function SignUpPage({ navigation, route }) {
         );
         return;
       }
-  
+
       var data = {
         firstName: firstName,
         lastName: lastName,
         phoneNumber: phoneNumber,
         password: confirmPassword,
       };
-  
+
       Adding("addUser", data, () => {
         navigation.navigate("SignUpConfirmation", {
           phoneNumber: data.phoneNumber,
         });
       });
-    }else{
-      Alert.alert(currLang.signupPage.editalert.title, currLang.signupPage.editalert.content)
-      navigation.popToTop();
+    } else {
+      Alert.alert(
+        currLang.signupPage.editalert.title,
+        currLang.signupPage.editalert.content
+      );
+      globleNavigation.dispatch(
+        globleNavigation.reset({
+          index: 0,
+          routes: [{ name: "LoginPage" }],
+        })
+      );
     }
   };
 
   const onLogin = () => {
-    navigation.popToTop();
+    globleNavigation.dispatch(
+      globleNavigation.reset({
+        index: 0,
+        routes: [{ name: "LoginPage" }],
+      })
+    );
   };
 
   return (
+
     <View style={styles.background}>
+
       <ScrollView
         alwaysBounceHorizontal={false}
         alwaysBounceVertical={false}
@@ -167,14 +199,18 @@ export default function SignUpPage({ navigation, route }) {
         <View style={styles.logoSection}>
           <View style={styles.logo}>
             <Image
-              source={require("../../assets/Logo.png")}
+              source={require("../../../assets/Logo.png")}
               style={styles.imageLogo}
             />
           </View>
         </View>
 
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>{isEditProfile ? currLang.signupPage.editprofile : currLang.signupPage.title}</Text>
+          <Text style={styles.title}>
+            {isEditProfile
+              ? currLang.signupPage.editprofile
+              : currLang.signupPage.title}
+          </Text>
         </View>
 
         <View style={styles.inputsContainer}>
@@ -182,26 +218,36 @@ export default function SignUpPage({ navigation, route }) {
             <View style={styles.firstnameContainer}>
               <View style={styles.firstname}>
                 <TextInput
+                  maxLength={inputMaxLength}
                   placeholder={currLang.signupPage.firstname + " *"}
                   placeholderTextColor={"rgba(102,0,50,0.75)"}
                   value={firstName}
                   onChangeText={(text) => {
                     setFirstName(text);
                   }}
-                  style={{ textAlign: isRTL ? "right" : "left" }}
+                  style={{
+                    flex: 1,
+                    textAlign: isRTL ? "right" : "left",
+                    // backgroundColor: "red",
+                  }}
                 />
               </View>
             </View>
             <View style={styles.lastnameContainer}>
               <View style={styles.lastname}>
                 <TextInput
+                  maxLength={inputMaxLength}
                   placeholder={currLang.signupPage.lastname + " *"}
                   placeholderTextColor={"rgba(102,0,50,0.75)"}
                   value={lastName}
                   onChangeText={(text) => {
                     setLastName(text);
                   }}
-                  style={{ textAlign: isRTL ? "right" : "left" }}
+                  style={{
+                    flex: 1,
+                    textAlign: isRTL ? "right" : "left",
+                    // backgroundColor: "red",
+                  }}
                 />
               </View>
             </View>
@@ -222,14 +268,15 @@ export default function SignUpPage({ navigation, route }) {
                     setPhoneNumber(text);
                     setFormattedValue(text);
                   }}
-                  textContainerStyle={{ backgroundColor: "white" }}
+                  textContainerStyle={{ flex: 1, backgroundColor: "white" }}
                   textInputStyle={{
                     fontSize: 16,
                     height: 50,
-                    backgroundColor: "white",
+                    // backgroundColor: "red",
                     textAlign: isRTL ? "right" : "left",
                   }}
                   textInputProps={{
+                    maxLength: inputMaxLength,
                     placeholder: currLang.signupPage.phonenumber + " *",
                     placeholderTextColor: "rgba(102,0,50,0.75)",
                   }}
@@ -240,15 +287,21 @@ export default function SignUpPage({ navigation, route }) {
 
           <View style={styles.birthdayContainer}>
             <TouchableOpacity style={styles.birthday} onPress={showDatepicker}>
-              <View style={{ flex: 8 }}>
+              <View style={{ flex: 1 }}>
                 <TextInput
+                  maxLength={inputMaxLength}
                   placeholder={"DD/MM/YYYY *"}
                   placeholderTextColor={"rgba(102,0,50,0.75)"}
-                  value={birthday.toLocaleDateString()}
-                  onChange={(text) => {
-                    setbirthday(text);
+                  value={birthday.toLocaleDateString("en-US")}
+                  // onEndEditing={(text) => {
+                  //   setbirthday(text);
+                  // }}
+                  style={{
+                    flex: 1,
+                    textAlign: isRTL ? "right" : "left",
+                    // backgroundColor: "red",
                   }}
-                  style={{ textAlign: isRTL ? "right" : "left" }}
+                  readOnly={true}
                 />
               </View>
               <View style={styles.birthdayIcon}>
@@ -263,6 +316,8 @@ export default function SignUpPage({ navigation, route }) {
                     value={date}
                     mode={mode}
                     onChange={onChange}
+                    minimumDate={new Date(1943, 5, 3)}
+                    maximumDate={new Date()}
                   />
                 )}
               </View>
@@ -274,24 +329,33 @@ export default function SignUpPage({ navigation, route }) {
               <>
                 <View style={styles.newPasswordContainer}>
                   <TextInput
-                    placeholder={currLang.signupPage.createnewpassword + " *"}
+                    maxLength={inputMaxLength}
+                    placeholder={currLang.signupPage.createnewpassword}
                     placeholderTextColor={"rgba(102,0,50,0.75)"}
                     onChangeText={(text) => {
                       setNewPassword(text);
                     }}
                     secureTextEntry={true}
-                    style={{ textAlign: isRTL ? "right" : "left" }}
+                    style={{
+                      flex: 1,
+                      textAlign: isRTL ? "right" : "left",
+                      // backgroundColor: "red",
+                    }}
                   />
                 </View>
                 <View style={styles.confirmPasswordContainer}>
                   <TextInput
-                    placeholder={currLang.signupPage.confirmpassword + " *"}
+                    placeholder={currLang.signupPage.confirmpassword}
                     placeholderTextColor={"rgba(102,0,50,0.75)"}
                     onChangeText={(text) => {
                       setConfirmPassword(text);
                     }}
                     secureTextEntry={true}
-                    style={{ textAlign: isRTL ? "right" : "left" }}
+                    style={{
+                      flex: 1,
+                      textAlign: isRTL ? "right" : "left",
+                      // backgroundColor: "red",
+                    }}
                   />
                 </View>
               </>
@@ -317,7 +381,9 @@ export default function SignUpPage({ navigation, route }) {
           </View>
         </View>
       </ScrollView>
+      
     </View>
+
   );
 }
 
@@ -328,11 +394,13 @@ const styles = StyleSheet.create({
   },
 
   logoSection: {
-    flex: 2,
+    flex: 1,
+    maxHeight: "26%",
+    minHeight: "26%",
     alignItems: "center",
     justifyContent: "flex-end",
-
-    // backgroundColor: 'red',
+    backgroundColor: isEdit ? "red" : "white",
+    // backgroundColor: "grey",
   },
   logo: {
     height: 125,
@@ -355,8 +423,10 @@ const styles = StyleSheet.create({
 
   titleContainer: {
     flex: 1,
-    // backgroundColor: 'green',
-
+    maxHeight: "6%",
+    minHeight: "6%",
+    backgroundColor: isEdit ? "green" : "white",
+    paddingTop: 8,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -366,13 +436,20 @@ const styles = StyleSheet.create({
   },
 
   inputsContainer: {
-    flex: 5,
-    // backgroundColor: 'blue',
+    flex: 1,
+    maxHeight: 355,
+    minHeight: 355,
+    backgroundColor: isEdit ? "blue" : "white",
+    // marginHorizontal: '5%',
+    paddingVertical: 20,
   },
   usernameContainer: {
     flex: 1,
+    maxHeight: "15%",
+    minHeight: "15%",
     flexDirection: isRTL ? "row-reverse" : "row",
-    // backgroundColor: '#578978',
+    // backgroundColor: "",
+    backgroundColor: isEdit ? "#578978" : "white",
     alignItems: "flex-end",
     justifyContent: "center",
     marginBottom: 18,
@@ -386,17 +463,21 @@ const styles = StyleSheet.create({
   firstname: {
     flex: 1,
     maxHeight: 50,
+    minHeight: 50,
 
     borderWidth: 2,
     borderColor: "#660032",
     borderRadius: 50,
 
+    justifyContent: "center",
+
     paddingHorizontal: 16,
-    padding: 8,
+    padding: 4,
   },
   lastnameContainer: {
     flex: 1,
     maxHeight: 50,
+    minHeight: 50,
 
     // backgroundColor: "blue",
     paddingHorizontal: 20,
@@ -408,14 +489,18 @@ const styles = StyleSheet.create({
     borderColor: "#660032",
     borderRadius: 50,
 
+    justifyContent: "center",
+
     paddingHorizontal: 16,
-    padding: 8,
+    padding: 4,
   },
   phonenumberContainer: {
     flex: 1,
-    // backgroundColor: "#324234",
+    // backgroundColor: "",
+    backgroundColor: isEdit ? "#324234" : "white",
     justifyContent: "center",
     maxHeight: 50,
+    minHeight: 50,
     marginBottom: 18,
 
     paddingHorizontal: 20,
@@ -432,12 +517,15 @@ const styles = StyleSheet.create({
     // backgroundColor: '#987412',
     justifyContent: "center",
     overflow: "hidden",
+    justifyContent: "center",
+
     // paddingTop: 3,
   },
   birthdayContainer: {
     flex: 1,
     flexDirection: isRTL ? "row-reverse" : "row",
-    // backgroundColor: '#987412',
+    // backgroundColor: '',
+    backgroundColor: isEdit ? "#987412" : "white",
     maxHeight: 50,
     minHeight: 50,
 
@@ -451,96 +539,115 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     maxHeight: 50,
+    minHeight: 50,
+    justifyContent: "center",
 
     borderWidth: 2,
     borderColor: "#660032",
     borderRadius: 50,
 
     paddingHorizontal: 16,
-    padding: 8,
+    padding: 4,
   },
   birthdayIcon: {
-    flex: 1,
+    // flex: 1,
     // position: 'absolute',
     // backgroundColor: 'red',
 
     alignItems: isRTL ? "flex-start" : "flex-end",
   },
-  btnsContainer: {
-    flex: 3,
-    // backgroundColor: 'grey',
-  },
   createNewPasswordContainer: {
-    flex: 1,
+    // flex: 1,
     // backgroundColor: 'red',
   },
   createNewPassword: {},
   passwordContainer: {
-    flex: 2,
+    flex: 1,
+    maxHeight: 118,
+    minHeight: 118,
+    // backgroundColor: "pink",
+    // justifyContent: 'space-between',
+    backgroundColor: isEdit ? "pink" : "white",
     paddingHorizontal: 20,
   },
   newPasswordContainer: {
     flex: 1,
     maxHeight: 50,
+    minHeight: 50,
 
     borderWidth: 2,
     borderColor: "#660032",
     borderRadius: 50,
+    justifyContent: "center",
 
     paddingHorizontal: 16,
-    padding: 8,
+    padding: 4,
     marginBottom: 18,
   },
   confirmPasswordContainer: {
     flex: 1,
     maxHeight: 50,
+    minHeight: 50,
 
     borderWidth: 2,
     borderColor: "#660032",
     borderRadius: 50,
+    justifyContent: "center",
 
     paddingHorizontal: 16,
-    padding: 8,
+    padding: 4,
   },
 
   actionContainer: {
     flex: 1,
+    maxHeight: "5%",
+    minHeight: "5%",
     flexDirection: isRTL ? "row-reverse" : "row",
-    // backgroundColor: 'red',
 
-    justifyContent: "space-around",
-    // paddingBottom: 6,
+    backgroundColor: isEdit ? "lightblue" : "white",
+    marginTop: 30,
+    justifyContent: "space-evenly",
+    alignItems: "center",
   },
   loginContainer: {
-    // backgroundColor: 'blue',
-    // marginBottom: 47,
+    flex: 1,
+
+    maxWidth: 140,
+    minWidth: 140,
     maxHeight: 40,
     minHeight: 40,
     justifyContent: "center",
     alignItems: "center",
+
     borderColor: "#660032",
+
     borderWidth: 2,
     borderRadius: 20,
   },
   login: {
-    flex: 1,
-    alignItems: "flex-end",
-
-    paddingTop: 2,
-    padding: 8,
+    // flex: 1,
+    // // alignItems: "flex-end",
+    // paddingTop: 2,
+    // padding: 8,
   },
 
   submitContainer: {
-    backgroundColor: "#660032",
+    flex: 1,
+
+    maxWidth: 100,
+    minWidth: 40,
     maxHeight: 40,
     minHeight: 40,
     borderRadius: 20,
+
+    backgroundColor: "#660032",
+    justifyContent: "center",
+    alignItems: "center",
   },
   submit: {
-    flex: 1,
-    alignItems: "flex-start",
-
-    paddingTop: 3,
-    padding: 8,
+    // flex: 1,
+    // alignItems: "flex-start",
+    // paddingTop: 10,
+    // padding: 8,
   },
 });

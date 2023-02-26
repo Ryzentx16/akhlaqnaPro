@@ -5,10 +5,15 @@ import React, {
   useCallback,
   useEffect,
 } from "react";
-import { Image, StyleSheet, View, SafeAreaView, FlatList } from "react-native";
-// import { FlatList } from "react-native-gesture-handler";
-import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import {
+  Image,
+  StyleSheet,
+  View,
+  SafeAreaView,
+  FlatList,
+  BackHandler,
+} from "react-native";
+import Modal from "react-native-modal";
 
 import CommentCard from "../comment/CommentCard";
 import comments from "../../data/comments";
@@ -44,16 +49,36 @@ function prepercomentsTempData() {
 }
 
 export default function PostsPage({ navigation }) {
+  useEffect(() => {
+    const backAction = () => {
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  });
+
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [commentPost, setCommentPost] = useState(null);
   const commentSheetRef = useRef(null);
   const snapPoints = useMemo(() => ["65%", "100%"], []);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [image, setImage] = useState({ uri: null, height: 1, width: 1 });
 
   const onPressComment = () => {
-    console.log("Comment Pressed");
+    // console.log("Comment Pressed");
   };
 
-  console.log("Comment State: " + (isCommentOpen ? "Opened" : "Closed"));
+  const onPressImage = ({ data }) => {
+    setImage(data);
+    setIsModalVisible(true);
+  };
+
+  // console.log("Comment State: " + (isCommentOpen ? "Opened" : "Closed"));
 
   useEffect(() => {
     textColor = themes._currTextTheme;
@@ -72,17 +97,18 @@ export default function PostsPage({ navigation }) {
             <PostCard
               navigation={navigation}
               post={item.item}
+              // onImagePress={({ data }) => onPressImage({ data })}
               key={index}
               onPressComment={(clickedPost) => {
                 setCommentPost(clickedPost);
                 setIsCommentOpen(true);
-                console.log("Comment Pressed: " + clickedPost.commentsId);
+                // console.log("Comment Pressed: " + clickedPost.commentsId);
               }}
             />
           );
         }}
       />
-      {!isCommentOpen ? console.log("Comment Clsoed: PostsPage") : null}
+      {/* {!isCommentOpen ? console.log("Comment Clsoed: PostsPage") : null} */}
       {isCommentOpen && (
         <CommentPage
           post={commentPost}
@@ -91,6 +117,7 @@ export default function PostsPage({ navigation }) {
           }}
         />
       )}
+      
     </SafeAreaView>
   );
 }
@@ -122,5 +149,21 @@ const styles = StyleSheet.create({
 
   scrollContainer: {
     flex: 1,
+  },
+
+  modalImageContainer: {
+    // flex: 1,
+    borderRadius: 23,
+    backgroundColor: "red",
+    justifyContent: "center",
+    overflow: "hidden",
+  },
+
+  modalImage: {
+    resizeMode: "contain",
+    backgroundColor: "black",
+    width: "100%",
+    // Without height undefined it won't work
+    height: undefined,
   },
 });

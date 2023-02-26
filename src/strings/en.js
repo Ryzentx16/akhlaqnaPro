@@ -5,27 +5,38 @@ const en = {
     forgetpassword: "Forget Password",
     title: "Login",
     signup: "Sign up",
-    login: 'Login'
+    login: "Login",
   },
   signupPage: {
+    title: "Create New Account",
     firstname: "First Name",
-    editprofile: 'Edit profile',
+    editprofile: "Edit profile",
     lastname: "Last Name",
     phonenumber: "Phone Numebr",
     birthday: "Birthday",
-    createnewpassword: "Create New Password",
-    confirmpassword: "Confirm Password",
+    createnewpassword: "Create New Password *",
+    confirmpassword: "Confirm Password *",
     submit: "Submit",
     login: "Login",
     editalert: {
       title: "Congratulations !",
-      content: "Your account changed successfully"
-    }
+      content: "Your account changed successfully",
+    },
   },
   otpPage: {
     wesentotp: "Your OTP: ",
     resendotp: "Resend",
     changemyphone: "Change my phone number",
+    submit: "Submit",
+  },
+  changepasswordpage: {
+    submitalert: {
+      title: "Error",
+      content: "Password doesn't match or its an empty",
+    },
+    changepasswordfor: "Change Password for",
+    createnewpassword: "Create New Password *",
+    confirmpassword: "Confirm Password *",
     submit: "Submit",
   },
   searchPage: {
@@ -55,29 +66,29 @@ const en = {
       title: "Warning",
       content: "In order to Apply the Changes you need to sign out",
       buttons: {
-        yessingout: 'Yes, Sign out',
-        cancel: 'Cancel',
-      }
+        yessingout: "Yes, Sign out",
+        cancel: "Cancel",
+      },
     },
   },
-  
+
   languagepage: {
-    applychange: 'Apply Changes',
+    applychange: "Apply Changes",
     applychangealert: {
       title: "Warning",
       content: "In order to Apply the Changes you need to sign out",
       buttons: {
-        yessingout: 'Yes, Sign out',
-        cancel: 'Cancel',
-      }
+        yessingout: "Yes, Sign out",
+        cancel: "Cancel",
+      },
     },
   },
 
   commentinput: {
-    content: "Type a comment" 
+    content: "Type a comment",
   },
   messageinput: {
-    content: "Type a message" 
+    content: "Type a message",
   },
 
   personprofilepage: {
@@ -85,11 +96,20 @@ const en = {
       title: "Warning",
       content: "In order to Change you need to sign out",
       buttons: {
-        yessingout: 'Yes, Sign out',
-        cancel: 'Cancel',
-      }
+        yessingout: "Yes, Sign out",
+        cancel: "Cancel",
+      },
     },
-  }
+    actions: {
+      editprofile: "Edit Profile",
+      message: "Message",
+      LostandFound: "Lost & Found",
+    },
+  },
+
+  postcard: {
+    readmore: "Read More",
+  },
 };
 
 export default en;

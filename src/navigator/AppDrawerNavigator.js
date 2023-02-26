@@ -1,7 +1,13 @@
 import { useEffect } from "react";
 import { BackHandler, Alert, I18nManager } from "react-native";
 
-import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
+import {
+  createDrawerNavigator,
+  DrawerItem,
+  DrawerContentScrollView,
+  DrawerItemList,
+} from "@react-navigation/drawer";
+// import { useNavigation } from '@react-navigation/native';
 
 import AppHeader from "../components/AppHeader.js";
 import PersonProfile from "../screens/Profiles/PersonProfile.js";
@@ -13,19 +19,36 @@ import FoundPage from "../../src/screens/post/FoundPage";
 import SettingNavigator from "./SettingNavigator.js";
 
 import users from "../data/users.js";
+import OurUser from "../OurUser";
 import languages from "../strings/LanguagesController";
 import ProfileNavigator from "./ProfileNavigator.js";
 
 const Drawer = createDrawerNavigator();
 const isRTL = I18nManager.isRTL;
+let currLang = languages.currLang();
 
-// const currLang = languages.currLang();
+function CustomDrawerContent(props) {
+  const { navigation } = props;
+
+  return (
+    <DrawerContentScrollView {...props}>
+      <DrawerItemList {...props} />
+      <DrawerItem
+        label={currLang.drawer.singout}
+        onPress={() => navigation.popToTop()}
+        labelStyle={{ textAlign: isRTL ? "right" : "left" }}
+        style={isRTL ? { left: 0 } : { right: 0 }}
+      />
+    </DrawerContentScrollView>
+  );
+}
 
 export default function AppDrawerNavigator() {
   useEffect(() => {
-    // console.log(logo);
+    currLang = languages.currLang();
+
     const backAction = () => {
-      return true;
+      return false;
     };
 
     const backHandler = BackHandler.addEventListener(
@@ -34,40 +57,36 @@ export default function AppDrawerNavigator() {
     );
 
     return () => backHandler.remove();
-  }, []);
-
-  let currLang = languages.currLang();
-  useEffect(() => {
-    currLang = languages.currLang();
   });
 
   return (
     <Drawer.Navigator
       initialRouteName="Pages"
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
+      screenListeners={{beforeRemove: null}}
       screenOptions={{
+        swipeEnabled: false,
         headerShown: false,
         drawerType: "front",
         drawerStyle: {
           backgroundColor: "white",
-          borderWidth: 5,
-
-          borderRightWidth: isRTL ? 5 : 0,
-          borderLeftWidth: isRTL ? 0 : 5,
+          
+          borderLeftWidth: 5,
+          borderTopWidth: 5,
+          borderBottomWidth: 5,
 
           borderColor: "#660032",
 
-          borderTopRightRadius: isRTL ? 15 : 0,
-          borderBottomRightRadius: isRTL ? 15 : 0,
-
-          borderTopLeftRadius: isRTL ? 0 : 15,
-          borderBottomLeftRadius: isRTL ? 0 : 15,
+          borderTopLeftRadius:  15,
+          borderBottomLeftRadius:  15,
 
           marginTop: 80,
-          minHeight: "20%",
-          maxHeight: "65%",
+          minHeight: "18%",
+          maxHeight: "67%",
           width: 240,
         },
         drawerLabelStyle: {
+          flex: 1,
           textAlign: isRTL ? "right" : "left",
         },
         drawerPosition: isRTL ? "left" : "right",
@@ -81,8 +100,15 @@ export default function AppDrawerNavigator() {
       <Drawer.Screen
         name="MyProfile"
         component={ProfileNavigator}
-        initialParams={{ user: users[0], isDrawer: true }}
-        options={{ title: "My Profile", drawerItemStyle: { display: "none" } }}
+        initialParams={{
+          user: OurUser.user,
+          isDrawer: true,
+        }}
+        options={{
+          title: "My Profile",
+          drawerItemStyle: { display: "none" },
+          swipeEnabled: false,
+        }}
       />
 
       <Drawer.Screen
@@ -107,13 +133,10 @@ export default function AppDrawerNavigator() {
       <Drawer.Screen
         name="SettingPage"
         component={SettingNavigator}
+        // initialParams={{
+        //   drawerNavigation: navigation,
+        // }}
         options={{ title: currLang.drawer.settings }}
-      />
-
-      <Drawer.Screen
-        name="Sign Out"
-        component={AppStartupNavigator}
-        options={{ title: currLang.drawer.singout }}
       />
     </Drawer.Navigator>
   );

@@ -18,6 +18,7 @@ import SeeMoreText from "../../components/SeeMoreText";
 import Helper from "../../shared/helpers";
 
 import themes from "../../ThemeController";
+import ImageModal from "../../components/ImageModal";
 
 let textColor = themes._currTextTheme;
 let backColor = themes._currBackColorTheme;
@@ -58,6 +59,8 @@ export default function PostCard(props) {
   let { post, navigation, onPressComment, isLostOrFound } = props;
   const [numOfLikes, setNumOfLikes] = useState(post.numberOfLikes); //To show ur remaining Text
   const [isLiked, setIsLiked] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
   const onMakeLike = () => {
     if (isLiked) {
       setNumOfLikes(numOfLikes - 1);
@@ -68,13 +71,17 @@ export default function PostCard(props) {
     setIsLiked(!isLiked);
   };
 
+  // const onImagePress = () => {
+  //   setIsModalVisible(true);
+  // };
+
   var postDuration = Helper.getPostDuration(post.createdAt);
-  var imageHeight;
+  var imageHeight, imageWidth;
 
   if (post.hasOwnProperty("image") == true) {
     imageHeight = Image.resolveAssetSource(post.image).height;
+    imageWidth = Image.resolveAssetSource(post.image).width;
   }
-
 
   useEffect(() => {
     textColor = themes._currTextTheme;
@@ -107,13 +114,6 @@ export default function PostCard(props) {
             <AntDesign name="questioncircle" size={25} color={textColor} />
           ) : null}
         </View>
-        {/* <TouchableOpacity style={headerStyles.headerDotsContainer}>
-          <MaterialCommunityIcons
-            name={"dots-vertical"}
-            color={textColor}
-            size={25}
-          />
-        </TouchableOpacity> */}
       </View>
 
       <View style={styles.detailsContainer}>
@@ -125,14 +125,19 @@ export default function PostCard(props) {
       </View>
 
       {post.hasOwnProperty("image") == true && (
-        <View
-          style={[
-            styles.imageContainer,
-            { height: imageHeight >= 450 ? 450 : imageHeight },
-          ]}
-        >
-          <Image style={styles.postImage} source={post.image} />
-        </View>
+        <>
+          <TouchableOpacity
+            onPress={() => setIsModalVisible(true)}
+            style={[
+              styles.imageContainer,
+              { height: imageHeight >= 450 ? 450 : imageHeight },
+            ]}
+          >
+            <Image style={styles.postImage} source={post.image} />
+          </TouchableOpacity>
+
+          <ImageModal status={isModalVisible} postImage={post.image} onCancell={() => setIsModalVisible(false)}/>
+        </>
       )}
 
       <View style={styles.actionContainer}>
@@ -253,7 +258,7 @@ const styles = StyleSheet.create({
     height: 240,
     flex: 1,
     width: null,
-    resizeMethod: "auto",
+    // resizeMethod: "auto",
     resizeMode: "stretch",
   },
 
@@ -261,5 +266,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: textColor,
     lineHeight: 18,
+    textAlign: "auto",
   },
 });

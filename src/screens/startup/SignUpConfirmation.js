@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Image,
   ScrollView,
@@ -11,35 +11,42 @@ import {
   View,
   Alert,
 } from "react-native";
-import users from "../data/users";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import CheckOTP from "../../../API/CheckOTP";
+import languages from "../../strings/LanguagesController";
 
 const windowHeight = Dimensions.get("window").height;
 const isRTL = I18nManager.isRTL;
+const isEdit = false;
 
-export default function ChangePasswordPage({ navigation, route }) {
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+// const currLang = languages.currLang();
 
-  const isValide = () => {
-    if (newPassword === '' || confirmPassword === '') {
-        return false;
-    } else if (newPassword === confirmPassword) {
-        return true;
-    } else {
-        // console.warn("result: " + )
-    }
+export default function SignUpConfirmation({ navigation, route }) {
+  const [OTP, setOtp] = useState("999999");
 
-    return null;
+  const isChangePass = route.params?.isChangePass;
+  let currLang = languages.currLang();
+  useEffect(() => {
+    currLang = languages.currLang();
+  });
+
+  const onChangePass = () => {
+    navigation.navigate("ChangePasswordPage", {
+      phoneNumber: route.params?.phoneNumber,
+    });
   };
 
-  const onSubmit = () => {
-    setNewPassword('');
-    setConfirmPassword('');
-    isValide()
-      ? navigation.replace('AppStartupNavigator')
-      : Alert.alert("Error", "Password doesn't match or its an empty");
+  const checkOTP = () => {
+    navigation.navigate("Home");
+    // CheckOTP(
+    //   {
+    //     otp: OTP,
+    //     phoneNumber: route.params?.phoneNumber,
+    //   },
+    //   () => navigation.navigate("Home")
+    // );
+    // return;
   };
-
   const onResend = () => {
     //fake OTP generator:
     otp = Math.floor(Math.random() * 1000000).toString();
@@ -62,61 +69,69 @@ export default function ChangePasswordPage({ navigation, route }) {
           <View style={styles.logoContainer}>
             <View style={styles.logo}>
               <Image
-                source={require("../../assets/Logo.png")}
+                source={require("../../../assets/Logo.png")}
                 style={styles.imageLogo}
               />
             </View>
           </View>
+
           <View style={styles.textContainer}>
-            <Text style={styles.text}>Change Password for {route.params?.phoneNumber}</Text>
+            <Text style={styles.text}>{currLang.otpPage.wesentotp}</Text>
           </View>
         </View>
 
         <View style={styles.inputContainer}>
-          <View style={styles.newPasswordInput}>
+          <View style={styles.input}>
             <TextInput
-              placeholder={"New Password *"}
+              placeholder={"OTP"}
               placeholderTextColor={"#660032"}
               onChangeText={(text) => {
-                setNewPassword(text);
+                setOtp(text);
               }}
-              //   maxLength={6}
+              maxLength={6}
               style={{ width: "100%", textAlign: "center" }}
-              secureTextEntry
-            />
-          </View>
-          <View style={styles.confirmPasswordInput}>
-            <TextInput
-              placeholder={"Confirm Password *"}
-              placeholderTextColor={"#660032"}
-              onChangeText={(text) => {
-                setConfirmPassword(text);
-              }}
-              //   maxLength={6}
-              style={{ width: "100%", textAlign: "center" }}
-              secureTextEntry
             />
           </View>
         </View>
 
         <View style={styles.actionsContainer}>
           <View style={styles.submitContainer}>
-            <TouchableOpacity style={styles.submit} onPress={onSubmit}>
-              <Text style={{ color: "white", fontSize: 20 }}>Submit</Text>
-            </TouchableOpacity>
-          </View>
-          {/* <View style={styles.resendContainer}>
-            <TouchableOpacity style={styles.resend} onPress={onResend}>
-              <Text style={{ color: "#660032", fontSize: 20 }}>
-                Resend The OTP
+            <TouchableOpacity
+              style={styles.submit}
+              onPress={isChangePass ? onChangePass : checkOTP}
+            >
+              <Text style={{ color: "white", fontSize: 20 }}>
+                {currLang.otpPage.submit}
               </Text>
             </TouchableOpacity>
-          </View> */}
-          {/* <View style={styles.changePhoneContainer}>
-                        <TouchableOpacity style={styles.changePhone} onPress={() => navigation.goBack()}>
-                            <Text style={{ color: '#660032', fontSize: 20 }}>Change My Phone Number</Text>
-                        </TouchableOpacity>
-                    </View> */}
+          </View>
+          {!isChangePass && (
+            <>
+              <View style={styles.resendContainer}>
+                <TouchableOpacity style={styles.resend} onPress={onResend}>
+                  <Text style={{ color: "#660032", fontSize: 22 }}>
+                    {currLang.otpPage.resendotp}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.changePhoneContainer}>
+                <TouchableOpacity
+                  style={styles.changePhone}
+                  onPress={() => navigation.goBack()}
+                >
+                  <Text
+                    style={{
+                      color: "#660032",
+                      fontSize: 16,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {currLang.otpPage.changemyphone}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
         </View>
       </ScrollView>
     </View>
@@ -132,19 +147,17 @@ const styles = StyleSheet.create({
 
   headContainer: {
     flex: 3,
-    // backgroundColor: 'blue',
-    marginTop: 90,
-  },
-  backContainer: {
-    marginTop: 10,
-    justifyContent: "center",
+    backgroundColor: isEdit ? 'red' : 'white',
+    // marginTop: 90,
   },
   logoContainer: {
-    // flex: 1,
+    flex: 3,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: 'flex-end',
 
     // backgroundColor: 'green',
+
+    paddingBottom: 5,
   },
   logo: {
     height: 125,
@@ -157,42 +170,34 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   imageLogo: {
+    // alignSelf: 'center',
     height: 87,
     width: 57,
 
+    // marginTop: 12,
     marginLeft: isRTL ? -5 : 5,
   },
-
   textContainer: {
-    marginTop: "20%",
-    alignSelf: "center",
-    // backgroundColor: 'red',
+    flex: 1,
+    justifyContent: 'flex-end',
+    // marginTop: "20%",
+    alignItems: "center",
+    // backgroundColor: 'lightblue',
   },
   text: {
     fontWeight: "bold",
-    fontSize: 20,
+    fontSize: 14,
     color: "#660032",
   },
 
   inputContainer: {
-    flex: 2,
-    // backgroundColor: '#165815',
+    flex: 1,
+    backgroundColor: isEdit ? '#165815' : 'white',
     justifyContent: "center",
 
     paddingHorizontal: 90,
   },
-  newPasswordInput: {
-    height: 47,
-    // backgroundColor: 'red',
-
-    borderColor: "#660032",
-    borderWidth: 2,
-    borderRadius: 50,
-
-    paddingLeft: 15,
-    padding: 10,
-  },
-  confirmPasswordInput: {
+  input: {
     height: 47,
     // backgroundColor: 'red',
 
@@ -201,14 +206,14 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     // justifyContent: 'center',
     // alignItems: 'center',
-    marginTop: 20,
     paddingLeft: 15,
     padding: 10,
   },
 
   actionsContainer: {
-    flex: 4,
-    // backgroundColor: 'red'
+    flex: 3,
+    backgroundColor: isEdit ? 'blue' : 'white',
+
   },
   submitContainer: {
     marginTop: 7,
@@ -220,7 +225,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#660032",
 
     borderColor: "#660032",
-    borderWidth: 2,
+    // borderWidth: 2,
     borderRadius: 50,
 
     justifyContent: "center",

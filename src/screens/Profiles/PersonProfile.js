@@ -18,17 +18,21 @@ import languages from "../../strings/LanguagesController";
 import AppHeader from "../../components/AppHeader";
 import users from "../../data/users";
 
-// import comments from "../../data/comments";
+import { useNavigation } from "@react-navigation/native";
 import CommentPage from "../comment/CommentPage";
+import ImageModal from "../../components/ImageModal";
+import OurUser from "../../OurUser";
 
 const isRTL = I18nManager.isRTL;
 
 export default function PersonProfile({ navigation, route }) {
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [commentPost, setCommentPost] = useState(null);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const ourUser = route.params?.user;
   const isDrawer = route.params?.isDrawer;
+  const globleNavigation = useNavigation();
+
   const isUserMe = ourUser.id === "u1" ? true : false;
   let x = [];
 
@@ -53,12 +57,15 @@ export default function PersonProfile({ navigation, route }) {
         {
           text: currLang.languagepage.applychangealert.buttons.yessingout,
           onPress: () => {
-            navigation.replace("AppStartupNavigator", {
-              screen: "SignUpPage",
-              params: {
-                user: users[0],
-              },
-            });
+            globleNavigation.dispatch(
+              globleNavigation.reset({
+                index: 0,
+                routes: [
+                  { name: "SignUpPage", params: { user: OurUser.user } },
+                ],
+              })
+              // navigation.navigate({ name: "SignUpPage", params: {user: users[0]} })
+            );
           },
         },
         {
@@ -67,6 +74,10 @@ export default function PersonProfile({ navigation, route }) {
         },
       ]
     );
+  };
+
+  const onImage = () => {
+    setIsModalOpen(true);
   };
 
   return (
@@ -78,14 +89,23 @@ export default function PersonProfile({ navigation, route }) {
         ListHeaderComponent={
           <View style={headerStyles.headContaienr}>
             <View style={headerStyles.head}>
+              <ImageModal
+                status={isModalOpen}
+                postImage={require("../../../assets/myProfileExample.png")}
+                onCancell={() => setIsModalOpen(false)}
+              />
+
               <View style={headerStyles.profileContainer}>
-                <View style={styles.imageContainer}>
+                <TouchableOpacity
+                  style={styles.imageContainer}
+                  onPress={() => onImage()}
+                >
                   <UserAvatar
                     src={ourUser.profileImage}
                     userName={"Jhon"}
                     size={80}
                   />
-                </View>
+                </TouchableOpacity>
                 <View style={headerStyles.detailsContaienr}>
                   <Text style={headerStyles.name}>{ourUser.name}</Text>
                   {/* <MaterialCommunityIcons
@@ -95,18 +115,21 @@ export default function PersonProfile({ navigation, route }) {
                   /> */}
                 </View>
               </View>
+
               <View style={headerStyles.actionContaienr}>
                 {!isUserMe ? (
                   <>
                     <TouchableOpacity style={headerStyles.btnStyle}>
                       <View style={headerStyles.messageButton}>
-                        <Text style={headerStyles.messageText}>Message</Text>
+                        <Text style={headerStyles.messageText}>
+                          {currLang.personprofilepage.actions.message}
+                        </Text>
                       </View>
                     </TouchableOpacity>
                     <TouchableOpacity style={headerStyles.btnStyle}>
                       <View style={headerStyles.lostAndFoundButton}>
                         <Text style={headerStyles.lostAndFoundText}>
-                          Lost & Found
+                          {currLang.personprofilepage.actions.LostandFound}
                         </Text>
                       </View>
                     </TouchableOpacity>
@@ -118,7 +141,7 @@ export default function PersonProfile({ navigation, route }) {
                   >
                     <View style={headerStyles.editProfileButton}>
                       <Text style={headerStyles.editProfileText}>
-                        Edit Profile
+                        {currLang.personprofilepage.actions.editprofile}
                       </Text>
                     </View>
                   </TouchableOpacity>

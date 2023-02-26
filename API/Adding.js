@@ -16,7 +16,6 @@ export default function Adding(action, data, callback) {
       //config
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json",
       },
     })
     .then((res) => {

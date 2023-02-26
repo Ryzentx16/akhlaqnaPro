@@ -31,9 +31,8 @@ const isRTL = I18nManager.isRTL;
 
 export default function AppBottomTabNavigator({ navigation }) {
   useEffect(() => {
-    // console.log(logo);
     const backAction = () => {
-      return true;
+      return false;
     };
 
     const backHandler = BackHandler.addEventListener(
@@ -42,7 +41,7 @@ export default function AppBottomTabNavigator({ navigation }) {
     );
 
     return () => backHandler.remove();
-  }, []);
+  });
 
   return (
     <Tab.Navigator
@@ -59,6 +58,8 @@ export default function AppBottomTabNavigator({ navigation }) {
         },
         header: () => <AppHeader navigation={navigation} isDrawer={true} />,
       }}
+      backBehavior={"initialRoute"}
+      screenListeners={{beforeRemove: null}}
       tabbarop
       barStyle={{ backgroundColor: "black" }} //This is where you can manipulate its look.
     >

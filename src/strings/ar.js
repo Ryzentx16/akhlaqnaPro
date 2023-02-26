@@ -14,8 +14,8 @@ const ar = {
     lastname: "الاسم الاخير",
     phonenumber: "رقم الهاتف",
     birthday: "تاريخ الميلاد",
-    createnewpassword: "ادخل كلمة مرور",
-    confirmpassword: "تأكيد كلمة المرور",
+    createnewpassword: "* ادخل كلمة مرور",
+    confirmpassword: "* تأكيد كلمة المرور",
     submit: "المتابعة",
     login: "تسجيل الدخول",
     editalert: {
@@ -28,6 +28,16 @@ const ar = {
     resendotp: "إعادة ارسال",
     changemyphone: "تغيير رقم الهاتف",
     submit: "المتابعة",
+  },
+  changepasswordpage: {
+    changepasswordfor: "تغيير كلمة المرور ل",
+    createnewpassword: "* ادخل كلمة مرور",
+    confirmpassword: "* تأكيد كلمة المرور",
+    submit: 'المتابعة',
+    submitalert: {
+      title: "Error",
+      content: "كلمة المرور لا تتطابق او غير مكتوبة بشكل صحيح",
+    },
   },
   searchPage: {
     history: "البحث السابق",
@@ -90,6 +100,15 @@ const ar = {
         cancel: 'إلغاء',
       }
     },
+    actions: {
+      editprofile: 'تعديل الحساب',
+      message: "رسالة",
+      LostandFound: "المفقودات و الموجودات",
+    }
+  },
+
+  postcard: {
+    readmore: 'قرأة المزيد'
   }
 };
 

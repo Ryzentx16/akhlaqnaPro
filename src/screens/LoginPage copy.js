@@ -20,68 +20,48 @@ const windowHeight = Dimensions.get("screen").height;
 const isRTL = I18nManager.isRTL;
 
 export default function LoginPage({ navigation }) {
-  /* #region  Testing AsyncStroage */
-  // const _storeData = async () => {
-  //   try {
-  //     await AsyncStorage.setItem(
-  //       '@MySuperStore:key',
-  //       'I like to save it.',
-  //     );
-  //   } catch (error) {
-  //     console.error(error);
-  //     // Error saving data
-  //   }
-  // };
-
-  // const _retrieveData = async () => {
-  //   try {
-  //     const value = await AsyncStorage.getItem('@MySuperStore:key');
-  //     if (value !== null) {
-  //       // We have data!!
-  //       console.log(value);
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //     // Error retrieving data
-  //   }
-  // };
-
-  // _storeData();
-  // console.warn(_retrieveData());
-  /* #endregion */
-
   const [value, setValue] = useState("");
   const [formattedValue, setFormattedValue] = useState("+97470031251");
   const [valid, setValid] = useState(false);
   const phoneInput = useRef(PhoneInput);
-  
+
   const [phoneNumber, setPhoneNumber] = useState("70031251");
   const [password, setPassword] = useState("12345");
 
   const checkLogin = () => {
-    // navigation.navigate("Home");
-    const axios = require("axios").default;
-    axios
-      .get(
-        "http://ryzentx.online/?phoneNumber=" +
-          formattedValue +
-          "&password=" +
-          password
-      )
-      .then(function (response) {
-        if (response.data === 1) {
-          // redirect to Dashboard
-          navigation.navigate("Home");
-        } else {
-          // alert something is wrong
-          Alert.alert("Error", "Username/Password Wrong");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    navigation.navigate("Home");
+    // const axios = require("axios").default;
+    // axios
+    //   .get(
+    //     "http://ryzentx.online/?phoneNumber=" +
+    //       formattedValue +
+    //       "&password=" +
+    //       password
+    //   )
+    //   .then(function (response) {
+    //     if (response.data === 1) {
+    //       // redirect to Dashboard
+    //       navigation.navigate("Home");
+    //     } else {
+    //       // alert something is wrong
+    //       Alert.alert("Error", "Username/Password Wrong");
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //   });
   };
 
+  const onForget = () => {
+    navigation.navigate("SignUpConfirmation", {
+      isChangePass: true,
+      phoneNumber: formattedValue,
+    });
+  };
+  
+  const onSignup = () => {
+    navigation.navigate("SignUpPage");
+  };
 
   let currLang = languages.currLang();
   useEffect(() => {
@@ -90,10 +70,6 @@ export default function LoginPage({ navigation }) {
 
   return (
     <View style={styles.background}>
-      {/* {Alert.alert(
-        "Login Information",
-        "Phone: " + phoneNumber + "\n" + "Pass: " + password
-      )} */}
       <ScrollView
         contentContainerStyle={styles.form}
         scrollEnabled={false}
@@ -114,18 +90,15 @@ export default function LoginPage({ navigation }) {
         </View>
 
         <View style={styles.inputsArea}>
-          <View style={[styles.inputSection, { justifyContent: "center" }]}>
+          <View style={styles.phoneInputSection}>
             <View style={styles.phoneInput}>
-              <View
-                style={[styles.iconHolder, { marginLeft: 40, marginRight: 0 }]}
-              >
+              <View style={styles.phoneIconHolder}>
                 <MaterialCommunityIcons
                   size={30}
                   name={"phone"}
                   color={"#660032"}
                 />
               </View>
-              {/* <View style={{justifyContent: 'center'}}> */}
               <PhoneInput
                 ref={phoneInput}
                 defaultValue={phoneNumber}
@@ -154,9 +127,9 @@ export default function LoginPage({ navigation }) {
               {/* </View> */}
             </View>
           </View>
-          <View style={styles.inputSection}>
+          <View style={styles.passInputSection}>
             <View style={styles.passInput}>
-              <View style={styles.iconHolder}>
+              <View style={styles.lockIconHolder}>
                 <MaterialCommunityIcons
                   size={30}
                   name={"lock"}
@@ -177,27 +150,16 @@ export default function LoginPage({ navigation }) {
           </View>
         </View>
 
-        <View style={styles.buttonsArea}>
+        <View style={styles.actionsArea}>
           <TouchableOpacity onPress={checkLogin} style={styles.loginButton}>
             <Text style={styles.textLogin}>{currLang.loginPage.login}</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("SignUpConfirmation", {
-                isChangePass: true,
-                phoneNumber: formattedValue,
-              })
-            }
-            style={styles.forgetButton}
-          >
+          <TouchableOpacity onPress={onForget} style={styles.forgetButton}>
             <Text style={styles.textForget}>
               {currLang.loginPage.forgetpassword}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.signupButton}
-            onPress={() => navigation.navigate("SignUpPage")}
-          >
+          <TouchableOpacity style={styles.signupButton} onPress={onSignup}>
             <Text style={styles.textSignup}>{currLang.loginPage.signup}</Text>
           </TouchableOpacity>
         </View>
@@ -215,7 +177,7 @@ const styles = StyleSheet.create({
     flex: 1,
     minHeight: windowHeight,
     maxHeight: windowHeight,
-    borderColor: "#660032",
+    // borderColor: "#660032",
     backgroundColor: "white",
   },
   border: {
@@ -267,69 +229,101 @@ const styles = StyleSheet.create({
 
   inputsArea: {
     flex: 1,
+    // marginHorizontal: 32,
+    // backgroundColor: 'grey',
+    maxHeight: "25%",
+    minHeight: "25%",
   },
-  inputSection: {
-    // Used Twice !
+  phoneInputSection: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
 
-    paddingHorizontal: 32,
+    // backgroundColor: 'green',
+
+    maxHeight: 50,
+    minHeight: 50,
+
+    marginBottom: 22,
+    margin: 50,
   },
-  iconHolder: {
-    // flex: 1,
+  passInputSection: {
+    flex: 1,
+    alignItems: "center",
+    // backgroundColor: 'blue',
+
+    maxHeight: 50,
+    minHeight: 50,
+
+    marginTop: 22,
+    margin: 50,
+  },
+  phoneIconHolder: {
     width: 32,
     justifyContent: "center",
     // backgroundColor: 'red',
-    // marginRight: 7,
+  },
+  lockIconHolder: {
+    width: 32,
+    justifyContent: "center",
+    // backgroundColor: 'red',
   },
   phoneInput: {
-    // flexShrink: 1,
+    flex: 1,
     flexDirection: "row",
-    height: 50,
-
-    // backgroundColor: "white",
-    borderColor: "#660032",
-    borderWidth: 2,
-    borderRadius: 30,
-    // backgroundColor: "green",
-
-    justifyContent: "center",
-    overflow: "hidden",
-  },
-  passInput: {
-    flexDirection: "row",
-    height: 50,
+    maxHeight: 50,
+    minHeight: 50,
+    maxWidth: 350,
+    minWidth: 350,
 
     backgroundColor: "white",
     borderColor: "#660032",
     borderWidth: 2,
     borderRadius: 30,
 
-    padding: 8,
-    // paddingTop: 7,
-    // paddingLeft: 13,
-    // paddingRight: 13,
-    // paddingBottom: 7,
+    paddingHorizontal: 15,
+    overflow: "hidden",
+  },
+  passInput: {
+    flex: 1,
+    flexDirection: "row",
+    maxWidth: 350,
+    minWidth: 350,
 
+    backgroundColor: "white",
+    borderColor: "#660032",
+    borderWidth: 2,
+    borderRadius: 30,
+
+    paddingHorizontal: 15,
     overflow: "hidden",
   },
 
-  buttonsArea: {
+  actionsArea: {
     flex: 1,
+    // backgroundColor: 'red'
+    alignItems: "center",
   },
   forgetButton: {
-    marginTop: 10,
+    marginTop: 15,
     // marginBottom: 10,
+    width: 150,
   },
   loginButton: {
     flex: 1,
-    width: 250,
+    // maxWidth: '53%',
+    // minWidth: '53%',
     maxHeight: 45,
+    minHeight: 45,
+
     alignSelf: "center",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "grey",
     backgroundColor: "#660032",
     borderRadius: 30,
+
+    paddingHorizontal: 60,
   },
   textLogin: {
     fontSize: 20,
@@ -340,21 +334,25 @@ const styles = StyleSheet.create({
   textForget: {
     fontSize: 12,
     color: "#660032",
-    // marginLeft: 5,
+    // width:
     alignSelf: "center",
   },
   signupButton: {
     flex: 1,
-    width: 150,
+    maxWidth: 150,
+    minWidth: 150,
     maxHeight: 40,
+    minHeight: 40,
+
     alignSelf: "center",
     justifyContent: "center",
     alignItems: "center",
-    // backgroundColor: 'grey',
+
     borderColor: "#660032",
     borderWidth: 2,
     borderRadius: 30,
-    marginTop: 100,
+
+    marginTop: "28%",
   },
   textSignup: {
     fontSize: 18,
