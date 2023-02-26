@@ -118,6 +118,7 @@ const PaginationListView = (props) => {
       {!isBottomSheet ? (
         <FlatList
           data={data}
+          style={props.style}
           // Error here
           renderItem={renderItem}
           keyExtractor={(item) => item.id.toString()}
@@ -138,6 +139,7 @@ const PaginationListView = (props) => {
       ) : (
         <BottomSheetFlatList
           data={data}
+          style={props.style}
           renderItem={renderItem}
           keyExtractor={(item) => item.id.toString()}
           onMomentumScrollBegin={() =>

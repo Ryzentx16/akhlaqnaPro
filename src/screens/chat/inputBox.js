@@ -128,7 +128,7 @@ export default function InputBox(props) {
             <Entypo
               name="location"
               size={20}
-              color="grey"
+              color={"#660032"}
               style={styles.icon}
             />
           )}

@@ -1,216 +1,251 @@
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-// import Colors from "./Colors";
+import React, { useEffect, useState } from "react";
+import {
+  FlatList,
+  StyleSheet,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import UserAvatar from "@muhzi/react-native-user-avatar";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import SeeMoreText from "../../components/SeeMoreText";
+import Helper from "../../shared/helpers";
+import ImageViewer from "../../components/ImageViewer";
+import themes from "../../ThemeController";
+import domain from "../../../API/domain";
 
-const month = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
+let textColor = themes._currTextTheme;
+let backColor = themes._currBackColorTheme;
+let themeColor = themes._currTheme;
 
-function calcTime(offset) {
-  // create Date object for current location
-  var d = new Date();
-
-  // convert to msec
-  // subtract local time zone offset
-  // get UTC time in msec
-  var utc = d.getTime() + d.getTimezoneOffset() * 60000;
-
-  // create new Date object for different city
-  // using supplied offset
-  var nd = new Date(utc + 3600000 * offset);
-
-  // return time as a string
-  return nd.toLocaleString();
-}
-
-function getPostDuration(postDate) {
-  // var postDate = new Date(post.createdAt).getTime();
-  // var currDate = new Date().getTime();
-  // var postDuration = new Date(currDate - postDate);
-
-  var postDate = new Date(postDate).getTime();
-  var currDate = new Date(calcTime("+3")).getTime();
-  var duration = currDate - postDate;
-
-  var days = Math.floor(duration / (1000 * 60 * 60 * 24));
-  var hours = Math.floor((duration % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  var minutes = Math.floor((duration % (1000 * 60 * 60)) / (1000 * 60));
-  var seconds = Math.floor((duration % (1000 * 60)) / 1000);
-
-  var durationString = "";
-
-  if (days > 90) {
-    var date = new Date(postDate);
-
-    durationString =
-      date.getDate() +
-      " " +
-      month[date.getMonth()] +
-      " " +
-      date.getFullYear().toString().substr(-2);
-  } else if (days > 30 && days <= 90) {
-    var date = new Date(postDate);
-    durationString = date.getDate() + " " + month[date.getMonth()];
-  } else if (days !== 0 && days > 0) {
-    durationString = days + " d";
-  } else if (hours !== 0 && hours > 0) {
-    durationString = hours + " h";
-  } else if (minutes !== 0 && minutes > 0) {
-    durationString = minutes + " m";
-  } else if (seconds !== 0 && seconds > 0) {
-    durationString = seconds + " s";
-  } else {
-    durationString = "Just now";
-  }
-
-  return durationString;
-  // console.log(postDuration)
-}
-
-function getTimeIn12Format(date) {
-  let dt = new Date(date);
-  let hours = dt.getHours(); // gives the value in 24 hours format
-  let AmOrPm = hours >= 12 ? "pm" : "am";
-  hours = hours % 12 || 12;
-  let minutes = dt.getMinutes();
-  return hours + ":" + (minutes < 10 ? "0" + minutes : minutes) + " " + AmOrPm; //22:10
-}
-
-export default function ChatMessage(props) {
+export default function CommentCard(props) {
   const { message, myId, roomId } = props;
-  const currDate = getTimeIn12Format(message.createdAt);
+  var messageDuration = Helper.getDuration(message.createdAt);
 
-  const isMyMessage = () => {
-    return message.user.id === myId;
-  };
+  const [imageWidth, setImageWidth] = useState(200);
+  const [imageHeight, setImageHeight] = useState(250);
+
+  let isItMyMessage = message.user.id == myId;
+  let tempImage = require("../../../assets/akhlaqna.png");
+  let tempImageUri = null;
+
+  useEffect(() => {
+    textColor = themes._currTextTheme;
+    backColor = themes._currBackColorTheme;
+    themeColor = themes._currTheme;
+    isItMyMessage = message.user.id == myId;
+    console.log(message.image !== null);
+  });
+
+  useEffect(() => {
+    // if (tempImage !== null) {
+    //   Image.getSize(
+    //     tempImage,
+    //     (imgWidth, imgHeight) => {
+    //       setImageWidth(imgWidth);
+    //       setImageHeight(imgHeight);
+    //     }
+    //   );
+    // }
+    let {uri, width, height } = Image.resolveAssetSource(tempImage);
+    setImageHeight(height);
+    setImageWidth(width);
+    tempImageUri = uri;
+    console.log({uri, width, height })
+  }, []);
 
   return (
     <View
       style={[
-        styles.messageBoxContainer,
+        styles.container,
         {
-          padding: isMyMessage() ? 2 : 10,
+          justifyContent: isItMyMessage ? "flex-end" : "flex-start",
         },
       ]}
     >
+      {/* <View style={styles.avatarContainer}>
+        <UserAvatar size={35} src={message.user.profileImage} fontSize={15} />
+      </View> */}
+
       <View
         style={[
-          styles.messageBox,
+          detailsStyles.container,
           {
-            backgroundColor: isMyMessage() ? "#660032" : "white",
-            marginRight: isMyMessage() ? 0 : 50,
-            marginLeft: isMyMessage() ? 50 : 0,
+            backgroundColor: isItMyMessage ? "#660032" : "#ffffff",
           },
         ]}
       >
-        {!isMyMessage() && <Text style={styles.name}>{message.user.name}</Text>}
-        <Text
-          style={[
-            styles.content,
-            {
-              color: isMyMessage() ? "white" : "black",
-            },
-          ]}
-        >
-          {message.content}
-        </Text>
-        <Text style={styles.time}>{currDate}</Text>
+        <View style={detailsStyles.headerContainer}>
+          {!isItMyMessage && (
+            <Text
+              style={detailsStyles.userName}
+            >{`${message.user.firstName} ${message.user.lastName}`}</Text>
+          )}
+        </View>
+
+        <View style={detailsStyles.commentDetailsContainer}>
+          {/* <SeeMoreText
+            textStyle={detailsStyles.detailsText}
+            text={"asdasdasdasdaasdasdasdasdasdsd"}
+            numberOfLines={6}
+          /> */}
+          <Text
+            style={[
+              detailsStyles.detailsText,
+              { color: isItMyMessage ? "white" : "black" },
+            ]}
+          >
+            asdasdasdasdaasdasdasdasdasdsd
+          </Text>
+        </View>
+
+        {/* {message.image !== null && ( */}
+        <View style={detailsStyles.imageContainer}>
+          <ImageViewer
+            // uri={`${domain}/download/` + message.image}
+            uri={tempImageUri}
+            isFullScreen={true}
+            maxHeight={imageHeight >= 250 ? 250 : imageHeight}
+            imageHeight={imageHeight}
+            imageWidth={imageWidth}
+          />
+        </View>
+        {/* )} */}
+
+        <View style={detailsStyles.postTimeContainer}>
+          <Text style={detailsStyles.postTime}>{messageDuration}</Text>
+        </View>
       </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  messageBoxContainer: {
-    padding: 10,
-  },
-  messageBox: {
-    backgroundColor: "#e5e5e5",
-    marginRight: 50,
-    borderRadius: 5,
-    padding: 10,
-  },
-  nameContainer: {
-    minWidth: 50,
-    backgroundColor: "red",
-  },
-  contentContainer: {
-    marginLeft: 10,
-  },
-  timeContainer: {},
+const detailsStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingVertical: 7,
+    paddingHorizontal: 12,
+    marginLeft: 5,
+    marginRight: 20,
+    borderRadius: 18,
+    // backgroundColor: themeColor === "light" ? "#ffffff" : "#CCCCCC",
 
-  name: {
-    fontWeight: "bold",
-    color: "#660032",
-    marginVertical: 5,
+    overflow: "hidden",
+
+    maxWidth: "70%",
   },
-  content: {},
-  time: {
-    fontSize: 10,
-    color: "grey",
-    alignSelf: "flex-end",
+
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 2,
+  },
+
+  commentDetailsContainer: {
+    flexShrink: 1,
+    marginBottom: 5,
+    // backgroundColor: "red",
+  },
+
+  actionContainer: {
+    flex: 1,
+    flexDirection: "row",
+  },
+
+  userName: {
+    fontSize: 12,
+    fontWeight: "bold",
+    color: textColor,
+    marginRight: 5,
+  },
+
+  postTimeContainer: {
+    // flex: 1,
+    alignItems: "flex-end",
+    // backgroundColor: "green"
+  },
+  postTime: {
+    fontSize: 9,
+    color: themeColor === "light" ? "#65676b" : "#FFFFFF",
+  },
+
+  detailsText: {
+    fontSize: 13,
+    lineHeight: 18,
+  },
+  imageContainer: {
+    // flexShrink: 1,
+    // flexGrow: 1,
+    marginBottom: 10,
+    marginHorizontal: 10,
+    borderRadius: 15,
+    overflow: "hidden",
+  },
+
+  replybutton: {
+    flexDirection: "row",
+  },
+  replybuttonText: {
+    fontSize: 12,
+    fontWeight: "bold",
+    color: themeColor === "light" ? "#65676b" : "#FFFFFF",
+    marginLeft: 5,
+  },
+
+  replyContainer: {
+    flex: 1,
+    flexDirection: "row",
+    // width: "100%",
+    backgroundColor: "green",
+    // borderBottomLeftRadius: 18,
+    // borderBottomRightRadius: 18,
+    marginHorizontal: -12,
+    marginBottom: -7,
+  },
+
+  replyInput: {
+    flex: 7,
+    // backgroundColor: 'blue',
+    justifyContent: "center",
+    paddingLeft: 9,
+    paddingRight: 7,
+  },
+
+  sendContainer: {
+    flex: 1,
+    backgroundColor: "red",
+    alignItems: "flex-start",
+    justifyContent: "center",
+    paddingRight: 8,
+    paddingLeft: 4,
   },
 });
 
-/*export default function ChatMessage(props) {
-    const {message, myId} = props;
-
-    const isMyMessage = () => {
-        return message.user.id === myId;
-    }
-
-    return (
-        <View style={styles.messageBoxContainer}>
-            <View style={[
-                styles.messageBox, {
-                    backgroundColor: isMyMessage() ? '#DCF8C5' : 'lightblue',
-                    marginLeft: isMyMessage() ? 50 : 0,
-                    marginRight: isMyMessage() ? 0 : 50,
-                }
-            ]}>
-                {
-                    !isMyMessage() &&
-                    <Text style={styles.name}>
-                        {message.user.name}
-                    </Text>
-                }
-                <Text style={styles.message}>{message.content}</Text>
-                <Text style={styles.time}>{getPostDuration(message.createdAt)}</Text>
-            </View>
-        </View>
-    )
-}*/
-
-/*
-
 const styles = StyleSheet.create({
-    messageBoxContainer: {
-        padding: 10,
-    },
-    messageBox: {
-        borderRadius: 5,
-        padding: 7,
-    },
-    name: {
-        color: Colors.light.tint,
-        fontWeight: "bold",
-        marginBottom: 5,
-    },
-    message: {},
-    time: {
-        // backgroundColor: 'red',
-        alignSelf: "flex-end",
-        color: 'grey'
-    }
-});*/
+  container: {
+    // flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 17,
+    paddingLeft: 10,
+    // maxWidth: "70%",
+    // backgroundColor: "red",
+    // marginLeft: is Reply ? ,
+  },
+
+  avatarContainer: {
+    flex: 1,
+    alignSelf: "flex-start",
+    justifyContent: "center",
+    alignItems: "center",
+    maxWidth: 40,
+  },
+
+  headContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+});

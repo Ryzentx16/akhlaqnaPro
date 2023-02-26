@@ -18,6 +18,7 @@ import themes from "../../ThemeController";
 import { GraphQL } from "../../../API";
 import ImageViewer from "../../components/ImageViewer";
 import OurUser from "../../OurUser";
+import domain from "../../../API/domain";
 
 let textColor = themes._currTextTheme;
 let backColor = themes._currBackColorTheme;
@@ -112,7 +113,7 @@ export default function PostCard(props) {
   useEffect(() => {
     if (post.image !== null) {
       Image.getSize(
-        "http://3c5e-156-211-236-150.eu.ngrok.io/download/" + post.image,
+        `${domain}/download/` + post.image,
         (imgWidth, imgHeight) => {
           setImageWidth(imgWidth);
           setImageHeight(imgHeight);
@@ -157,9 +158,7 @@ export default function PostCard(props) {
       {post.image !== null && (
         <View style={styles.imageContainer}>
           <ImageViewer
-            uri={
-              "http://3c5e-156-211-236-150.eu.ngrok.io/download/" + post.image
-            }
+            uri={`${domain}/download/` + post.image}
             isFullScreen={true}
             maxHeight={imageHeight >= 450 ? 450 : imageHeight}
             imageHeight={imageHeight}
