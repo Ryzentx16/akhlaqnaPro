@@ -1,109 +1,51 @@
-import React, { useState, useRef, useMemo } from "react";
-import {
-  FlatList,
-  Image,
-  ScrollView,
-  StyleSheet,
-  Alert,
-  Text,
-  View,
-  SafeAreaView,
-} from "react-native";
-// import lostPosts from "../data/lostPosts";
-import PostCard from "./PostCard";
+import React, { useEffect } from "react";
+import { BackHandler } from "react-native";
 
-import CommentPage from "../comment/CommentPage";
-import posts from "../../data/posts";
 import AppHeader from "../../components/AppHeader";
-
-const lostPosts = () => {
-  let value = [];
-  for (let index = 0; index < posts.length * 4; index++) {
-    const element = posts[index % posts.length];
-    if (element.type === "lost") {
-      value.push(element);
-    }
-  }
-
-  return value;
-};
+import PostListView from "./PostListView";
+import OurUser from "../../OurUser";
+import themes from "../../ThemeController";
+import { GraphQL } from "../../../API";
 
 function LostPage({ navigation }) {
-  const [isCommentOpen, setIsCommentOpen] = useState(false);
-  const [commentPost, setCommentPost] = useState(null);
-  const commentSheetRef = useRef(null);
-  const snapPoints = useMemo(() => ["65%", "100%"], []);
+  useEffect(() => {
+    const backAction = () => {
+      return true;
+    };
 
-  const onPressComment = () => {
-    console.log("Comment Pressed");
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  });
+
+  useEffect(() => {
+    textColor = themes._currTextTheme;
+    backColor = themes._currBackColorTheme;
+    themeColor = themes._currTheme;
+  });
+
+  const retrieveData = async (params) => {
+    params.userId = OurUser.user.id;
+    params.postTypes = 2;
+    const result = await GraphQL.PostApiLogic.Queries.Retrieve(params);
+    
+    return result;
   };
 
-  console.log("Comment State: " + (isCommentOpen ? "Opened" : "Closed"));
-
   return (
-    <SafeAreaView style={commentsStyles.container}>
-      <AppHeader style={{ top: -17 }} navigation={navigation} isDrawer/>
-      <FlatList
-        data={lostPosts()}
-        style={styles.scrollContainer}
-        keyExtractor={(item, index) => index}
-        renderItem={(item, index) => {
-          return (
-            <PostCard
-              navigation={navigation}
-              post={item.item}
-              key={index}
-              onPressComment={(clickedPost) => {
-                setCommentPost(clickedPost);
-                setIsCommentOpen(true);
-                console.log("Comment Pressed: " + clickedPost.commentsId);
-              }}
-              isLost
-            />
-          );
-        }}
+    <>
+      <AppHeader style={{ top: -12 }} navigation={navigation} isDrawer />
+      <PostListView
+        retrieveData={retrieveData}
+        type={2}
+        navigation={navigation}
+        perPage={4}
       />
-      {!isCommentOpen ? console.log("Comment Clsoed: PostsPage") : null}
-      {isCommentOpen && (
-        <CommentPage
-          post={commentPost}
-          isClosed={(state) => {
-            setIsCommentOpen(state);
-          }}
-        />
-      )}
-    </SafeAreaView>
+    </>
   );
 }
-
-const commentsStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingBottom: 10,
-    paddingTop: 17,
-    backgroundColor: "#F0F2F5",
-  },
-
-  commentsContainer: {
-    flex: 1,
-  },
-
-  scrollContainer: {
-    flex: 1,
-  },
-});
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingBottom: 10,
-    paddingTop: 5,
-    backgroundColor: "#CCCCCC",
-  },
-
-  scrollContainer: {
-    flex: 1,
-  },
-});
 
 export default LostPage;

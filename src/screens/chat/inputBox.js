@@ -1,23 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
-  KeyboardAvoidingView,
-  Platform,
   StyleSheet,
   TextInput,
   TouchableOpacity,
   View,
   I18nManager,
   Keyboard,
+  Image,
 } from "react-native";
-import { useHeaderHeight } from "@react-navigation/elements";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Entypo from "react-native-vector-icons/Entypo";
 import Fontisto from "react-native-vector-icons/Fontisto";
-import users from "../../data/users";
-
+import ImageViewer from "../../components/ImageViewer";
 import languages from "../../strings/LanguagesController";
-import Adding from "../../../API/Adding"; // API
-
 import themes from "../../ThemeController";
 
 let textColor = themes._currTextTheme;
@@ -25,34 +20,11 @@ let backColor = themes._currBackColorTheme;
 let themeColor = themes._currTheme;
 const isRTL = I18nManager.isRTL;
 
-function useKeyboardHeight() {
-  /* #region  get keybaord height test */
-  const [keyboardHeight, setKeyboardHeight] = useState(0);
-
-  useEffect(() => {
-    const showSubscription = Keyboard.addListener("keyboardDidShow", (e) =>
-      setKeyboardHeight(e.endCoordinates.height)
-    );
-    const hideSubscription = Keyboard.addListener("keyboardWillHide", () =>
-      setKeyboardHeight(0)
-    );
-    return () => {
-      showSubscription.remove();
-      hideSubscription.remove();
-    };
-  }, [setKeyboardHeight]);
-
-  /* #endregion */
-
-  return keyboardHeight;
-}
-
 export default function InputBox(props) {
   var heightLimit = 135;
 
   const [message, setMessage] = useState("");
   const [isComment, setIsComment] = useState(props.hasOwnProperty("isComment"));
-  const [createdDateTime, setcreatedDateTime] = useState(Date.now());
   const [textInputHeight, setTextInputHeight] = useState(25);
   const [isFocus, setIsFocus] = useState(props.onFocus);
   const [bPlaceholder, setBplaceholder] = useState(
@@ -94,18 +66,14 @@ export default function InputBox(props) {
     }
   });
 
-  // var placeholder = () => {
-  //   return "error";
-  // };
-
   const onSend = () => {
-    props.onEndReply();
+    props.onSendReply(message);
     Keyboard.dismiss();
     setIsFocus(false);
     setBplaceholder(isComment ? "Type a comment" : "Type a message");
 
     setMessage("");
-    setcreatedDateTime(Date.now());
+    // setcreatedDateTime(Date.now());
   };
 
   return (
@@ -125,16 +93,68 @@ export default function InputBox(props) {
             styles.textInput,
             {
               height:
-                textInputHeight > heightLimit ? heightLimit : textInputHeight,
+                props.image !== null
+                  ? heightLimit
+                  : textInputHeight > heightLimit
+                  ? heightLimit
+                  : textInputHeight,
             },
           ]}
         />
-        {props.hasOwnProperty("isComment") == false && (
-          <Entypo name="location" size={20} color="grey" style={styles.icon} />
+        {props.image !== null && (
+          <View style={styles.imageContainer}>
+            <ImageViewer
+              uri={props.image.uri}
+              isFullScreen={true}
+              maxHeight={props.image.height >= 450 ? 450 : props.image.height}
+              imageHeight={props.image.height}
+              imageWidth={props.image.width}
+              isUpload={true}
+              onCancel={props.onCancel}
+            />
+          </View>
         )}
-        {!message && (
-          <Fontisto name="camera" size={20} color="grey" style={styles.icon} />
-        )}
+
+        <View
+          style={{
+            width: 70,
+            flexDirection: "row",
+            justifyContent: "space-around",
+            alignItems: "center",
+            // backgroundColor: "red",
+          }}
+        >
+          {props.hasOwnProperty("isComment") == false && (
+            <Entypo
+              name="location"
+              size={20}
+              color="grey"
+              style={styles.icon}
+            />
+          )}
+          <TouchableOpacity
+            // style={styles.buttonContainer}
+            onPress={props.onPickImage}
+          >
+            <MaterialIcons
+              name={"add-photo-alternate"}
+              size={25}
+              color={"#660032"}
+              style={styles.icon}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            // style={styles.buttonContainer}
+            onPress={props.onTakeImage}
+          >
+            <Fontisto
+              name="camera"
+              size={20}
+              color={"#660032"}
+              style={styles.icon}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
       <TouchableOpacity style={styles.buttonContainer} onPress={onSend}>
         <MaterialIcons
@@ -183,5 +203,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "flex-end",
+  },
+  imageContainer: {
+    flexShrink: 1,
+    flexGrow: 1,
+    marginBottom: 10,
+    marginHorizontal: 10,
+    borderRadius: 15,
+    overflow: "hidden",
   },
 });

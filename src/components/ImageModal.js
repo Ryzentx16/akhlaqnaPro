@@ -10,15 +10,12 @@ import Modal from "react-native-modal";
 import { Fontisto } from "react-native-vector-icons";
 import { ReactNativeZoomableView } from "@openspacelabs/react-native-zoomable-view";
 
-// const deviceWidth = Dimensions.get("window").width;
-// const deviceHeight = Dimensions.get("window").height;
+const deviceWidth = Dimensions.get("window").width;
+const deviceHeight = Dimensions.get("window").height;
 
 export default function ImageModal(props) {
-  const { status, postImage, onCancell } = props;
-  //   const [isModalVisible, setIsModalVisible] = useState(status);
-  // console.log(postImage);
-  const image = Image.resolveAssetSource(postImage);
-  // console.log(image);
+  const { status, uri, onCancel, imageHeight, imageWidth } = props;
+  
   return (
     <Modal
       isVisible={status}
@@ -26,12 +23,13 @@ export default function ImageModal(props) {
       animationOut={"zoomOut"}
       useNativeDriver={true}
       hideModalContentWhileAnimating={true}
-      onBackdropPress={onCancell}
-      onBackButtonPress={onCancell}
-      onSwipeComplete={onCancell}
+      onBackdropPress={onCancel}
+      onBackButtonPress={onCancel}
+      onSwipeComplete={onCancel}
       swipeDirection={["up", "down"]}
       backdropColor={"#4b4b4a"}
       backdropOpacity={0.9}
+      style={{ justifyContent: "center", alignItems: "center" }}
     >
       <View style={styles.contentContainer}>
         <ReactNativeZoomableView
@@ -41,11 +39,11 @@ export default function ImageModal(props) {
         >
           <View style={styles.modalImageContainer}>
             <Image
-              source={{ uri: image.uri }}
+              source={{ uri: uri }}
               style={[
                 styles.modalImage,
                 {
-                  aspectRatio: image.width / image.height,
+                  aspectRatio: imageWidth / imageHeight,
                 },
               ]}
             />
@@ -53,7 +51,7 @@ export default function ImageModal(props) {
         </ReactNativeZoomableView>
         <TouchableOpacity
           style={styles.closeButtonContainer}
-          onPress={onCancell}
+          onPress={onCancel}
         >
           <Fontisto name={"close"} size={40} color={"#d2d2d2"} />
         </TouchableOpacity>
@@ -68,11 +66,16 @@ const styles = StyleSheet.create({
     // backgroundColor: "red",
     // justifyContent: "center",
     // alignItems: "center",
+    maxHeight: deviceHeight,
+    minHeight: deviceHeight,
+    maxWidth: deviceWidth,
+    minWidth: deviceWidth,
   },
 
   closeButtonContainer: {
     position: "absolute",
     alignSelf: "flex-end",
+    margin: "5%",
     // backgroundColor: "green",
   },
 

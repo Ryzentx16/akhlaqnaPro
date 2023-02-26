@@ -53,7 +53,11 @@ export default function PostNavigator({ navigation, route }) {
       tabbarop
       barStyle={{ backgroundColor: "black" }} //This is where you can manipulate its look.
     >
-      <Stack.Screen name="PostsPage" component={PostsPage} />
+      <Stack.Screen
+        name="PostsPage"
+        component={PostsPage}
+        // listeners={{ focus: (e) => {} }}
+      />
       <Stack.Screen
         name="PersonProfile"
         component={ProfileNavigator}

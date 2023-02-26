@@ -182,7 +182,13 @@ export default function ChatRoom({ route }) {
           width: "100%",
         }}
       >
-        <InputBox />
+        <InputBox
+          image={null}
+          style={{ backgroundColor: "#c8c7c8" }}
+          onPickImage={() => {}}
+          onTakeImage={() => {}}
+          onCancel={() => {}}
+        />
         {/* <TextInput
           style={{
             // flex: 1,

@@ -15,72 +15,43 @@ import {
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import PhoneInput from "react-native-phone-number-input";
 import languages from "../../strings/LanguagesController";
+import { GraphQL } from "../../../API";
+import OurUser from "../../OurUser";
 
 const windowHeight = Dimensions.get("screen").height;
 const isRTL = I18nManager.isRTL;
 const isEdit = false;
 
+// import NetInfo from "@react-native-community/netinfo";
+// NetInfo.fetch().then(state => {
+//   console.log("Connection : ", state.details);
+// });
+
 export default function LoginPage({ navigation }) {
-  /* #region  Testing AsyncStroage */
-  // const _storeData = async () => {
-  //   try {
-  //     await AsyncStorage.setItem(
-  //       '@MySuperStore:key',
-  //       'I like to save it.',
-  //     );
-  //   } catch (error) {
-  //     console.error(error);
-  //     // Error saving data
-  //   }
-  // };
-
-  // const _retrieveData = async () => {
-  //   try {
-  //     const value = await AsyncStorage.getItem('@MySuperStore:key');
-  //     if (value !== null) {
-  //       // We have data!!
-  //       console.log(value);
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //     // Error retrieving data
-  //   }
-  // };
-
-  // _storeData();
-  // console.warn(_retrieveData());
-  /* #endregion */
-
   const [value, setValue] = useState("");
-  const [formattedValue, setFormattedValue] = useState("+97470031251");
+  const [formattedValue, setFormattedValue] = useState("+97455298188");
   const [valid, setValid] = useState(false);
   const phoneInput = useRef(PhoneInput);
 
-  const [phoneNumber, setPhoneNumber] = useState("70031251");
-  const [password, setPassword] = useState("12345");
+  const [phoneNumber, setPhoneNumber] = useState("55298188");
+  const [password, setPassword] = useState("123");
 
   const checkLogin = () => {
-    navigation.navigate("Home");
-    // const axios = require("axios").default;
-    // axios
-    //   .get(
-    //     "http://ryzentx.online/?phoneNumber=" +
-    //       formattedValue +
-    //       "&password=" +
-    //       password
-    //   )
-    //   .then(function (response) {
-    //     if (response.data === 1) {
-    //       // redirect to Dashboard
-    //       navigation.navigate("Home");
-    //     } else {
-    //       // alert something is wrong
-    //       Alert.alert("Error", "Username/Password Wrong");
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //   });
+    const params = {
+      phoneNumber: phoneNumber,
+      password: password,
+    };
+
+    GraphQL.UserApiLogic.Queries.Login(params).then((res) => {
+      if (!res) {
+        Alert.alert("Error", "Phone number or password incorrect");
+      } else if (res.errors) {
+        Alert.alert("Error", res.errors.join("\n"));
+      } else {
+        OurUser.user = res[0];
+        navigation.navigate("Home");
+      }
+    });
   };
 
   const onForget = () => {
@@ -93,7 +64,7 @@ export default function LoginPage({ navigation }) {
   const onSignup = () => {
     navigation.navigate("SignUpPage");
   };
-  
+
   let currLang = languages.currLang();
   useEffect(() => {
     currLang = languages.currLang();

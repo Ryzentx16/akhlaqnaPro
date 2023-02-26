@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   I18nManager,
   Keyboard,
@@ -12,26 +12,63 @@ import {
   Platform,
   View,
   ScrollView,
+  ActivityIndicator,
+  Button,
+  Dimensions,
+  Alert,
+  Switch,
 } from "react-native";
 import UserAvatar from "@muhzi/react-native-user-avatar";
-import { FontAwesome, MaterialIcons, Entypo } from "react-native-vector-icons";
+import {
+  FontAwesome,
+  MaterialIcons,
+  Entypo,
+  Ionicons,
+  AntDesign,
+} from "react-native-vector-icons";
+
 import * as ImagePicker from "expo-image-picker";
-import { Loader } from "@googlemaps/js-api-loader";
+import MapView from "react-native-maps";
+import Modal from "react-native-modal";
 
 import users from "../data/users";
 
-import Adding from "../../API/Adding";
 import languages from "../strings/LanguagesController";
 
+import { GraphQL, Utils } from "../../API";
+import ImageViewer from "../components/ImageViewer";
+import GetMap from "../components/GetMap";
+import OurUser from "../OurUser";
+
 const isRTL = I18nManager.isRTL;
+const windowHeight = Dimensions.get("window").height;
+const windowWidth = Dimensions.get("window").width;
 
 const AddPostPage = ({ navigation }) => {
   const user = users[0];
   const [content, setContent] = useState("");
   const [test, setTest] = useState("");
-  const [status, setStatus] = useState(false);
+  const [modalStatus, setModalStatus] = useState(false);
   const [image, setImage] = useState(null);
   const [createdDateTime, setcreatedDateTime] = useState(Date.now());
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [isLost, setIsLost] = React.useState(false);
+  
+  const [region, setRegion] = useState({
+    latitude: 25.300946829658887,
+    latitudeDelta: 0.6631861591450701,
+    longitude: 51.465748474001884,
+    longitudeDelta: 0.3281260281801224,
+  });
+
+
+  const onToggle = () => setIsLost(!isLost);
+
+  const [address, setAddress] = useState({});
+
+  const mapViewRef = useRef(MapView);
 
   let currLang = languages.currLang();
   useEffect(() => {
@@ -96,36 +133,44 @@ const AddPostPage = ({ navigation }) => {
   };
 
   const onPost = () => {
-    // let data = new FormData();
-    // data.append("userId", user.id);
-    // data.append("content", content);
-    // data.append("createdDateTime", createdDateTime);
-    // data.append("image", {
-    //   uri: "http://ryzentx.online/image_1.png",
-    //   name: "profileExample.png",
-    //   type: "image/png",
-    // });
+    setIsLoading(true);
+    const createPost = (imagePath = null) => {
+      const data = {
+        content: content,
+        area: "Alrayan - Alshafie",
+        location: JSON.stringify(region),
+        userId: 22,
+        postTypes: isLost ? 2 : 3,
+      };
 
-    // Adding("addPost", data, () => navigation.navigate("Post"));
+      if (imagePath) {
+        data.image = imagePath;
+      }
 
-    console.log("toto");
+      GraphQL.PostApiLogic.Queries.Create(data).then((res) => {
+        if (res.success) {
+          setContent("");
+          setImage(null);
+          setIsLoading(false);
+          navigation.navigate("Post");
+        } else {
+          //to ar
+          Alert.alert("Error", res.errors.join("\n"));
+        }
+      });
+    };
+
+    if (image) {
+      Utils.Uploader.Image(image.uri, "post", true).then((res) => {
+        createPost(res);
+      });
+    } else {
+      createPost();
+    }
   };
 
   const onLocation = () => {
-    let map;
-
-    const loader = new Loader({
-      apiKey: "AIzaSyBb2lef_VaN4m9OlvngArW3h84ul1DHZIo",
-      version: "weekly",
-      // ...additionalOptions,
-    });
-
-    loader.load().then(() => {
-      map = new google.maps.Map(document.getElementById("map"), {
-        center: { lat: -34.397, lng: 150.644 },
-        zoom: 8,
-      });
-    });
+    setModalStatus(true);
   };
 
   return (
@@ -139,12 +184,46 @@ const AddPostPage = ({ navigation }) => {
         accessible={false}
         touchSoundDisabled={true}
       >
-        <View style={styles.headContainer}>
-          <View style={styles.avatarContainer}>
-            <UserAvatar size={55} src={user.profileImage} fontSize={20} />
+        <View style={[styles.headContainer]}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <View style={styles.avatarContainer}>
+              <UserAvatar size={55} src={user.profileImage} fontSize={20} />
+            </View>
+            <View style={styles.headerDetailsContainer}>
+              <Text style={styles.userName}>
+                {OurUser.user.firstName + " " + OurUser.user.lastName}
+              </Text>
+            </View>
           </View>
-          <View style={styles.headerDetailsContainer}>
-            <Text style={styles.userName}>{test}</Text>
+
+          <View
+            style={{
+              width: 120,
+              justifyContent: "center",
+              alignItems: "center",
+              marginHorizontal: 20,
+              flexDirection: "row",
+            }}
+          >
+            <Switch
+              value={isLost}
+              onValueChange={onToggle}
+              thumbColor={isLost ? "#660032" : "#660032"}
+              trackColor={{ false: "#767577", true: "#660032" }}
+              style={{ marginRight: 10 }}
+            />
+
+            {isLost ? (
+              <AntDesign name="questioncircle" size={30} color={"#660032"} />
+            ) : (
+              <Ionicons name="checkmark-circle" size={35} color={"#660032"} />
+            )}
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -165,19 +244,16 @@ const AddPostPage = ({ navigation }) => {
           </View>
           {image && (
             <View style={styles.imageContainer}>
-              <View style={styles.image}>
-                <Image
-                  source={{ uri: image.uri }}
-                  style={[
-                    styles.resImage,
-                    {
-                      aspectRatio: image.width / image.height,
-                    },
-                  ]}
-                  // resizeMode={"contain"}
-                  // resizeMethod={"auto"}
-                />
-              </View>
+              <ImageViewer
+                uri={image.uri}
+                isFullScreen={false}
+                maxHeight={400}
+                imageHeight={image.height}
+                imageWidth={image.width}
+                isUpload={true}
+                onCancel={() => setImage(null)}
+                style={{ backdropColor: "black" }}
+              />
             </View>
           )}
         </ScrollView>
@@ -215,19 +291,38 @@ const AddPostPage = ({ navigation }) => {
       </View>
 
       <Modal
-        isVisible={status}
+        onBackButtonPress={() => setModalStatus(false)} //test
+        isVisible={modalStatus}
         animationIn={"zoomIn"}
         animationOut={"zoomOut"}
         useNativeDriver={true}
         hideModalContentWhileAnimating={true}
-        swipeDirection={["up", "down"]}
+        onBackdropPress={() => setModalStatus(false)}
         backdropColor={"#4b4b4a"}
         backdropOpacity={0.9}
+        style={{ justifyContent: "center", alignItems: "center" }}
       >
-        <View style={styles.contentContainer}>
-          
+        <View style={styles.modalLocation}>
+          <GetMap />
         </View>
       </Modal>
+      {isLoading && (
+        <View
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+            opacity: 0.8,
+            backgroundColor: "black",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <ActivityIndicator size="large" color="#FFD700" />
+        </View>
+      )}
     </KeyboardAvoidingView>
   );
 };
@@ -296,13 +391,9 @@ const styles = StyleSheet.create({
   imageContainer: {
     borderWidth: 3,
     borderRadius: 20,
-    borderColor: "#660032",
+    // borderColor: "#660032",
     overflow: "hidden",
     width: "100%",
-  },
-
-  image: {
-    flex: 1,
   },
 
   resImage: {
@@ -363,82 +454,72 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
   },
+
+  modalLocation: {
+    flex: 1,
+    maxHeight: windowHeight,
+    minHeight: windowHeight,
+    maxWidth: windowWidth,
+    minWidth: windowWidth,
+    backgroundColor: "#660032",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  pinIcon: {
+    position: "absolute",
+    // backgroundColor: "red",
+    alignSelf: "center",
+  },
 });
 
 export default AddPostPage;
 
-//   const [image, setImage] = useState(null);
+{
+  /* <MapView
+            ref={mapViewRef}
+            style={{ height: "100%", width: "100%" }}
+            loadingEnabled={true}
+            onRegionChangeComplete={async (region) => {
+              setRegion(region);
+            }}
+            initialRegion={{
+              latitude: 25.300946829658887,
+              latitudeDelta: 0.6631861591450701,
+              longitude: 51.465748474001884,
+              longitudeDelta: 0.3281260281801224,
+            }}
+            // onPress={async (e) => {
+            //   console.log(address);
+            // }}
+            onMapReady={async (e) => {
+              setAddress(
+                await mapViewRef.current.addressForCoordinate({
+                  latitude: region.latitude,
+                  longitude: region.longitude,
+                })
+              );
+            }}
+          />
+          <View style={styles.pinIcon}>
+            <Entypo name={"location-pin"} size={40} color={"#660032"} />
+          </View>
+          <View style={{ position: "absolute", top: 0, left: 0 }}>
+            <Text>{`country: ${address.country} \n locality: ${address.locality} \n subLocality: ${address.subLocality}`}</Text>
+          </View>
+          <View style={{ position: "absolute", bottom: 0, right: 0 }}>
+            <Button
+              title="getAddress"
+              onPress={async () => {
+                setAddress(
+                  await mapViewRef.current.addressForCoordinate({
+                    latitude: region.latitude,
+                    longitude: region.longitude,
+                  })
+                );
 
-//   const pickImage = async () => {
-//     // No permissions request is necessary for launching the image library
-//     let result = await ImagePicker.launchImageLibraryAsync({
-//       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-//       aspect: [4, 3],
-//       quality: 1,
-//     });
-
-//     console.log(result);
-
-//     if (!result.canceled) {
-//       setImage(result.assets[0].uri);
-//     }
-//   };
-
-//   const takeImage = async () => {
-//     // No permissions request is necessary for launching the image library
-//     let result = await ImagePicker.launchCameraAsync({
-//       aspect: [4, 3],
-//       quality: 1,
-//     });
-
-//     console.log(result);
-
-//     if (!result.canceled) {
-//       setImage(result.assets[0].uri);
-//     }
-//   };
-
-//   const sendbackEndo = () => {
-//     let data = new FormData();
-//     data.append("userId", "tamborea");
-//     data.append("content", "aslkdjfkljasdjfklk;jadsjflja;ldjflk;jadlkjf");
-//     data.append("createdDateTime", new Date().toUTCString());
-
-//     if (image) {
-//       data.append("image", {
-//         uri: image,
-//         name: "profileExample.png",
-//         type: "image/png",
-//       });
-//     }
-
-//     axios
-//       .post("http://2c0f-156-192-171-226.eu.ngrok.io/addPost", data, {
-//         //config
-//         headers: {
-//           Accept: "application/json",
-//           "Content-Type": "multipart/form-data",
-//         },
-//       })
-//       .then((res) => {
-//         if (res) {
-//           console.log("donawy");
-//         } else {
-//         }
-//       })
-//       .catch((err) => {
-//         console.log(err);
-//         alert(err);
-//       });
-//   };
-
-//   return (
-//     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-//       <Button title="Pick an image from camera roll" onPress={pickImage} />
-//       <Button title="take an image from camera roll" onPress={takeImage} />
-//       {image && (
-//         <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
-//       )}
-//       <Button title="send back endo" onPress={sendbackEndo} />
-//     </View>
-//   );
+                console.log(address);
+              }}
+            />
+          </View> */
+}

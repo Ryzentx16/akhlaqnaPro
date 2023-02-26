@@ -1,158 +1,127 @@
-import React, {
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-  useEffect,
-} from "react";
-import {
-  FlatList,
-  KeyboardAvoidingView,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  Keyboard,
-  TextInput,
-} from "react-native";
-import BottomSheet, {
-  BottomSheetFlatList,
-  BottomSheetTextInput,
-} from "@gorhom/bottom-sheet";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import React, { useMemo, useRef, useState, useEffect } from "react";
+import { View, StyleSheet } from "react-native";
+import * as ImagePicker from "expo-image-picker";
 import CommentCard from "./CommentCard";
-import comments from "../../data/comments";
-import InputBox from "../chat/inputBox";
-
-import themes from "../../ThemeController";
-
-let textColor = themes._currTextTheme;
-let backColor = themes._currBackColorTheme;
-let themeColor = themes._currTheme;
-
-function useKeyboardHeight() {
-  /* #region  get keybaord height test */
-  const [keyboardHeight, setKeyboardHeight] = useState(0);
-
-  useEffect(() => {
-    const showSubscription = Keyboard.addListener("keyboardDidShow", (e) =>
-      setKeyboardHeight(e.endCoordinates.height)
-    );
-    const hideSubscription = Keyboard.addListener("keyboardDidHide", () =>
-      setKeyboardHeight(0)
-    );
-    return () => {
-      showSubscription.remove();
-      hideSubscription.remove();
-    };
-  }, [setKeyboardHeight]);
-
-  /* #endregion */
-
-  return keyboardHeight;
-}
-
-function getCommentsGroup(post) {
-  // console.log(comments.length);
-  for (let index = 0; index < comments.length; index++) {
-    const element = comments[index];
-    // console.log("element: " + element.postId);
-
-    if (post.commentsId === element.postId) {
-      // console.log(
-      //   "post.commentsId === element.postId: " + post.commentsId ===
-      //     element.postId
-      // );
-      return element.comments;
-    }
-  }
-}
-
-function Comments(props) {
-  const { post } = props;
-  // console.log("Commetns length: " + comments.length);
-
-  return (
-    // <KeyboardAvoidingView style={{ flex: 1 }}>
-    <View style={commentsStyles.container}>
-      <View style={commentsStyles.commentsContainer}>
-        <BottomSheetFlatList
-          data={getCommentsGroup(post)}
-          style={commentsStyles.scrollContainer}
-          keyExtractor={(item, index) => index}
-          renderItem={(item, index) => {
-            // console.log(item.item);
-            return (
-              <CommentCard
-                comment={item.item}
-                key={index}
-                // BSTextInput={BottomSheetTextInput}
-              />
-            );
-          }}
-        />
-      </View>
-    </View>
-    // </KeyboardAvoidingView>
-  );
-}
+import { GraphQL, Utils } from "../../../API";
+import PaginationListView from "../../components/PaginationListView";
+import BottomSheetHandler from "../../components/BottomSheetHandler";
+import OurUser from "../../OurUser";
 
 export default function CommentPage(props) {
   const { post, isClosed } = props;
-  const [isFocus, setIsFocus] = useState(false);
-  const [tiPlaceHolder, setTiPlaceHolder] = useState(null);
-  const commentSheetRef = useRef(BottomSheet);
-  const snapPoints = useMemo(() => ["25%", "65%", "100%"], []);
+  const [isSend, setIsSend] = useState(false);
+  const [image, setImage] = useState(null);
 
-  /* #region  get keybaord height test */
-  const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const retrieveData = async (params) => {
+    params.postId = post.id;
+    const result = await GraphQL.CommentApiLogic.Queries.Retrieve(params);
 
-  useEffect(() => {
-    const showSubscription = Keyboard.addListener("keyboardDidShow", (e) => {
-      console.log(e);
-      setKeyboardHeight(e.endCoordinates.height);
-    });
-    const hideSubscription = Keyboard.addListener("keyboardDidHide", (e) => {
-      // console.log(e);
-      setKeyboardHeight(0);
-    });
-    return () => {
-      showSubscription.remove();
-      hideSubscription.remove();
-    };
-  }, [setKeyboardHeight]);
-
-  /* #endregion */
-
-  const onCommentClose = () => {
-    isClosed(false);
+    return result;
   };
 
-  useEffect(() => {
-    textColor = themes._currTextTheme;
-    backColor = themes._currBackColorTheme;
-    themeColor = themes._currTheme;
-  });
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result.assets[0].uri);
+
+    if (!result.canceled) {
+      setImage(result.assets[0]);
+    } else {
+      console.log("cancelled");
+    }
+  };
+
+  const takeImage = async () => {
+    // let pS = ;
+    await ImagePicker.requestCameraPermissionsAsync();
+    let r = await ImagePicker.getCameraPermissionsAsync().catch((er) =>
+      console.error(er)
+    );
+    setTest(JSON.stringify(r));
+
+    if (!r.granted) {
+      if (r.canAskAgain) {
+        await ImagePicker.requestCameraPermissionsAsync();
+        r = await ImagePicker.getCameraPermissionsAsync().catch((er) =>
+          console.error(er)
+        );
+        console.log(r);
+      } else {
+        alert("u refused!");
+        return;
+      }
+    }
+
+    if (r.granted) {
+      // No permissions request is necessary for launching the image library
+      const result = await ImagePicker.launchCameraAsync({
+        aspect: [4, 3],
+        quality: 1,
+      }).catch((er) => console.error(er));
+
+      console.log(result);
+
+      if (!result.canceled) {
+        setImage(result.assets[0]);
+      } else {
+        console.log("cancelled");
+      }
+    }
+  };
+
+  const onSend = async (message) => {
+    setIsSend(true);
+    const createComment = (imagePath = null) => {
+      const data = {
+        content: message,
+        userId: OurUser.user.id,
+        postId: post.id,
+      };
+
+      if (imagePath) {
+        data.image = imagePath;
+      }
+
+      GraphQL.CommentApiLogic.Queries.Create(data).then((res) => {
+        if (res.success) {
+          setIsSend(false);
+        } else {
+          //to ar
+          Alert.alert("Error", res.errors.join("\n"));
+        }
+      });
+    };
+
+    if (image) {
+      Utils.Uploader.Image(image.uri, "post", true).then(async (res) => {
+        createComment(res);
+      });
+    } else {
+      createComment();
+    }
+    setImage(null);
+  };
 
   return (
-    <BottomSheet
-      ref={commentSheetRef}
-      index={0}
-      snapPoints={snapPoints}
-      handleStyle={{
-        backgroundColor: "#660032",
-        borderTopLeftRadius: 15,
-        borderTopRightRadius: 15,
-      }}
-      onClose={onCommentClose}
-      enablePanDownToClose={true}
+    <BottomSheetHandler
+      onPickImage={pickImage}
+      onTakeImage={takeImage}
+      InputBox={onSend}
+      post={post}
+      isClosed={isClosed}
+      image={image} // image to show in InputBox
+      onCancel={() => setImage(null)}
     >
       <View style={commentsStyles.container}>
         <View style={commentsStyles.commentsContainer}>
-          <BottomSheetFlatList
-            data={getCommentsGroup(post)}
-            style={commentsStyles.scrollContainer}
-            keyExtractor={(item, index) => index}
+          <PaginationListView
+            perPage={5}
+            retrieveData={retrieveData}
             renderItem={(item, index) => {
               return (
                 <CommentCard
@@ -165,42 +134,12 @@ export default function CommentPage(props) {
                 />
               );
             }}
+            isBottomSheet={true}
+            isSend={isSend}
           />
         </View>
       </View>
-
-      <InputBox
-        replyPlaceHolder={tiPlaceHolder}
-        onFocus={isFocus}
-        onEndReply={() => {
-          setIsFocus(false);
-          setTiPlaceHolder(null)
-        }}
-        isComment={true}
-        post={post}
-        style={{ backgroundColor: "#c8c7c8" }}
-      />
-
-      {/* <KeyboardAvoidingView style={{flex: 1}}>
-        <View style={{ flex: 1, backgroundColor: "red", padding: 14 }}>
-          <View style={{ flex: 1, backgroundColor: "blue" }}>
-            <BottomSheetFlatList
-              data={getCommentsGroup(post)}
-              style={commentsStyles.scrollContainer}
-              keyExtractor={(item, index) => index}
-              renderItem={(item, index) => {
-                return (
-                  <CommentCard
-                    comment={item.item}
-                    key={index}
-                  />
-                );
-              }}
-            />
-          </View>
-        </View>
-      </KeyboardAvoidingView> */}
-    </BottomSheet>
+    </BottomSheetHandler>
   );
 }
 
@@ -209,27 +148,8 @@ const commentsStyles = StyleSheet.create({
     flex: 1,
     paddingBottom: 10,
     paddingTop: 17,
-    backgroundColor: themeColor === "light" ? "#c8c7c8" : "#A1A1A1",
+    backgroundColor: "#c8c7c8",
     // backgroundColor: "lightblue",
-  },
-
-  commentsContainer: {
-    // backgroundColor: 'red',
-    flex: 1,
-  },
-
-  scrollContainer: {
-    // backgroundColor: 'red',
-    flex: 1,
-  },
-});
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingBottom: 10,
-    paddingTop: 17,
-    backgroundColor: "#F0F2F5",
   },
 
   commentsContainer: {

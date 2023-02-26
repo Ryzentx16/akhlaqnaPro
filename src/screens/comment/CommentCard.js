@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import {
   FlatList,
-  KeyboardAvoidingView,
   StyleSheet,
+  Image,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -13,13 +12,8 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import SeeMoreText from "../../components/SeeMoreText";
 import Helper from "../../shared/helpers";
 import ReplyCard from "./ReplyCard";
-
+import ImageViewer from "../../components/ImageViewer";
 import themes from "../../ThemeController";
-
-import {
-  BottomSheetTextInput,
-  BottomSheetFlatList,
-} from "@gorhom/bottom-sheet";
 
 let textColor = themes._currTextTheme;
 let backColor = themes._currBackColorTheme;
@@ -29,12 +23,12 @@ export default function CommentCard(props) {
   const { comment, onReply } = props;
   const [isReplying, setIsReplying] = useState(false);
   const [replyContent, setReplyContent] = useState("");
-  var postDuration = Helper.getPostDuration(comment.createdAt);
+  var commentDuration = Helper.getDuration(comment.createdDateTime);
+
+  const [imageWidth, setImageWidth] = useState(null);
+  const [imageHeight, setImageHeight] = useState(null);
 
   const haveReplies = comment.hasOwnProperty("replies");
-  // const onReply = () => {
-  //   // setIsReplying(true);
-  // };
   const onSendReply = () => {
     setIsReplying(false);
     setReplyContent("");
@@ -46,6 +40,18 @@ export default function CommentCard(props) {
     themeColor = themes._currTheme;
   });
 
+  useEffect(() => {
+    if (comment.image !== null) {
+      Image.getSize(
+        "http://28d0-156-211-236-150.eu.ngrok.io/download/" + comment.image,
+        (imgWidth, imgHeight) => {
+          setImageWidth(imgWidth);
+          setImageHeight(imgHeight);
+        }
+      );
+    }
+  }, []);
+
   return (
     <>
       <View style={styles.container}>
@@ -54,8 +60,10 @@ export default function CommentCard(props) {
         </View>
         <View style={detailsStyles.container}>
           <View style={detailsStyles.headerContainer}>
-            <Text style={detailsStyles.userName}>{comment.user.name}</Text>
-            <Text style={detailsStyles.postTime}>{postDuration}</Text>
+            <Text
+              style={detailsStyles.userName}
+            >{`${comment.user.firstName} ${comment.user.lastName}`}</Text>
+            <Text style={detailsStyles.postTime}>{commentDuration}</Text>
           </View>
           <View style={detailsStyles.commentDetailsContainer}>
             <SeeMoreText
@@ -64,6 +72,20 @@ export default function CommentCard(props) {
               numberOfLines={6}
             />
           </View>
+          {comment.image !== null && (
+            <View style={detailsStyles.imageContainer}>
+              <ImageViewer
+                uri={
+                  "http://28d0-156-211-236-150.eu.ngrok.io/download/" +
+                  comment.image
+                }
+                isFullScreen={true}
+                maxHeight={imageHeight >= 250 ? 250 : imageHeight}
+                imageHeight={imageHeight}
+                imageWidth={imageWidth}
+              />
+            </View>
+          )}
           <View style={detailsStyles.actionContainer}>
             {!isReplying && (
               <TouchableOpacity
@@ -78,29 +100,6 @@ export default function CommentCard(props) {
                 <Text style={detailsStyles.replybuttonText}>Reply</Text>
               </TouchableOpacity>
             )}
-            {/* {isReplying && (
-              <View style={detailsStyles.replyContainer}>
-                <View style={detailsStyles.replyInput}>
-                  <BottomSheetTextInput
-                    placeholder={"Reply"}
-                    placeholderTextColor={"#660032"}
-                    style={{
-                      // textAlignVertical: "top",
-                      // justifyContent: "center",
-                    }}
-                    value={replyContent}
-                    // onChangeText={(t) => setReplyContent(t)}
-                    // onSubmitEditing={() => onSendReply()}
-                  />
-                </View>
-                <TouchableOpacity
-                  style={detailsStyles.sendContainer}
-                  onPress={() => onSendReply()}
-                >
-                  <Text>Send</Text>
-                </TouchableOpacity>
-              </View>
-            )} */}
           </View>
         </View>
       </View>
@@ -109,8 +108,7 @@ export default function CommentCard(props) {
           style={{ marginTop: -10 }}
           data={comment.replies}
           keyExtractor={(item, index) => index}
-          renderItem={(item, index) => {
-            // console.log(item.item);
+          renderItem={(item) => {
             return <ReplyCard reply={item.item} />;
           }}
           scrollEnabled={false}
@@ -166,6 +164,14 @@ const detailsStyles = StyleSheet.create({
     fontSize: 13,
     color: textColor,
     lineHeight: 18,
+  },
+  imageContainer: {
+    flexShrink: 1,
+    flexGrow: 1,
+    marginBottom: 10,
+    marginHorizontal: 10,
+    borderRadius: 15,
+    overflow: "hidden",
   },
 
   replybutton: {

@@ -1,34 +1,18 @@
 import React, { useEffect, useState } from "react";
-import {
-  FlatList,
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  I18nManager,
-  Text,
-  View,
-  Alert,
-  TouchableOpacity,
-} from "react-native";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import UserAvatar from "@muhzi/react-native-user-avatar";
+import { StyleSheet, I18nManager, Alert } from "react-native";
 import posts from "../../data/posts";
-import PostCard from "../../screens/post/PostCard";
 import languages from "../../strings/LanguagesController";
 import AppHeader from "../../components/AppHeader";
 import users from "../../data/users";
 
 import { useNavigation } from "@react-navigation/native";
-import CommentPage from "../comment/CommentPage";
-import ImageModal from "../../components/ImageModal";
 import OurUser from "../../OurUser";
+import PostListView from "../post/PostListView";
+import { GraphQL } from "../../../API";
 
 const isRTL = I18nManager.isRTL;
 
 export default function PersonProfile({ navigation, route }) {
-  const [isCommentOpen, setIsCommentOpen] = useState(false);
-  const [commentPost, setCommentPost] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const ourUser = route.params?.user;
   const isDrawer = route.params?.isDrawer;
   const globleNavigation = useNavigation();
@@ -80,103 +64,25 @@ export default function PersonProfile({ navigation, route }) {
     setIsModalOpen(true);
   };
 
+  const retrieveData = async (params) => {
+    params.userId = OurUser.user.id;
+    params.conditionUserId = OurUser.user.id;
+    const result = await GraphQL.PostApiLogic.Queries.Retrieve(params);
+
+    return result;
+  };
+
   return (
-    <View style={styles.container}>
-      <AppHeader navigation={navigation} isDrawer={isDrawer} />
-
-      <FlatList
-        style={styles.postsContainer}
-        ListHeaderComponent={
-          <View style={headerStyles.headContaienr}>
-            <View style={headerStyles.head}>
-              <ImageModal
-                status={isModalOpen}
-                postImage={require("../../../assets/myProfileExample.png")}
-                onCancell={() => setIsModalOpen(false)}
-              />
-
-              <View style={headerStyles.profileContainer}>
-                <TouchableOpacity
-                  style={styles.imageContainer}
-                  onPress={() => onImage()}
-                >
-                  <UserAvatar
-                    src={ourUser.profileImage}
-                    userName={"Jhon"}
-                    size={80}
-                  />
-                </TouchableOpacity>
-                <View style={headerStyles.detailsContaienr}>
-                  <Text style={headerStyles.name}>{ourUser.name}</Text>
-                  {/* <MaterialCommunityIcons
-                    name={"dots-vertical"}
-                    color={"#660032"}
-                    size={50}
-                  /> */}
-                </View>
-              </View>
-
-              <View style={headerStyles.actionContaienr}>
-                {!isUserMe ? (
-                  <>
-                    <TouchableOpacity style={headerStyles.btnStyle}>
-                      <View style={headerStyles.messageButton}>
-                        <Text style={headerStyles.messageText}>
-                          {currLang.personprofilepage.actions.message}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={headerStyles.btnStyle}>
-                      <View style={headerStyles.lostAndFoundButton}>
-                        <Text style={headerStyles.lostAndFoundText}>
-                          {currLang.personprofilepage.actions.LostandFound}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  </>
-                ) : (
-                  <TouchableOpacity
-                    style={headerStyles.myBtnStyle}
-                    onPress={onEdit}
-                  >
-                    <View style={headerStyles.editProfileButton}>
-                      <Text style={headerStyles.editProfileText}>
-                        {currLang.personprofilepage.actions.editprofile}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                )}
-              </View>
-            </View>
-          </View>
-        }
-        data={x}
-        keyExtractor={(item, index) => index}
-        renderItem={(item, index) => {
-          return (
-            <PostCard
-              navigation={navigation}
-              post={item.item}
-              key={index}
-              onPressComment={(clickedPost) => {
-                setCommentPost(clickedPost);
-                setIsCommentOpen(true);
-                console.log("Comment Pressed: " + clickedPost.commentsId);
-              }}
-            />
-          );
-        }}
+    <>
+      <AppHeader style={{ top: -12 }} navigation={navigation} isDrawer />
+      <PostListView
+        retrieveData={retrieveData}
+        type={4}
+        navigation={navigation}
+        perPage={4}
+        Profile={ourUser}
       />
-      {!isCommentOpen ? console.log("Comment Clsoed: PostsPage") : null}
-      {isCommentOpen && (
-        <CommentPage
-          post={commentPost}
-          isClosed={(state) => {
-            setIsCommentOpen(state);
-          }}
-        />
-      )}
-    </View>
+    </>
   );
 }
 

@@ -6,19 +6,18 @@ import {
   TouchableOpacity,
   View,
   I18nManager,
+  Alert,
 } from "react-native";
 import UserAvatar from "@muhzi/react-native-user-avatar";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import {
-  Ionicons,
-  AntDesign,
-  MaterialCommunityIcons,
-} from "react-native-vector-icons";
+import { Ionicons, AntDesign } from "react-native-vector-icons";
 import SeeMoreText from "../../components/SeeMoreText";
 import Helper from "../../shared/helpers";
 
 import themes from "../../ThemeController";
-import ImageModal from "../../components/ImageModal";
+import { GraphQL } from "../../../API";
+import ImageViewer from "../../components/ImageViewer";
+import OurUser from "../../OurUser";
 
 let textColor = themes._currTextTheme;
 let backColor = themes._currBackColorTheme;
@@ -55,11 +54,31 @@ function ActionButton(props) {
   );
 }
 
+function postType(type) {
+  let result = null;
+
+  switch (type) {
+    case 2: // isLost
+      result = <AntDesign name="questioncircle" size={25} color={textColor} />;
+      break;
+    case 3: // isFound
+      result = <Ionicons name="checkmark-circle" size={25} color={textColor} />;
+      break;
+    default:
+      result = null;
+      break;
+  }
+
+  return result;
+}
+
 export default function PostCard(props) {
-  let { post, navigation, onPressComment, isLostOrFound } = props;
-  const [numOfLikes, setNumOfLikes] = useState(post.numberOfLikes); //To show ur remaining Text
-  const [isLiked, setIsLiked] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  let { post, navigation, onPressComment, isTypeEnable } = props;
+
+  const [numOfLikes, setNumOfLikes] = useState(post.numOfLikes); //To show ur remaining Text
+  const [isLiked, setIsLiked] = useState(post.isLikedByMe);
+  const [imageWidth, setImageWidth] = useState(null);
+  const [imageHeight, setImageHeight] = useState(null);
 
   const onMakeLike = () => {
     if (isLiked) {
@@ -68,25 +87,39 @@ export default function PostCard(props) {
       setNumOfLikes(numOfLikes + 1);
     }
 
+    var params = {
+      id: post.id,
+      isLike: !isLiked,
+      userId: OurUser.user.id,
+    };
+    GraphQL.PostApiLogic.Queries.Like(params).then((res) => {
+      if (!res.success) {
+        //to ar
+        Alert.alert("Error", res.errors.join("\n"));
+      }
+    });
+
     setIsLiked(!isLiked);
   };
 
-  // const onImagePress = () => {
-  //   setIsModalVisible(true);
-  // };
-
-  var postDuration = Helper.getPostDuration(post.createdAt);
-  var imageHeight, imageWidth;
-
-  if (post.hasOwnProperty("image") == true) {
-    imageHeight = Image.resolveAssetSource(post.image).height;
-    imageWidth = Image.resolveAssetSource(post.image).width;
-  }
+  var postDuration = Helper.getDuration(post.createdDateTime);
 
   useEffect(() => {
     textColor = themes._currTextTheme;
     backColor = themes._currBackColorTheme;
   });
+
+  useEffect(() => {
+    if (post.image !== null) {
+      Image.getSize(
+        "http://28d0-156-211-236-150.eu.ngrok.io/download/" + post.image,
+        (imgWidth, imgHeight) => {
+          setImageWidth(imgWidth);
+          setImageHeight(imgHeight);
+        }
+      );
+    }
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -100,19 +133,16 @@ export default function PostCard(props) {
           <UserAvatar size={35} src={post.user.profileImage} fontSize={15} />
         </TouchableOpacity>
         <View style={headerStyles.headerDetailsContainer}>
-          <Text style={headerStyles.userName}>{post.user.name}</Text>
+          <Text style={headerStyles.userName}>
+            {post.user.firstName + " " + post.user.lastName}
+          </Text>
 
           <Text style={headerStyles.postTime}>
             {postDuration + " (Al Rayaan)"}
           </Text>
         </View>
         <View style={headerStyles.headerIconContainer}>
-          {props.hasOwnProperty("isFound") ? (
-            <Ionicons name="checkmark-circle" size={25} color={textColor} />
-          ) : null}
-          {props.hasOwnProperty("isLost") ? (
-            <AntDesign name="questioncircle" size={25} color={textColor} />
-          ) : null}
+          {isTypeEnable && postType(post.postTypes)}
         </View>
       </View>
 
@@ -124,20 +154,18 @@ export default function PostCard(props) {
         />
       </View>
 
-      {post.hasOwnProperty("image") == true && (
-        <>
-          <TouchableOpacity
-            onPress={() => setIsModalVisible(true)}
-            style={[
-              styles.imageContainer,
-              { height: imageHeight >= 450 ? 450 : imageHeight },
-            ]}
-          >
-            <Image style={styles.postImage} source={post.image} />
-          </TouchableOpacity>
-
-          <ImageModal status={isModalVisible} postImage={post.image} onCancell={() => setIsModalVisible(false)}/>
-        </>
+      {post.image !== null && (
+        <View style={styles.imageContainer}>
+          <ImageViewer
+            uri={
+              "http://28d0-156-211-236-150.eu.ngrok.io/download/" + post.image
+            }
+            isFullScreen={true}
+            maxHeight={imageHeight >= 450 ? 450 : imageHeight}
+            imageHeight={imageHeight}
+            imageWidth={imageWidth}
+          />
+        </View>
       )}
 
       <View style={styles.actionContainer}>
@@ -148,13 +176,13 @@ export default function PostCard(props) {
         />
         <ActionButton
           type={"comment"}
-          details={post.numberOfComments}
+          details={post.numOfComments}
           onPress={() => {
             onPressComment(post);
             console.log("Action Pressed");
           }}
         />
-        <ActionButton type={"share"} details={post.numberOfShares} />
+        {/* <ActionButton type={"share"} details={post.numOfShares} /> */}
       </View>
     </View>
   );
@@ -227,7 +255,7 @@ const styles = StyleSheet.create({
   container: {
     flexShrink: 1,
     backgroundColor: backColor,
-    marginBottom: 17,
+    marginBottom: 10,
     paddingVertical: 10,
   },
 
@@ -238,15 +266,6 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
 
-  imageContainer: {
-    flexShrink: 1,
-    flexGrow: 1,
-    marginBottom: 10,
-    marginHorizontal: 10,
-    borderRadius: 15,
-    overflow: "hidden",
-  },
-
   actionContainer: {
     flex: 1,
     minHeight: 40,
@@ -254,18 +273,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
 
-  postImage: {
-    height: 240,
-    flex: 1,
-    width: null,
-    // resizeMethod: "auto",
-    resizeMode: "stretch",
-  },
-
   detailsText: {
     fontSize: 13,
     color: textColor,
     lineHeight: 18,
     textAlign: "auto",
+  },
+
+  imageContainer: {
+    flexShrink: 1,
+    flexGrow: 1,
+    marginBottom: 10,
+    marginHorizontal: 10,
+    borderRadius: 15,
+    overflow: "hidden",
   },
 });

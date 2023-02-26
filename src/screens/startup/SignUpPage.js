@@ -19,9 +19,9 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 
 import PhoneInput from "react-native-phone-number-input";
 
-import Adding from "../../../API/Adding";
 import languages from "../../strings/LanguagesController";
 import { useNavigation } from "@react-navigation/native";
+import { GraphQL } from "../../../API";
 
 const windowHeight = Dimensions.get("window").height;
 const isRTL = I18nManager.isRTL;
@@ -43,7 +43,6 @@ export default function SignUpPage({ navigation, route }) {
 
   const inputMaxLength = 55;
 
-  const [value, setValue] = useState("");
   const [formattedValue, setFormattedValue] = useState("");
   const [valid, setValid] = useState(false);
   const phoneInput = useRef(PhoneInput);
@@ -116,7 +115,9 @@ export default function SignUpPage({ navigation, route }) {
     let isConfirmPassword = confirmPassword === newPassword;
 
     return (
-      isConfirmPassword && isFilled && phoneInput.current?.isValidNumber(value)
+      isConfirmPassword &&
+      isFilled &&
+      phoneInput.current?.isValidNumber(phoneNumber)
     );
   };
 
@@ -154,10 +155,15 @@ export default function SignUpPage({ navigation, route }) {
         password: confirmPassword,
       };
 
-      Adding("addUser", data, () => {
-        navigation.navigate("SignUpConfirmation", {
-          phoneNumber: data.phoneNumber,
-        });
+      GraphQL.UserApiLogic.Queries.Signup(data).then((res) => {
+        if (res.success) {
+          navigation.navigate("SignUpConfirmation", {
+            phoneNumber: data.phoneNumber,
+          });
+        } else {
+          //to ar
+          Alert.alert("Error", res.errors.join("\n"));
+        }
       });
     } else {
       Alert.alert(
@@ -183,9 +189,7 @@ export default function SignUpPage({ navigation, route }) {
   };
 
   return (
-
     <View style={styles.background}>
-
       <ScrollView
         alwaysBounceHorizontal={false}
         alwaysBounceVertical={false}
@@ -261,7 +265,6 @@ export default function SignUpPage({ navigation, route }) {
                   defaultCode="QA"
                   layout="second"
                   onChangeText={(text) => {
-                    console.log(phoneNumber);
                     setValid(phoneInput.current?.isValidNumber(text));
                   }}
                   onChangeFormattedText={(text) => {
@@ -381,9 +384,7 @@ export default function SignUpPage({ navigation, route }) {
           </View>
         </View>
       </ScrollView>
-      
     </View>
-
   );
 }
 

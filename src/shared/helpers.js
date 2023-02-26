@@ -30,9 +30,9 @@ const Helper = {
     // return time as a string
     return nd.toLocaleString();
   },
-  getPostDuration: (date) => {
-    var date = new Date(date).getTime();
-    var currDate = new Date(Helper.calcTime("+3")).getTime();
+  getDuration: (date) => {
+    var date = new Date(parseInt(date)).getTime();
+    var currDate = new Date(Helper.calcTime("+0")).getTime();
     var duration = currDate - date;
 
     var days = Math.floor(duration / (1000 * 60 * 60 * 24));
