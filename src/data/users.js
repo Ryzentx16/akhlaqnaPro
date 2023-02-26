@@ -2,7 +2,7 @@ const users = [
   {
       id: 'u1',
       username: 'Abdulrahman',
-      name: 'Abdulrahman .M',
+      firstName: 'Abdulrahman .M',
       phoneNumber: '+97470031251',
       password: "70031251",
       profileImage: "http://ryzentx.online/myProfileExample.png",
@@ -10,7 +10,7 @@ const users = [
   {
       id: 'u2',
       username: 'John',
-      name: 'John .M',
+      firstName: 'John .M',
       phoneNumber: '+97412345678',
       password: "12345678",
       profileImage: "http://ryzentx.online/profile_1.png",
@@ -18,7 +18,7 @@ const users = [
   {
       id: 'u3',
       username: 'Ali',
-      name: 'ALi .Q',
+      firstName: 'ALi .Q',
       phoneNumber: '+97412345678',
       password: "12345678",
       profileImage: "http://ryzentx.online/profile_2.png",
@@ -26,7 +26,7 @@ const users = [
   {
       id: 'u4',
       username: 'Salah',
-      name: 'Salah .D',
+      firstName: 'Salah .D',
       phoneNumber: '+97412345678',
       password: "12345678",
       profileImage: "http://ryzentx.online/profile_3.png",
@@ -34,7 +34,7 @@ const users = [
   {
       id: 'u5',
       username: 'Mohamed',
-      name: 'Mohamed .A',
+      firstName: 'Mohamed .A',
       phoneNumber: '+97412345678',
       password: "12345678",
       profileImage: "http://ryzentx.online/profile_4.png",

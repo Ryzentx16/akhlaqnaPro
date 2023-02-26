@@ -12,7 +12,7 @@ import {
   Alert,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import CheckOTP from "../../../API/CheckOTP";
+// import CheckOTP from "../../../API/CheckOTP";
 import languages from "../../strings/LanguagesController";
 
 const windowHeight = Dimensions.get("window").height;

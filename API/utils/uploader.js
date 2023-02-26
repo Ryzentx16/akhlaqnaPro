@@ -1,4 +1,5 @@
 import axios from "axios";
+import domain from "../domain";
 
 const Uploader = {
   Image: async (uri, typeName, isCompressed = false) => {
@@ -19,7 +20,7 @@ const Uploader = {
 
     try {
       const response = await axios.post(
-        "http://28d0-156-211-236-150.eu.ngrok.io/upload",
+        `${domain}/upload`,
         formData,
         {
           headers: {

@@ -22,11 +22,6 @@ const windowHeight = Dimensions.get("screen").height;
 const isRTL = I18nManager.isRTL;
 const isEdit = false;
 
-// import NetInfo from "@react-native-community/netinfo";
-// NetInfo.fetch().then(state => {
-//   console.log("Connection : ", state.details);
-// });
-
 export default function LoginPage({ navigation }) {
   const [value, setValue] = useState("");
   const [formattedValue, setFormattedValue] = useState("+97455298188");

@@ -1,129 +1,124 @@
 import React, { useEffect, useState } from "react";
-import {
-  FlatList,
-  SafeAreaView,
-  StyleSheet,
-  View,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
-  Dimensions,
-  TextInput,
-} from "react-native";
-import { useHeaderHeight } from "@react-navigation/elements";
-import ChatMessage from "./ChatMessage";
+import { StyleSheet, View } from "react-native";
+
+import PaginationListView from "../../components/PaginationListView";
+import OurUser from "../../OurUser";
 import chatRoomData from "../../data/chatRoomData";
 import InputBox from "./inputBox";
-import Constants from "expo-constants";
-
-const statusBarHeight = Constants.statusBarHeight;
-const windowHeight = Dimensions.get("window").height;
-
-//  <KeyboardAvoidingView
-//   onLayout={(event) => {
-//     var { x, y, width, height } = event.nativeEvent.layout;
-//     console.warn(height);
-//   }}
-//   style={[
-//     styles.container,
-//     {
-//       maxHeight: windowHeight - keyboardHeight,
-//       minHeight: windowHeight - keyboardHeight,
-//     },
-//   ]}
-//   behavior={"height"}
-// >
-//   <View
-//     style={{
-//       height: "50%",
-//       justifyContent: "flex-end",
-//       alignItems: "center",
-//     }}
-//   >
-//     <Text style={styles.text}>
-//       {"StatusBar Height: " + statusBarHeight}
-//     </Text>
-//     <Text style={styles.text}>{"Window Height: " + windowHeight}</Text>
-//     <Text style={styles.text}>{"Keyboard Height: " + keyboardHeight}</Text>
-//     <Text style={styles.text}>{"Green View Height: " + greenHeight}</Text>
-//   </View>
-
-//   <View
-//     onLayout={(event) => {
-//       var { x, y, width, height } = event.nativeEvent.layout;
-//       setGreenHeight(height);
-//     }}
-//     style={{
-//       flex: 1,
-//       // height: windowHeight / 2,
-//       backgroundColor: "green",
-//       width: "100%",
-//       justifyContent: "flex-end",
-//     }}
-//   >
-//     <InputBox />
-//     {/* <TextInput
-//       style={{
-//         flex: 1,
-//         maxHeight: 25,
-//         minHeight: 25,
-//         backgroundColor: "red",
-//       }}
-//     /> */}
-//   </View>
-// </KeyboardAvoidingView>
-
-function useKeyboardHeight() {
-  /* #region  get keybaord height test */
-  const [keyboardHeight, setKeyboardHeight] = useState(0);
-
-  useEffect(() => {
-    const showSubscription = Keyboard.addListener("keyboardDidShow", (e) =>
-      setKeyboardHeight(e.endCoordinates.height)
-    );
-    const hideSubscription = Keyboard.addListener("keyboardDidHide", () =>
-      setKeyboardHeight(0)
-    );
-    return () => {
-      showSubscription.remove();
-      hideSubscription.remove();
-    };
-  }, [setKeyboardHeight]);
-
-  /* #endregion */
-
-  return keyboardHeight;
-}
+import ChatMessage from "./ChatMessage";
 
 export default function ChatRoom({ route }) {
-  const keyboardHeight = useKeyboardHeight();
-  const [layoutHeight, setLayoutHeight] = useState(windowHeight * 0.75);
-  // const [greenHeight, setGreenHeight] = useState(0);
-  const myFixedKeyboardHeight = 329.523;
+  const [isSend, setIsSend] = useState(false);
+  const [image, setImage] = useState(null);
 
-  /* #region  get keybaord height test */
-  // const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const retrieveData = async (params) => {
+    params.postId = post.id;
+    const result = await GraphQL.CommentApiLogic.Queries.Retrieve(params);
 
-  // useEffect(() => {
-  //   const showSubscription = Keyboard.addListener("keyboardDidShow", (e) =>
-  //     setKeyboardHeight(e.endCoordinates.height)
-  //   );
-  //   const hideSubscription = Keyboard.addListener("keyboardDidHide", () =>
-  //     setKeyboardHeight(0)
-  //   );
-  //   return () => {
-  //     showSubscription.remove();
-  //     hideSubscription.remove();
-  //   };
-  // }, [setKeyboardHeight]);
+    // return result;
+  };
 
-  /* #endregion */
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
-  // console.warn(keyboardHeight);
+    console.log(result.assets[0].uri);
+
+    if (!result.canceled) {
+      setImage(result.assets[0]);
+    } else {
+      console.log("cancelled");
+    }
+  };
+
+  const takeImage = async () => {
+    // let pS = ;
+    await ImagePicker.requestCameraPermissionsAsync();
+    let r = await ImagePicker.getCameraPermissionsAsync().catch((er) =>
+      console.error(er)
+    );
+    setTest(JSON.stringify(r));
+
+    if (!r.granted) {
+      if (r.canAskAgain) {
+        await ImagePicker.requestCameraPermissionsAsync();
+        r = await ImagePicker.getCameraPermissionsAsync().catch((er) =>
+          console.error(er)
+        );
+        console.log(r);
+      } else {
+        alert("u refused!");
+        return;
+      }
+    }
+
+    if (r.granted) {
+      // No permissions request is necessary for launching the image library
+      const result = await ImagePicker.launchCameraAsync({
+        aspect: [4, 3],
+        quality: 1,
+      }).catch((er) => console.error(er));
+
+      console.log(result);
+
+      if (!result.canceled) {
+        setImage(result.assets[0]);
+      } else {
+        console.log("cancelled");
+      }
+    }
+  };
+
+  const onSend = async (message) => {
+    setIsSend(true);
+    const createComment = (imagePath = null) => {
+      const data = {
+        content: message,
+        userId: OurUser.user.id,
+        postId: post.id,
+      };
+
+      if (imagePath) {
+        data.image = imagePath;
+      }
+
+      GraphQL.CommentApiLogic.Queries.Create(data).then((res) => {
+        if (res.success) {
+          setIsSend(false);
+        } else {
+          //to ar
+          Alert.alert("Error", res.errors.join("\n"));
+        }
+      });
+    };
+
+    if (image) {
+      Utils.Uploader.Image(image.uri, "post", true).then(async (res) => {
+        createComment(res);
+      });
+    } else {
+      createComment();
+    }
+    setImage(null);
+  };
 
   return (
-    // <View style={[styles.container]}>
-    //   <View style={styles.messgaesContainer}>
+    // <KeyboardAvoidingView
+    //   onLayout={(event) => {}}
+    //   style={[
+    //     styles.container,
+    //     {
+    //       maxHeight: windowHeight * 0.75 - keyboardHeight,
+    //       minHeight: windowHeight * 0.75 - keyboardHeight,
+    //     },
+    //   ]}
+    //   behavior={"height"}
+    // >
+    //   <View style={[styles.messgaesContainer]}>
     //     <FlatList
     //       data={chatRoomData[0].messages}
     //       style={styles.scrollContainer}
@@ -134,72 +129,82 @@ export default function ChatRoom({ route }) {
     //       inverted
     //     />
     //   </View>
-    //   <View>
-    //     <InputBox />
+
+    //   <View
+    //     style={{
+    //       width: "100%",
+    //     }}
+    //   >
+    //     <InputBox
+    //       image={null}
+    //       style={{ backgroundColor: "#c8c7c8" }}
+    //       onPickImage={() => {}}
+    //       onTakeImage={() => {}}
+    //       onCancel={() => {}}
+    //     />
     //   </View>
-    // </View>
+    // </KeyboardAvoidingView>
 
-    <KeyboardAvoidingView
-      onLayout={(event) => {
-        // var { x, y, width, height } = event.nativeEvent.layout;
-        // setLayoutHeight(height);
-        // console.warn(
-        //   ` layoutHeight: ${layoutHeight},\n keyboardHeight: ${keyboardHeight},\n`
-        // );
-      }}
-      style={[
-        styles.container,
-        {
-          maxHeight: windowHeight * 0.75 - keyboardHeight,
-          minHeight: windowHeight * 0.75 - keyboardHeight,
-        },
-      ]}
-      behavior={"height"}
-    >
-      <View
-        style={[
-          styles.messgaesContainer,
-          // {
-          //   height: "50%",
-          //   justifyContent: "flex-end",
-          //   alignItems: "center",
-          // },
-        ]}
-      >
-        <FlatList
-          data={chatRoomData[0].messages}
-          style={styles.scrollContainer}
-          keyExtractor={(item, index) => index}
-          renderItem={(item, index) => {
-            return <ChatMessage key={index} message={item.item} myId={"u1"} />;
-          }}
-          inverted
-        />
-      </View>
+    // renderItem,
+    // retrieveData,
+    // perPage,
+    // isBottomSheet = false,
+    // isSend,
 
-      <View
-        style={{
-          width: "100%",
+    <View style={styles.container}>
+      {/* <PaginationListView
+        perPage={5}
+        retrieveData={() => chatRoomData[0].messages}
+        renderItem={(item, index) => {
+          return (
+            <ChatMessage
+              key={index}
+              message={item.item}
+              myId={OurUser.user.id}
+            />
+          );
         }}
-      >
-        <InputBox
-          image={null}
-          style={{ backgroundColor: "#c8c7c8" }}
-          onPickImage={() => {}}
-          onTakeImage={() => {}}
-          onCancel={() => {}}
-        />
-        {/* <TextInput
-          style={{
-            // flex: 1,
-            width: "100%",
-            maxHeight: 25,
-            minHeight: 25,
-            backgroundColor: "red",
+        
+      /> */}
+      <View style={styles.messgaesContainer}>
+        <ChatMessage
+          // key={index}
+          message={{
+            id: "m10",
+            createdAt: "2023/01/10 22:08:00",
+            content: "Bye",
+            user: OurUser.user,
           }}
-        /> */}
+          myId={OurUser.user.id}
+        />
+        <ChatMessage
+          // key={index}
+          message={{
+            id: "m9",
+            createdAt: "2023/01/10 22:07:50",
+            content: "Good Bye then!",
+            user: {
+              id: "u2",
+              username: "John",
+              firstName: "John .M",
+              phoneNumber: "+97412345678",
+              password: "12345678",
+              profileImage: "http://ryzentx.online/profile_1.png",
+            },
+            image: "خلطبية بالصلصة"
+          }}
+          myId={OurUser.user.id}
+        />
       </View>
-    </KeyboardAvoidingView>
+
+      <InputBox
+        image={null}
+        style={{ backgroundColor: "#c8c7c8" }}
+        onPickImage={pickImage}
+        onTakeImage={takeImage}
+        onCancel={() => setImage(null)}
+      />
+    </View>
   );
 }
 
@@ -208,13 +213,12 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 10,
     backgroundColor: "#CCCCCC",
-    // justifyContent: "flex-end",
   },
 
   messgaesContainer: {
     flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
+    // justifyContent: "flex-end",
+    // alignItems: "center",
   },
 
   scrollContainer: {

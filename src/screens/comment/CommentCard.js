@@ -14,6 +14,7 @@ import Helper from "../../shared/helpers";
 import ReplyCard from "./ReplyCard";
 import ImageViewer from "../../components/ImageViewer";
 import themes from "../../ThemeController";
+import domain from "../../../API/domain";
 
 let textColor = themes._currTextTheme;
 let backColor = themes._currBackColorTheme;
@@ -43,7 +44,7 @@ export default function CommentCard(props) {
   useEffect(() => {
     if (comment.image !== null) {
       Image.getSize(
-        "http://28d0-156-211-236-150.eu.ngrok.io/download/" + comment.image,
+        `${domain}/download/` + comment.image,
         (imgWidth, imgHeight) => {
           setImageWidth(imgWidth);
           setImageHeight(imgHeight);
@@ -76,7 +77,7 @@ export default function CommentCard(props) {
             <View style={detailsStyles.imageContainer}>
               <ImageViewer
                 uri={
-                  "http://28d0-156-211-236-150.eu.ngrok.io/download/" +
+                  `${domain}/download/` +
                   comment.image
                 }
                 isFullScreen={true}
