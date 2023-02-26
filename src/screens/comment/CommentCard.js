@@ -43,7 +43,7 @@ export default function CommentCard(props) {
   useEffect(() => {
     if (comment.image !== null) {
       Image.getSize(
-        "http://28d0-156-211-236-150.eu.ngrok.io/download/" + comment.image,
+        "http://3c5e-156-211-236-150.eu.ngrok.io/download/" + comment.image,
         (imgWidth, imgHeight) => {
           setImageWidth(imgWidth);
           setImageHeight(imgHeight);
@@ -76,7 +76,7 @@ export default function CommentCard(props) {
             <View style={detailsStyles.imageContainer}>
               <ImageViewer
                 uri={
-                  "http://28d0-156-211-236-150.eu.ngrok.io/download/" +
+                  "http://3c5e-156-211-236-150.eu.ngrok.io/download/" +
                   comment.image
                 }
                 isFullScreen={true}

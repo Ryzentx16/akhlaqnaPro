@@ -2,7 +2,7 @@ import { ApolloClient, InMemoryCache } from "@apollo/client";
 
 const domain = "192.168.1.8";
 const port = "2000";
-const endPointUrl = `http://28d0-156-211-236-150.eu.ngrok.io/graphql`
+const endPointUrl = `http://3c5e-156-211-236-150.eu.ngrok.io/graphql`
 const client = new ApolloClient({
   uri: endPointUrl,
   cache: new InMemoryCache(),

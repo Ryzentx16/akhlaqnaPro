@@ -19,7 +19,7 @@ const Uploader = {
 
     try {
       const response = await axios.post(
-        "http://28d0-156-211-236-150.eu.ngrok.io/upload",
+        "http://3c5e-156-211-236-150.eu.ngrok.io/upload",
         formData,
         {
           headers: {

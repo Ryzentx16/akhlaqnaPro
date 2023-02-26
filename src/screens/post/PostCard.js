@@ -112,7 +112,7 @@ export default function PostCard(props) {
   useEffect(() => {
     if (post.image !== null) {
       Image.getSize(
-        "http://28d0-156-211-236-150.eu.ngrok.io/download/" + post.image,
+        "http://3c5e-156-211-236-150.eu.ngrok.io/download/" + post.image,
         (imgWidth, imgHeight) => {
           setImageWidth(imgWidth);
           setImageHeight(imgHeight);
@@ -158,7 +158,7 @@ export default function PostCard(props) {
         <View style={styles.imageContainer}>
           <ImageViewer
             uri={
-              "http://28d0-156-211-236-150.eu.ngrok.io/download/" + post.image
+              "http://3c5e-156-211-236-150.eu.ngrok.io/download/" + post.image
             }
             isFullScreen={true}
             maxHeight={imageHeight >= 450 ? 450 : imageHeight}
