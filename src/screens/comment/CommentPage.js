@@ -84,6 +84,7 @@ export default function CommentPage(props) {
       };
 
       if (imagePath) {
+        console.log(imagePath);
         data.image = imagePath;
       }
 
@@ -98,7 +99,7 @@ export default function CommentPage(props) {
     };
 
     if (image) {
-      Utils.Uploader.Image(image.uri, "post", true).then(async (res) => {
+      Utils.Uploader.Image(image.uri, "comment", true).then(async (res) => {
         createComment(res);
       });
     } else {

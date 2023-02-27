@@ -14,7 +14,6 @@ import {
   ScrollView,
   ActivityIndicator,
   Button,
-  Dimensions,
   Alert,
   Switch,
 } from "react-native";
@@ -41,8 +40,6 @@ import GetMap from "../components/GetMap";
 import OurUser from "../OurUser";
 
 const isRTL = I18nManager.isRTL;
-const windowHeight = Dimensions.get("window").height;
-const windowWidth = Dimensions.get("window").width;
 
 const AddPostPage = ({ navigation }) => {
   const user = users[0];
@@ -55,14 +52,13 @@ const AddPostPage = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [isLost, setIsLost] = React.useState(false);
-  
+
   const [region, setRegion] = useState({
     latitude: 25.300946829658887,
     latitudeDelta: 0.6631861591450701,
     longitude: 51.465748474001884,
     longitudeDelta: 0.3281260281801224,
   });
-
 
   const onToggle = () => setIsLost(!isLost);
 
@@ -277,12 +273,12 @@ const AddPostPage = ({ navigation }) => {
               color={"#660032"}
             />
           </TouchableOpacity>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.actionBtnContainer}
             onPress={onLocation}
           >
             <Entypo name={"location"} size={30} color={"#660032"} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         <TouchableOpacity style={styles.postBtnContaianer} onPress={onPost}>
@@ -302,9 +298,7 @@ const AddPostPage = ({ navigation }) => {
         backdropOpacity={0.9}
         style={{ justifyContent: "center", alignItems: "center" }}
       >
-        <View style={styles.modalLocation}>
-          <GetMap />
-        </View>
+        <GetMap />
       </Modal>
       {isLoading && (
         <View
@@ -453,17 +447,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
     color: "white",
-  },
-
-  modalLocation: {
-    flex: 1,
-    maxHeight: windowHeight,
-    minHeight: windowHeight,
-    maxWidth: windowWidth,
-    minWidth: windowWidth,
-    backgroundColor: "#660032",
-    justifyContent: "center",
-    alignItems: "center",
   },
 
   pinIcon: {

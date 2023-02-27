@@ -26,7 +26,7 @@ export default function AppHeader(props) {
     navigation.navigate('PostsPage');
   };
   const onProfile = () => {
-    navigation.navigate('MyProfile');
+    navigation.navigate('PersonProfile');
   };
   const onToggleDrawer = () => {
     navigation.toggleDrawer();

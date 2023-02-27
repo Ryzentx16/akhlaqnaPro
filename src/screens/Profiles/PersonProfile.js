@@ -1,7 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, I18nManager, Alert } from "react-native";
+import {
+  FlatList,
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  I18nManager,
+  Text,
+  View,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
 import posts from "../../data/posts";
 import languages from "../../strings/LanguagesController";
+import UserAvatar from "@muhzi/react-native-user-avatar";
 import AppHeader from "../../components/AppHeader";
 import users from "../../data/users";
 
@@ -74,7 +85,57 @@ export default function PersonProfile({ navigation, route }) {
 
   return (
     <>
-      <AppHeader style={{ top: -12 }} navigation={navigation} isDrawer />
+      {(
+        <AppHeader style={{ top: -12 }} navigation={navigation} isDrawer />
+      )}
+      <View style={headerStyles.headContaienr}>
+        <View style={headerStyles.head}>
+          <View style={headerStyles.profileContainer}>
+            <View style={styles.imageContainer}>
+              <UserAvatar
+                src={ourUser.profileImage}
+                userName={"Jhon"}
+                size={80}
+              />
+            </View>
+            <View style={headerStyles.detailsContaienr}>
+              <Text style={headerStyles.name}>{ourUser.firstName}</Text>
+              {/* <MaterialCommunityIcons
+                    name={"dots-vertical"}
+                    color={"#660032"}
+                    size={50}
+                  /> */}
+            </View>
+          </View>
+          <View style={headerStyles.actionContaienr}>
+            {!isUserMe ? (
+              <>
+                <TouchableOpacity style={headerStyles.btnStyle}>
+                  <View style={headerStyles.messageButton}>
+                    <Text style={headerStyles.messageText}>Message</Text>
+                  </View>
+                </TouchableOpacity>
+                {/* <TouchableOpacity style={headerStyles.btnStyle}>
+                  <View style={headerStyles.lostAndFoundButton}>
+                    <Text style={headerStyles.lostAndFoundText}>
+                      Lost & Found
+                    </Text>
+                  </View>
+                </TouchableOpacity> */}
+              </>
+            ) : (
+              <TouchableOpacity
+                style={headerStyles.myBtnStyle}
+                onPress={onEdit}
+              >
+                <View style={headerStyles.editProfileButton}>
+                  <Text style={headerStyles.editProfileText}>Edit Profile</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+      </View>
       <PostListView
         retrieveData={retrieveData}
         type={4}
@@ -127,6 +188,7 @@ const headerStyles = StyleSheet.create({
     flex: 1,
     maxWidth: 170,
     minWidth: 170,
+    justifyContent: "center",
   },
   myBtnStyle: {
     flex: 1,
@@ -152,20 +214,19 @@ const headerStyles = StyleSheet.create({
   },
   messageButton: {
     flex: 1,
-    backgroundColor: "white",
     borderRadius: 99,
     borderWidth: 1,
     maxHeight: 40,
     minHeight: 40,
-    borderColor: "#660032",
+    backgroundColor: "#660032",
     alignItems: "center",
-    // paddingLeft: isRTL ? -20 : 10,
-    paddingTop: 5,
+    justifyContent: "center",
   },
   messageText: {
     // marginLeft: 30,
-    color: "#660032",
-    fontSize: 20,
+    color: "white",
+    fontSize: 15,
+    textAlign: "center",
   },
   lostAndFoundButton: {
     flex: 1,

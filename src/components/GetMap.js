@@ -1,10 +1,6 @@
 import { useRef, useState } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
-import MapView, {
-  AnimatedRegion,
-  Animated,
-  MarkerAnimated,
-} from "react-native-maps";
+import { Button, StyleSheet, Text, View, Dimensions } from "react-native";
+import MapView from "react-native-maps";
 import * as Location from "expo-location";
 import { FontAwesome, MaterialIcons, Entypo } from "react-native-vector-icons";
 import axios from "axios";
@@ -12,6 +8,8 @@ import axios from "axios";
 const customMapStyle = [];
 const QAlat = 25.300946829658887;
 const QAlon = 51.465748474001884;
+const windowHeight = Dimensions.get("window").height;
+const windowWidth = Dimensions.get("window").width;
 
 export default function GetMap() {
   const [markerPoint, setMarkerPoint] = useState({
@@ -72,14 +70,14 @@ export default function GetMap() {
   };
 
   return (
-    <View style={styles.container}>
+    <>
       <MapView
         showsMyLocationButton={false}
         showsUserLocation={true}
         customMapStyle={customMapStyle}
         onUserLocationChange={(e) => setCurrLocation(e.nativeEvent.coordinate)} //here
         ref={refMap}
-        style={{ height: "100%", width: "100%" }}
+        style={styles.container}
         onRegionChangeComplete={async (Region) => {
           await getAddressAsync(Region.latitude, Region.longitude);
           console.log(`${Region.latitude}, ${Region.longitude}`);
@@ -98,7 +96,7 @@ export default function GetMap() {
           setMarkerPoint(e.nativeEvent.coordinate);
         }}
         // onRegionChangeComplete={setCoordinate}
-      ></MapView>
+      />
       <View style={{ position: "absolute", top: 40, left: 0 }}>
         <Button title={"to curr location"} onPress={onLocation} />
       </View>
@@ -108,28 +106,26 @@ export default function GetMap() {
         color={"#660032"}
         style={styles.pin}
       />
-      <View
-        style={{
-          position: "absolute",
-          width: 6,
-          height: 6,
-          borderRadius: 0,
-          left: "50%",
-          top: "50%",
-        }}
-      />
+      <View style={styles.centerRefrence} />
       <View style={{ position: "absolute", bottom: 0 }}>
         <Text>{JSON.stringify(address)}</Text>
       </View>
-    </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    maxHeight: windowHeight,
+    minHeight: windowHeight,
+    maxWidth: windowWidth,
+    minWidth: windowWidth,
+    height: windowHeight,
+    width: windowWidth,
+    backgroundColor: "#660032",
     justifyContent: "center",
+    alignItems: "center",
   },
 
   pin: {
@@ -139,5 +135,14 @@ const styles = StyleSheet.create({
     marginTop: 3 + 3 - 30, //3 is the half of below view height another 3 is the offset and the -30 is the current icon hight
     marginLeft: -15 + 3, //-15 is the current icon width and the 3 is the half of bellow view width
     zIndex: 1,
+  },
+
+  centerRefrence: {
+    position: "absolute",
+    width: 6,
+    height: 6,
+    borderRadius: 0,
+    left: "50%",
+    top: "50%",
   },
 });
