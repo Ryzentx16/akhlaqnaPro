@@ -40,6 +40,8 @@ import GetMap from "../components/GetMap";
 import OurUser from "../OurUser";
 import domain from "../../API/domain";
 
+import LoadingHandler from "../components/LoadingHandler";
+
 const isRTL = I18nManager.isRTL;
 
 const AddPostPage = ({ navigation }) => {
@@ -112,7 +114,7 @@ const AddPostPage = ({ navigation }) => {
         quality: 0.4, // adjust the quality to reduce file size
         exif: false, // ignore EXIF data to prevent image rotation
       }).catch((er) => console.error(er));
-      
+
       if (!result.canceled) {
         setImage(result.assets[0]);
       } else {
@@ -217,7 +219,7 @@ const AddPostPage = ({ navigation }) => {
 
   const onLocation = () => {
     setModalStatus(true);
-  }
+  };
 
   //----------------------------------------------------
 
@@ -356,23 +358,8 @@ const AddPostPage = ({ navigation }) => {
       >
         <GetMap />
       </Modal>
-      {isLoading && (
-        <View
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            top: 0,
-            bottom: 0,
-            opacity: 0.8,
-            backgroundColor: "black",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <ActivityIndicator size="large" color="#FFD700" />
-        </View>
-      )}
+
+      <LoadingHandler status={isLoading} />
     </KeyboardAvoidingView>
   );
 };

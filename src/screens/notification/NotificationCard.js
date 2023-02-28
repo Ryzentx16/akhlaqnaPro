@@ -62,7 +62,7 @@ export default function NotificationCard(props) {
         </View>
         
         <View style={styles.detailsContainer}>
-          <Text style={styles.details}>{notification.user.name + notification.details}</Text>
+          <Text style={styles.details}>{`Coming Soon`}</Text>
         </View>
       </View>
     </TouchableOpacity>

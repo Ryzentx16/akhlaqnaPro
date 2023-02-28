@@ -17,6 +17,7 @@ import PhoneInput from "react-native-phone-number-input";
 import languages from "../../strings/LanguagesController";
 import { GraphQL } from "../../../API";
 import OurUser from "../../OurUser";
+import LoadingHandler from "../../components/LoadingHandler";
 
 const windowHeight = Dimensions.get("screen").height;
 const isRTL = I18nManager.isRTL;
@@ -36,7 +37,10 @@ export default function LoginPage({ navigation }) {
   const [phoneNumber, setPhoneNumber] = useState(null);
   const [password, setPassword] = useState(null);
 
+  const [modalStatus, setModalStatus] = useState(false);
+
   const checkLogin = () => {
+    setModalStatus(true);
     if (
       phoneInput == "" ||
       phoneInput == null ||
@@ -51,15 +55,17 @@ export default function LoginPage({ navigation }) {
       password: password,
     };
 
-    // GraphQL.UserApiLogic.Queries.Login(params).then((res) => {
-    //   if (!res) {
-    //     Alert.alert("Error", "Phone number or password incorrect");
-    //   } else if (res.errors) {
-    //     Alert.alert("Error", res.errors.join("\n"));
-    //   } else {
-    //     OurUser.user = res[0];
-    //   }
-    // });
+    GraphQL.UserApiLogic.Queries.Login(params).then((res) => {
+      setModalStatus(false);
+      if (!res) {
+        Alert.alert("Error", "Phone number or password incorrect");
+      } else if (res.errors) {
+        Alert.alert("Error", res.errors.join("\n"));
+      } else {
+        OurUser.user = res[0];
+        navigation.navigate("Home");
+      }
+    });
   };
 
   const onForget = () => {
@@ -114,15 +120,6 @@ export default function LoginPage({ navigation }) {
               </View>
 
               <View style={inputsStyle.phoneInputHolder}>
-                {/* <TextInput
-                  placeholder={currLang.loginPage.phonenumber + " *"}
-                  style={{
-                    flex: 1,
-                    textAlign: isRTL ? "right" : "left",
-                    fontSize: 16,
-                  }}
-                /> */}
-
                 <PhoneInput
                   ref={phoneInput}
                   defaultValue={phoneNumber}
@@ -209,6 +206,8 @@ export default function LoginPage({ navigation }) {
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+      <LoadingHandler status={modalStatus} />
     </View>
   );
 }

@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,6 +12,8 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import AppHeader from "../../components/AppHeader";
 import languages from "../../strings/LanguagesController";
 import themes from "../../ThemeController";
+import OurUser from "../../OurUser";
+import domain from "../../../API/domain";
 
 const isRTL = I18nManager.isRTL;
 let textColor = themes._currTextTheme;
@@ -35,8 +37,6 @@ export default function SettingPage({ navigation }) {
     backColor = themes._currBackColorTheme;
   });
 
-
-
   return (
     <View style={styles.container}>
       <AppHeader navigation={navigation} isDrawer={true} />
@@ -45,12 +45,14 @@ export default function SettingPage({ navigation }) {
         <View style={styles.accountInfoContainer}>
           <View style={styles.avatarContainer}>
             <UserAvatar
-              size={100}
-              src={"http://ryzentx.online/myProfileExample.png"}
+              src={`${domain}/download/` + OurUser.user.profileImage}
+              size={70}
             />
           </View>
           <View style={styles.nameContainer}>
-            <Text style={styles.name}>Abdulrahman .M</Text>
+            <Text
+              style={styles.name}
+            >{`${OurUser.user.firstName} ${OurUser.user.lastName}`}</Text>
           </View>
         </View>
         <View style={styles.btnsBody}>
@@ -83,7 +85,6 @@ export default function SettingPage({ navigation }) {
               <Text style={styles.text}>{currLang.settingPage.chats}</Text>
             </View>
           </TouchableOpacity> */}
-
         </View>
       </View>
     </View>
@@ -127,6 +128,7 @@ const styles = StyleSheet.create({
     // alignItems: 'center'
 
     // paddingLeft: 15,
+    marginLeft: -15,
   },
   name: {
     fontSize: 26,

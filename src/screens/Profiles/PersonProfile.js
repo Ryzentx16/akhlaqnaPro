@@ -19,6 +19,7 @@ import { useNavigation } from "@react-navigation/native";
 import PostListView from "../post/PostListView";
 import { GraphQL } from "../../../API";
 import domain from "../../../API/domain";
+import LoadingHandler from "../../components/LoadingHandler";
 
 const isRTL = I18nManager.isRTL;
 
@@ -27,6 +28,7 @@ export default function PersonProfile({ navigation, route }) {
   const isDrawer = route.params?.isDrawer;
   const globleNavigation = useNavigation();
   const isUserMe = route.params?.isMe;
+  const [modalStatus, setModalStatus] = useState(false);
 
   let currLang = languages.currLang();
   useEffect(() => {
@@ -34,28 +36,30 @@ export default function PersonProfile({ navigation, route }) {
   });
 
   const onEdit = () => {
-    Alert.alert(
-      currLang.languagepage.applychangealert.title,
-      currLang.languagepage.applychangealert.content,
-      [
-        {
-          text: currLang.languagepage.applychangealert.buttons.yessingout,
-          onPress: () => {
-            globleNavigation.dispatch(
-              globleNavigation.reset({
-                index: 0,
-                routes: [{ name: "SignUpPage", params: { user: user } }],
-              })
-              // navigation.navigate({ name: "SignUpPage", params: {user: users[0]} })
-            );
-          },
-        },
-        {
-          text: currLang.languagepage.applychangealert.buttons.cancel,
-          onPress: null,
-        },
-      ]
-    );
+    Alert.alert("Sorry!", "Coming Soon");
+
+    // Alert.alert(
+    //   currLang.languagepage.applychangealert.title,
+    //   currLang.languagepage.applychangealert.content,
+    //   [
+    //     {
+    //       text: currLang.languagepage.applychangealert.buttons.yessingout,
+    //       onPress: () => {
+    //         globleNavigation.dispatch(
+    //           globleNavigation.reset({
+    //             index: 0,
+    //             routes: [{ name: "SignUpPage", params: { user: user } }],
+    //           })
+    //           // navigation.navigate({ name: "SignUpPage", params: {user: users[0]} })
+    //         );
+    //       },
+    //     },
+    //     {
+    //       text: currLang.languagepage.applychangealert.buttons.cancel,
+    //       onPress: null,
+    //     },
+    //   ]
+    // );
   };
 
   const onImage = () => {
@@ -72,12 +76,14 @@ export default function PersonProfile({ navigation, route }) {
   };
 
   const messagePerson = () => {
+    setModalStatus(true);
     var data = {
       user1Id: OurUser.user.id,
       user2Id: user.id,
     };
 
     GraphQL.ChatApiLogic.Rooms.Queries.Create(data).then((res) => {
+      setModalStatus(false);
       if (res.success || res.roomId) {
         navigation.navigate("Chat", {
           screen: "ChatRoom",
@@ -158,6 +164,7 @@ export default function PersonProfile({ navigation, route }) {
         perPage={4}
         Profile={user}
       />
+      <LoadingHandler status={modalStatus} />
     </>
   );
 }

@@ -16,43 +16,38 @@ export default function AccountPage() {
   const navigation = useNavigation();
 
   const onChangePass = () => {
-    console.warn(users[0].phoneNumber);
+    // console.warn(users[0].phoneNumber);
 
-    Alert.alert(
-      "Warning",
-      "In order to Change The password you need to sign out",
-      [
-        {
-          text: "Yes, Sign Out",
-          onPress: () =>
-            navigation.dispatch(
-              // navigation.replace("AppStartupNavigator", {
-              //   screen: "SignUpConfirmation",
-              //   params: {
-              //     isChangePass: true,
-              //     phoneNumber: users[0].phoneNumber,
-              //   },
-              // })
-              navigation.reset({
-                index: 1,
-                routes: [
-                  {
-                    name: "SignUpConfirmation",
-                    params: {
-                      isChangePass: true,
-                      phoneNumber: users[0].phoneNumber,
-                    },
-                  },
-                ],
-              })
-            ),
-        },
-        {
-          text: "Cancel",
-          onPress: null,
-        },
-      ]
-    );
+    // Alert.alert(
+    //   "Warning",
+    //   "In order to Change The password you need to sign out",
+    //   [
+    //     {
+    //       text: "Yes, Sign Out",
+    //       onPress: () =>
+    //         navigation.dispatch(
+    //           navigation.reset({
+    //             index: 1,
+    //             routes: [
+    //               {
+    //                 name: "SignUpConfirmation",
+    //                 params: {
+    //                   isChangePass: true,
+    //                   phoneNumber: users[0].phoneNumber,
+    //                 },
+    //               },
+    //             ],
+    //           })
+    //         ),
+    //     },
+    //     {
+    //       text: "Cancel",
+    //       onPress: null,
+    //     },
+    //   ]
+    // );
+
+    Alert.alert("Sorry!", "Coming Soon");
   };
 
   useEffect(() => {
@@ -86,6 +81,9 @@ export default function AccountPage() {
                 flexDirection: "row",
                 alignItems: "center",
                 maxHeight: 60,
+              }}
+              onPress={() => {
+                Alert.alert("Sorry!", "Coming Soon");
               }}
             >
               <View style={{ flex: 1 }}>

@@ -22,19 +22,11 @@ import PhoneInput from "react-native-phone-number-input";
 import languages from "../../strings/LanguagesController";
 import { useNavigation } from "@react-navigation/native";
 import { GraphQL } from "../../../API";
+import LoadingHandler from "../../components/LoadingHandler";
 
 const windowHeight = Dimensions.get("window").height;
 const isRTL = I18nManager.isRTL;
 const isEdit = false;
-
-// {
-//   id: 'u1',
-//   username: 'Abdulrahman',
-//   name: 'Abdulrahman .M',
-//   phoneNumber: '+97470031251',
-//   password: "70031251",
-//   profileImage: "http://ryzentx.online/myProfileExample.png",
-// }
 
 export default function SignUpPage({ navigation, route }) {
   const ourUser = route.params?.user;
@@ -42,6 +34,8 @@ export default function SignUpPage({ navigation, route }) {
   const globleNavigation = useNavigation();
 
   const inputMaxLength = 55;
+
+  const [modalStatus, setModalStatus] = useState(false);
 
   const [formattedValue, setFormattedValue] = useState("");
   const [valid, setValid] = useState(false);
@@ -112,7 +106,7 @@ export default function SignUpPage({ navigation, route }) {
       birthday !== "" &&
       newPassword !== "" &&
       confirmPassword !== "";
-      phoneNumber.length > 8 || phoneNumber.length <8; 
+    phoneNumber.length > 8 || phoneNumber.length < 8;
     let isConfirmPassword = confirmPassword === newPassword;
 
     return (
@@ -123,14 +117,16 @@ export default function SignUpPage({ navigation, route }) {
   };
 
   const onSubmit = () => {
+    setModalStatus(true);
     if (!isEditProfile) {
       if (!vaildateSubmit()) {
-        Alert.alert(
+        setModalStatus(false);
+        Alert.alert( // TODO: change it to ar 
           "Error",
           "Please fill it up with your information " +
             "\n" +
             "and use the same password on both inputs " +
-          "number-pad"
+            "number-pad"
         );
         return;
       }
@@ -143,6 +139,7 @@ export default function SignUpPage({ navigation, route }) {
       };
 
       GraphQL.UserApiLogic.Queries.Signup(data).then((res) => {
+        setModalStatus(false);
         if (res.success) {
           navigation.navigate("LoginPage");
         } else {
@@ -369,6 +366,8 @@ export default function SignUpPage({ navigation, route }) {
           </View>
         </View>
       </ScrollView>
+
+      <LoadingHandler status={modalStatus} />
     </View>
   );
 }
