@@ -129,20 +129,6 @@ export default function SignUpPage({ navigation, route }) {
           "Please fill it up with your information" +
             "\n" +
             "and use the same password on both inputs",
-          [
-            {
-              text: "ok",
-              // onPress: () => {},
-            },
-            {
-              text: "are u a dev ?",
-              onPress: () => {
-                navigation.navigate("SignUpConfirmation", {
-                  phoneNumber: "+97470031251",
-                });
-              },
-            },
-          ],
           "number-pad"
         );
         return;
@@ -609,7 +595,7 @@ const styles = StyleSheet.create({
   },
   loginContainer: {
     flex: 1,
-    width:140,
+    width: 140,
     maxHeight: 30,
     minHeight: 30,
     justifyContent: "center",
@@ -629,7 +615,7 @@ const styles = StyleSheet.create({
 
   submitContainer: {
     flex: 1,
-    width:220,
+    width: 220,
     maxHeight: 40,
     minHeight: 40,
     borderRadius: 20,
