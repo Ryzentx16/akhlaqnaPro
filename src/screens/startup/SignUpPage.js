@@ -112,6 +112,7 @@ export default function SignUpPage({ navigation, route }) {
       birthday !== "" &&
       newPassword !== "" &&
       confirmPassword !== "";
+      phoneNumber.length > 8 || phoneNumber.length <8; 
     let isConfirmPassword = confirmPassword === newPassword;
 
     return (
@@ -126,9 +127,9 @@ export default function SignUpPage({ navigation, route }) {
       if (!vaildateSubmit()) {
         Alert.alert(
           "Error",
-          "Please fill it up with your information" +
+          "Please fill it up with your information " +
             "\n" +
-            "and use the same password on both inputs",
+            "and use the same password on both inputs " +
           "number-pad"
         );
         return;
@@ -143,9 +144,7 @@ export default function SignUpPage({ navigation, route }) {
 
       GraphQL.UserApiLogic.Queries.Signup(data).then((res) => {
         if (res.success) {
-          navigation.navigate("SignUpConfirmation", {
-            phoneNumber: data.phoneNumber,
-          });
+          navigation.navigate("LoginPage");
         } else {
           //to ar
           Alert.alert("Error", res.errors.join("\n"));

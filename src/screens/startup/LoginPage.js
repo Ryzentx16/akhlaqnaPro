@@ -32,6 +32,15 @@ export default function LoginPage({ navigation }) {
   const [password, setPassword] = useState(null);
 
   const checkLogin = () => {
+    if (
+      phoneInput == "" ||
+      phoneInput == null ||
+      password == "" ||
+      password == null
+    ) {
+      Alert.alert("Error", "Phone number and password are required");
+      return;
+    }
     const params = {
       phoneNumber: phoneNumber,
       password: password,

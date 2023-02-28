@@ -59,7 +59,8 @@ export default function CommentPage(props) {
       // No permissions request is necessary for launching the image library
       const result = await ImagePicker.launchCameraAsync({
         aspect: [4, 3],
-        quality: 1,
+        quality: 0.4, // adjust the quality to reduce file size
+        exif: false, // ignore EXIF data to prevent image rotation
       }).catch((er) => console.error(er));
 
       if (!result.canceled) {
