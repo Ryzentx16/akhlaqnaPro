@@ -128,10 +128,17 @@ export default function PostCard(props) {
         <TouchableOpacity
           style={headerStyles.avatarContainer}
           onPress={() =>
-            navigation.navigate("PersonProfile", { user: post.user })
+            navigation.navigate("PersonProfile", {
+              user: post.user,
+              isMe: post.user.id == OurUser.user.id,
+            })
           }
         >
-          <UserAvatar size={35} src={post.user.profileImage} fontSize={15} />
+          <UserAvatar
+            size={35}
+            src={`${domain}/download/` + post.user.profileImage}
+            fontSize={15}
+          />
         </TouchableOpacity>
         <View style={headerStyles.headerDetailsContainer}>
           <Text style={headerStyles.userName}>

@@ -124,14 +124,14 @@ export default function InputBox(props) {
             // backgroundColor: "red",
           }}
         >
-          {props.hasOwnProperty("isComment") == false && (
+          {/* {props.hasOwnProperty("isComment") == false && (
             <Entypo
               name="location"
               size={20}
               color={"#660032"}
               style={styles.icon}
             />
-          )}
+          )} */}
           <TouchableOpacity
             // style={styles.buttonContainer}
             onPress={props.onPickImage}

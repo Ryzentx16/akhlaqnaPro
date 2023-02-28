@@ -57,7 +57,7 @@ export default function CommentCard(props) {
     <>
       <View style={styles.container}>
         <View style={styles.avatarContainer}>
-          <UserAvatar size={35} src={comment.user.profileImage} fontSize={15} />
+          <UserAvatar size={35} src={`${domain}/download/` + comment.user.profileImage} fontSize={15} />
         </View>
         <View style={detailsStyles.container}>
           <View style={detailsStyles.headerContainer}>

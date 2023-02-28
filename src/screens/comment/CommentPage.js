@@ -27,8 +27,6 @@ export default function CommentPage(props) {
       quality: 1,
     });
 
-    console.log(result.assets[0].uri);
-
     if (!result.canceled) {
       setImage(result.assets[0]);
     } else {
@@ -64,8 +62,6 @@ export default function CommentPage(props) {
         quality: 1,
       }).catch((er) => console.error(er));
 
-      console.log(result);
-
       if (!result.canceled) {
         setImage(result.assets[0]);
       } else {
@@ -84,7 +80,6 @@ export default function CommentPage(props) {
       };
 
       if (imagePath) {
-        console.log(imagePath);
         data.image = imagePath;
       }
 
@@ -137,6 +132,7 @@ export default function CommentPage(props) {
             }}
             isBottomSheet={true}
             isSend={isSend}
+            isHideRefreshAnimation={true}
           />
         </View>
       </View>

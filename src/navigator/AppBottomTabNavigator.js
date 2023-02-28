@@ -13,7 +13,6 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 import SearchPage from "../screens/search/SearchPage";
 import AddPostPage from "../screens/AddpostPage";
-import chatRoom from "../screens/chat/chatRoom";
 import commentPage from "../screens/comment/CommentPage";
 import NotificationsPage from "../screens/notification/NotificationsPage";
 import AppHeader from "../components/AppHeader";

@@ -1,15 +1,16 @@
 import { gql } from "@apollo/client";
-import Handler from "../handler";
-import { GraphQlParamsGenerator } from "../utils";
+import Handler from "../../handler";
+import { GraphQlParamsGenerator } from "../../utils";
 
 const Queries = {
   Create: async (params) => {
     const query = gql`
-      mutation ($input: AddCommentInput!) {
-        addComment(input: $input) {
+      mutation ($input: AddChatRoomInput!) {
+        addChatRoom(input: $input) {
           success
           message
           errors
+          roomId
         }
       }
     `;
@@ -26,34 +27,7 @@ const Queries = {
       return result;
     }
 
-    return result.data.addComment;
-  },
-
-  Edit: async (id, params) => {
-    const query = gql`
-      mutation ($id: Int!, $input: EditCommentInput!) {
-        editComment(id: $id, input: $input) {
-          success
-          message
-          errors
-        }
-      }
-    `;
-
-    const result = await Handler.Mutate({
-      statement: query,
-      variables: {
-        id: id,
-        input: params,
-      },
-    });
-
-    if ("type" in result && "errors" in result) {
-      //error
-      return result;
-    }
-
-    return result.data.editComment;
+    return result.data.addChatRoom;
   },
 
   Retrieve: async (params) => {
@@ -62,17 +36,22 @@ const Queries = {
 
     const query = gql`
       query (${paramDefsString}) {
-        comment(${paramBindingsString}) {
-        id
-        createdDateTime
-        content
-        image
+        chatRoom(${paramBindingsString}) {
+          id
+          createdDateTime
           user {
             id
             firstName
             lastName
             profileImage
-            phoneNumber
+          }
+          lastMessage{
+              createdDateTime
+              content
+              image
+              senderUser{
+                  id
+              }
           }
         }
       }
@@ -87,7 +66,8 @@ const Queries = {
       //error
       return result;
     }
-    return result.data.comment;
+
+    return result.data.chatRoom;
   },
 };
 

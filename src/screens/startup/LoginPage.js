@@ -24,12 +24,12 @@ const isEdit = false;
 
 export default function LoginPage({ navigation }) {
   const [value, setValue] = useState("");
-  const [formattedValue, setFormattedValue] = useState("+97455298188");
+  const [formattedValue, setFormattedValue] = useState(null);
   const [valid, setValid] = useState(false);
   const phoneInput = useRef(PhoneInput);
 
-  const [phoneNumber, setPhoneNumber] = useState("55298188");
-  const [password, setPassword] = useState("123");
+  const [phoneNumber, setPhoneNumber] = useState(null);
+  const [password, setPassword] = useState(null);
 
   const checkLogin = () => {
     const params = {
@@ -116,7 +116,6 @@ export default function LoginPage({ navigation }) {
                   defaultCode="QA"
                   layout="second"
                   onChangeText={(text) => {
-                    console.log(phoneNumber);
                     setValid(phoneInput.current?.isValidNumber(text));
                   }}
                   onChangeFormattedText={(text) => {
@@ -158,7 +157,12 @@ export default function LoginPage({ navigation }) {
                     setPassword(text);
                   }}
                   secureTextEntry={true}
-                  style={{ textAlign: isRTL ? "right" : "left" }}
+                  style={[
+                    {
+                      textAlign: isRTL ? "right" : "left",
+                    },
+                    isRTL ? { paddingRight: 10 } : { paddingLeft: 10 },
+                  ]}
                 />
               </View>
             </View>

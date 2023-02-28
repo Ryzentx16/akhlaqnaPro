@@ -21,52 +21,48 @@ let themeColor = themes._currTheme;
 
 export default function CommentCard(props) {
   const { message, myId, roomId } = props;
-  var messageDuration = Helper.getDuration(message.createdAt);
-
   const [imageWidth, setImageWidth] = useState(200);
   const [imageHeight, setImageHeight] = useState(250);
 
-  let isItMyMessage = message.user.id == myId;
-  let tempImage = require("../../../assets/akhlaqna.png");
-  let tempImageUri = null;
+  let isItMyMessage = message.senderUser.id == myId;
 
   useEffect(() => {
     textColor = themes._currTextTheme;
     backColor = themes._currBackColorTheme;
     themeColor = themes._currTheme;
-    isItMyMessage = message.user.id == myId;
-    console.log(message.image !== null);
+    isItMyMessage = message.senderUser.id == myId;
   });
 
   useEffect(() => {
-    // if (tempImage !== null) {
-    //   Image.getSize(
-    //     tempImage,
-    //     (imgWidth, imgHeight) => {
-    //       setImageWidth(imgWidth);
-    //       setImageHeight(imgHeight);
-    //     }
-    //   );
-    // }
-    let {uri, width, height } = Image.resolveAssetSource(tempImage);
-    setImageHeight(height);
-    setImageWidth(width);
-    tempImageUri = uri;
-    console.log({uri, width, height })
+    if (message.image !== null) {
+      Image.getSize(
+        `${domain}/download/` + message.image,
+        (imgWidth, imgHeight) => {
+          setImageWidth(imgWidth);
+          setImageHeight(imgHeight);
+        }
+      );
+    }
   }, []);
+
+  var messageDuration = Helper.getDuration(message.createdDateTime);
 
   return (
     <View
       style={[
         styles.container,
         {
-          justifyContent: isItMyMessage ? "flex-end" : "flex-start",
+          justifyContent: isItMyMessage ? "flex-start" : "flex-start",
+          flexDirection: isItMyMessage ? "row-reverse" : "row",
         },
       ]}
     >
-      {/* <View style={styles.avatarContainer}>
-        <UserAvatar size={35} src={message.user.profileImage} fontSize={15} />
-      </View> */}
+      <View style={styles.avatarContainer}>
+        <UserAvatar
+          size={35}
+          src={`${domain}/download/` + message.senderUser.profileImage}
+        />
+      </View>
 
       <View
         style={[
@@ -80,7 +76,7 @@ export default function CommentCard(props) {
           {!isItMyMessage && (
             <Text
               style={detailsStyles.userName}
-            >{`${message.user.firstName} ${message.user.lastName}`}</Text>
+            >{`${message.senderUser.firstName} ${message.senderUser.lastName}`}</Text>
           )}
         </View>
 
@@ -96,25 +92,31 @@ export default function CommentCard(props) {
               { color: isItMyMessage ? "white" : "black" },
             ]}
           >
-            asdasdasdasdaasdasdasdasdasdsd
+            {message.content}
           </Text>
         </View>
 
-        {/* {message.image !== null && ( */}
-        <View style={detailsStyles.imageContainer}>
-          <ImageViewer
-            // uri={`${domain}/download/` + message.image}
-            uri={tempImageUri}
-            isFullScreen={true}
-            maxHeight={imageHeight >= 250 ? 250 : imageHeight}
-            imageHeight={imageHeight}
-            imageWidth={imageWidth}
-          />
-        </View>
-        {/* )} */}
+        {message.image !== null && (
+          <View style={detailsStyles.imageContainer}>
+            <ImageViewer
+              uri={`${domain}/download/` + message.image}
+              isFullScreen={true}
+              maxHeight={imageHeight >= 250 ? 250 : imageHeight}
+              imageHeight={imageHeight}
+              imageWidth={imageWidth}
+            />
+          </View>
+        )}
 
         <View style={detailsStyles.postTimeContainer}>
-          <Text style={detailsStyles.postTime}>{messageDuration}</Text>
+          <Text
+            style={[
+              detailsStyles.postTime,
+              { color: isItMyMessage ? "#E0E0E0" : "#65676b" },
+            ]}
+          >
+            {messageDuration}
+          </Text>
         </View>
       </View>
     </View>
@@ -127,7 +129,7 @@ const detailsStyles = StyleSheet.create({
     paddingVertical: 7,
     paddingHorizontal: 12,
     marginLeft: 5,
-    marginRight: 20,
+    marginRight: 5,
     borderRadius: 18,
     // backgroundColor: themeColor === "light" ? "#ffffff" : "#CCCCCC",
 

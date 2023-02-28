@@ -38,11 +38,11 @@ import { GraphQL, Utils } from "../../API";
 import ImageViewer from "../components/ImageViewer";
 import GetMap from "../components/GetMap";
 import OurUser from "../OurUser";
+import domain from "../../API/domain";
 
 const isRTL = I18nManager.isRTL;
 
 const AddPostPage = ({ navigation }) => {
-  const user = users[0];
   const [content, setContent] = useState("");
   const [test, setTest] = useState("");
   const [modalStatus, setModalStatus] = useState(false);
@@ -79,8 +79,6 @@ const AddPostPage = ({ navigation }) => {
       quality: 1,
     });
 
-    console.log(result.assets[0].uri);
-
     if (!result.canceled) {
       setImage(result.assets[0]);
     } else {
@@ -97,9 +95,7 @@ const AddPostPage = ({ navigation }) => {
     setTest(JSON.stringify(r));
 
     if (!r.granted) {
-      console.log("1");
       if (r.canAskAgain) {
-        console.log("2");
         await ImagePicker.requestCameraPermissionsAsync();
         r = await ImagePicker.getCameraPermissionsAsync().catch((er) =>
           console.error(er)
@@ -117,9 +113,7 @@ const AddPostPage = ({ navigation }) => {
         aspect: [4, 3],
         quality: 1,
       }).catch((er) => console.error(er));
-
-      console.log(result);
-
+      
       if (!result.canceled) {
         setImage(result.assets[0]);
       } else {
@@ -135,7 +129,7 @@ const AddPostPage = ({ navigation }) => {
         content: content,
         area: "Alrayan - Alshafie",
         location: JSON.stringify(region),
-        userId: 22,
+        userId: OurUser.user.id,
         postTypes: isLost ? 2 : 3,
       };
 
@@ -189,7 +183,11 @@ const AddPostPage = ({ navigation }) => {
             }}
           >
             <View style={styles.avatarContainer}>
-              <UserAvatar size={55} src={user.profileImage} fontSize={20} />
+              <UserAvatar
+                size={55}
+                src={`${domain}/download/` + OurUser.user.profileImage}
+                fontSize={20}
+              />
             </View>
             <View style={styles.headerDetailsContainer}>
               <Text style={styles.userName}>
