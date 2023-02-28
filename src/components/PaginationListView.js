@@ -15,6 +15,9 @@ const PaginationListView = (props) => {
     perPage,
     isBottomSheet = false,
     isSend,
+    isInverted = false,
+    refreshCallBack = null,
+    isHideRefreshAnimation = false,
   } = props;
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -92,6 +95,10 @@ const PaginationListView = (props) => {
 
       setRefreshing(false);
       setPage(1);
+
+      if (refreshCallBack) {
+        refreshCallBack();
+      }
     });
   };
 
@@ -133,8 +140,9 @@ const PaginationListView = (props) => {
           }}
           onEndReachedThreshold={0.2}
           ListFooterComponent={renderFooter}
-          refreshing={refreshing}
+          refreshing={isHideRefreshAnimation ? !isHideRefreshAnimation:refreshing}
           onRefresh={refreshHandler}
+          inverted={isInverted}
         />
       ) : (
         <BottomSheetFlatList
@@ -153,7 +161,7 @@ const PaginationListView = (props) => {
           }}
           onEndReachedThreshold={0.2}
           ListFooterComponent={renderFooter}
-          refreshing={refreshing}
+          refreshing={isHideRefreshAnimation ? !isHideRefreshAnimation:refreshing}
           onRefresh={refreshHandler}
           // style={{ flex: 1, backgroundColor: 'red' }}
         />

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { BackHandler } from "react-native";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import ChatRoom from "../screens/chat/chatRoom";
+import ChatRoomPage from "../screens/chat/ChatRoomPage";
 import ChatsPage from "../screens/chat/ChatsPage";
 
 const Stack = createStackNavigator();
@@ -52,8 +52,11 @@ export default function ChatNavigator({ navigation, route }) {
       <Stack.Screen name="ChatPage" component={ChatsPage} />
       <Stack.Screen
         name="ChatRoom"
-        component={ChatRoom}
-        options={{ headerShown: true }}
+        component={ChatRoomPage}
+        options={({ route }) => ({
+          headerTitle: route.params.chatName,
+          headerShown: true,
+        })}
       />
     </Stack.Navigator>
   );

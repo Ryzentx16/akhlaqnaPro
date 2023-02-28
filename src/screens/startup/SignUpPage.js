@@ -112,6 +112,7 @@ export default function SignUpPage({ navigation, route }) {
       birthday !== "" &&
       newPassword !== "" &&
       confirmPassword !== "";
+      phoneNumber.length > 8 || phoneNumber.length <8; 
     let isConfirmPassword = confirmPassword === newPassword;
 
     return (
@@ -126,23 +127,9 @@ export default function SignUpPage({ navigation, route }) {
       if (!vaildateSubmit()) {
         Alert.alert(
           "Error",
-          "Please fill it up with your information" +
+          "Please fill it up with your information " +
             "\n" +
-            "and use the same password on both inputs",
-          [
-            {
-              text: "ok",
-              // onPress: () => {},
-            },
-            {
-              text: "are u a dev ?",
-              onPress: () => {
-                navigation.navigate("SignUpConfirmation", {
-                  phoneNumber: "+97470031251",
-                });
-              },
-            },
-          ],
+            "and use the same password on both inputs " +
           "number-pad"
         );
         return;
@@ -157,9 +144,7 @@ export default function SignUpPage({ navigation, route }) {
 
       GraphQL.UserApiLogic.Queries.Signup(data).then((res) => {
         if (res.success) {
-          navigation.navigate("SignUpConfirmation", {
-            phoneNumber: data.phoneNumber,
-          });
+          navigation.navigate("LoginPage");
         } else {
           //to ar
           Alert.alert("Error", res.errors.join("\n"));
@@ -369,7 +354,7 @@ export default function SignUpPage({ navigation, route }) {
         <View style={styles.actionContainer}>
           <View style={styles.loginContainer}>
             <TouchableOpacity style={styles.login} onPress={onLogin}>
-              <Text style={{ fontSize: 18, color: "#660032" }}>
+              <Text style={{ fontSize: 14, color: "#660032" }}>
                 {currLang.signupPage.login}
               </Text>
             </TouchableOpacity>
@@ -392,6 +377,7 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
     backgroundColor: "white",
+    paddingHorizontal: 10,
   },
 
   logoSection: {
@@ -454,12 +440,12 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     justifyContent: "center",
     marginBottom: 18,
+    paddingHorizontal: 20,
   },
   firstnameContainer: {
     flex: 1,
+    marginRight: 5,
     // backgroundColor: "red",
-
-    paddingHorizontal: 20,
   },
   firstname: {
     flex: 1,
@@ -477,11 +463,7 @@ const styles = StyleSheet.create({
   },
   lastnameContainer: {
     flex: 1,
-    maxHeight: 50,
-    minHeight: 50,
-
-    // backgroundColor: "blue",
-    paddingHorizontal: 20,
+    marginLeft: 5,
   },
   lastname: {
     flex: 1,
@@ -601,22 +583,20 @@ const styles = StyleSheet.create({
 
   actionContainer: {
     flex: 1,
-    maxHeight: "5%",
-    minHeight: "5%",
-    flexDirection: isRTL ? "row-reverse" : "row",
+    maxHeight: 100,
+    minHeight: 100,
+    flexDirection: "column-reverse",
 
     backgroundColor: isEdit ? "lightblue" : "white",
     marginTop: 30,
-    justifyContent: "space-evenly",
+    justifyContent: "space-around",
     alignItems: "center",
   },
   loginContainer: {
     flex: 1,
-
-    maxWidth: 140,
-    minWidth: 140,
-    maxHeight: 40,
-    minHeight: 40,
+    width: 140,
+    maxHeight: 30,
+    minHeight: 30,
     justifyContent: "center",
     alignItems: "center",
 
@@ -634,9 +614,7 @@ const styles = StyleSheet.create({
 
   submitContainer: {
     flex: 1,
-
-    maxWidth: 100,
-    minWidth: 40,
+    width: 220,
     maxHeight: 40,
     minHeight: 40,
     borderRadius: 20,

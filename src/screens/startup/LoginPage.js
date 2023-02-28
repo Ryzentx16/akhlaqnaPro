@@ -29,20 +29,27 @@ const isEdit = false;
 
 export default function LoginPage({ navigation }) {
   const [value, setValue] = useState("");
-  const [formattedValue, setFormattedValue] = useState("+97455298188");
+  const [formattedValue, setFormattedValue] = useState(null);
   const [valid, setValid] = useState(false);
   const phoneInput = useRef(PhoneInput);
 
-  const [phoneNumber, setPhoneNumber] = useState("55298188");
-  const [password, setPassword] = useState("123");
+  const [phoneNumber, setPhoneNumber] = useState(null);
+  const [password, setPassword] = useState(null);
 
   const checkLogin = () => {
-    navigation.navigate("Home"); // TODO: return this after server bugs
-
-    // const params = {
-    //   phoneNumber: phoneNumber,
-    //   password: password,
-    // };
+    if (
+      phoneInput == "" ||
+      phoneInput == null ||
+      password == "" ||
+      password == null
+    ) {
+      Alert.alert("Error", "Phone number and password are required");
+      return;
+    }
+    const params = {
+      phoneNumber: phoneNumber,
+      password: password,
+    };
 
     // GraphQL.UserApiLogic.Queries.Login(params).then((res) => {
     //   if (!res) {
@@ -122,7 +129,6 @@ export default function LoginPage({ navigation }) {
                   defaultCode="QA"
                   layout="second"
                   onChangeText={(text) => {
-                    console.log(phoneNumber);
                     setValid(phoneInput.current?.isValidNumber(text));
                   }}
                   onChangeFormattedText={(text) => {
@@ -164,7 +170,12 @@ export default function LoginPage({ navigation }) {
                     setPassword(text);
                   }}
                   secureTextEntry={true}
-                  style={{ textAlign: isRTL ? "right" : "left" }}
+                  style={[
+                    {
+                      textAlign: isRTL ? "right" : "left",
+                    },
+                    isRTL ? { paddingRight: 10 } : { paddingLeft: 10 },
+                  ]}
                 />
               </View>
             </View>

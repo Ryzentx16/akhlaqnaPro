@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-
+import * as ImagePicker from "expo-image-picker";
 import PaginationListView from "../../components/PaginationListView";
 import OurUser from "../../OurUser";
 import chatRoomData from "../../data/chatRoomData";
 import InputBox from "./inputBox";
 import ChatMessage from "./ChatMessage";
+
+import { Utils } from "../../../API";
 
 export default function ChatRoom({ route }) {
   const [isSend, setIsSend] = useState(false);
@@ -25,8 +27,6 @@ export default function ChatRoom({ route }) {
       aspect: [4, 3],
       quality: 1,
     });
-
-    console.log(result.assets[0].uri);
 
     if (!result.canceled) {
       setImage(result.assets[0]);
@@ -60,10 +60,9 @@ export default function ChatRoom({ route }) {
       // No permissions request is necessary for launching the image library
       const result = await ImagePicker.launchCameraAsync({
         aspect: [4, 3],
-        quality: 1,
+        quality: 0.4, // adjust the quality to reduce file size
+        exif: false, // ignore EXIF data to prevent image rotation
       }).catch((er) => console.error(er));
-
-      console.log(result);
 
       if (!result.canceled) {
         setImage(result.assets[0]);
@@ -78,22 +77,17 @@ export default function ChatRoom({ route }) {
     const createComment = (imagePath = null) => {
       const data = {
         content: message,
-        userId: OurUser.user.id,
-        postId: post.id,
+        senderId: OurUser.user.id,
+        receiverId: route.params.recieverId,
+        roomId: route.params.roomId,
       };
 
       if (imagePath) {
         data.image = imagePath;
       }
 
-      GraphQL.CommentApiLogic.Queries.Create(data).then((res) => {
-        if (res.success) {
-          setIsSend(false);
-        } else {
-          //to ar
-          Alert.alert("Error", res.errors.join("\n"));
-        }
-      });
+      Utils.Socket.emit("chat message", data);
+      setIsSend(false);
     };
 
     if (image) {
@@ -106,50 +100,23 @@ export default function ChatRoom({ route }) {
     setImage(null);
   };
 
+  useEffect(() => {
+    // subscribe to the chat room when the component mounts
+    Utils.Socket.emit("subscribe", { id: route.params.roomId });
+
+    // listen for incoming messages
+    Utils.Socket.on("chat message", (message) => {
+      console.log(message);
+    });
+
+    // clean up event listeners when the component unmounts
+    return () => {
+      Utils.Socket.emit("unsubscribe", { id: route.params.roomId });
+      Utils.Socket.off("chat message");
+    };
+  }, []);
+
   return (
-    // <KeyboardAvoidingView
-    //   onLayout={(event) => {}}
-    //   style={[
-    //     styles.container,
-    //     {
-    //       maxHeight: windowHeight * 0.75 - keyboardHeight,
-    //       minHeight: windowHeight * 0.75 - keyboardHeight,
-    //     },
-    //   ]}
-    //   behavior={"height"}
-    // >
-    //   <View style={[styles.messgaesContainer]}>
-    //     <FlatList
-    //       data={chatRoomData[0].messages}
-    //       style={styles.scrollContainer}
-    //       keyExtractor={(item, index) => index}
-    //       renderItem={(item, index) => {
-    //         return <ChatMessage key={index} message={item.item} myId={"u1"} />;
-    //       }}
-    //       inverted
-    //     />
-    //   </View>
-
-    //   <View
-    //     style={{
-    //       width: "100%",
-    //     }}
-    //   >
-    //     <InputBox
-    //       image={null}
-    //       style={{ backgroundColor: "#c8c7c8" }}
-    //       onPickImage={() => {}}
-    //       onTakeImage={() => {}}
-    //       onCancel={() => {}}
-    //     />
-    //   </View>
-    // </KeyboardAvoidingView>
-
-    // renderItem,
-    // retrieveData,
-    // perPage,
-    // isBottomSheet = false,
-    // isSend,
 
     <View style={styles.container}>
       {/* <PaginationListView
@@ -191,7 +158,7 @@ export default function ChatRoom({ route }) {
               password: "12345678",
               profileImage: "http://ryzentx.online/profile_1.png",
             },
-            image: "خلطبية بالصلصة"
+            image: "خلطبية بالصلصة",
           }}
           myId={OurUser.user.id}
         />
@@ -203,6 +170,7 @@ export default function ChatRoom({ route }) {
         onPickImage={pickImage}
         onTakeImage={takeImage}
         onCancel={() => setImage(null)}
+        onSendReply={onSend}
       />
     </View>
   );

@@ -14,6 +14,8 @@ import {
 import { FontAwesome, Entypo, Ionicons } from "react-native-vector-icons";
 
 import themes from "../ThemeController";
+import OurUser from "../OurUser";
+import domain from "../../API/domain";
 
 let textColor = themes._currTextTheme;
 let backColor = themes._currBackColorTheme;
@@ -23,10 +25,10 @@ export default function AppHeader(props) {
   const { navigation, isDrawer } = props;
 
   const onLogo = () => {
-    navigation.navigate('PostsPage');
+    navigation.navigate("PostsPage");
   };
   const onProfile = () => {
-    navigation.navigate('MyProfile');
+    navigation.navigate("PersonProfile", { user: OurUser.user, isMe: true });
   };
   const onToggleDrawer = () => {
     navigation.toggleDrawer();
@@ -41,41 +43,51 @@ export default function AppHeader(props) {
 
   return (
     <>
-    {isDrawer ? <View style={[styles.container, props.style]}>
-      <View style={styles.circle}></View>
-      <TouchableOpacity style={styles.logo} onPress={onLogo}>
-        <Image
-          source={require("../../assets/Logo.png")}
-          style={styles.imageLogo}
-        />
-        {/*<AmanatiLogo style={styles.imageLogo}/>*/}
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.profileContainer} onPress={onProfile}>
-        <UserAvatar 
-          src={"http://ryzentx.online/myProfileExample.png"}
-          // initialName={"Abdulrahman .M"}
-          size={50}
-          // fontSize={36}
-          style={styles.profileIcon}
-        />
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.menuContainer} onPress={onToggleDrawer}>
-        <Entypo
-          name="menu"
-          size={30}
-          color={textColor}
-          style={styles.menuIcon}
-        />
-      </TouchableOpacity>
-      {isSettings && <TouchableOpacity style={styles.backContainer} onPress={() => navigation.goBack()}>
-      <Ionicons
-          name="arrow-back"
-          size={45}
-          color={textColor}
-          style={styles.backIcon}
-        />
-      </TouchableOpacity>}
-    </View> : null}
+      {isDrawer ? (
+        <View style={[styles.container, props.style]}>
+          <View style={styles.circle}></View>
+          <TouchableOpacity style={styles.logo} onPress={onLogo}>
+            <Image
+              source={require("../../assets/Logo.png")}
+              style={styles.imageLogo}
+            />
+            {/*<AmanatiLogo style={styles.imageLogo}/>*/}
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.profileContainer} onPress={onProfile}>
+            <UserAvatar
+              src={`${domain}/download/` + OurUser.user.profileImage}
+              // initialName={"Abdulrahman .M"}
+              size={50}
+              // fontSize={36}
+              style={styles.profileIcon}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.menuContainer}
+            onPress={onToggleDrawer}
+          >
+            <Entypo
+              name="menu"
+              size={30}
+              color={textColor}
+              style={styles.menuIcon}
+            />
+          </TouchableOpacity>
+          {isSettings && (
+            <TouchableOpacity
+              style={styles.backContainer}
+              onPress={() => navigation.goBack()}
+            >
+              <Ionicons
+                name="arrow-back"
+                size={45}
+                color={textColor}
+                style={styles.backIcon}
+              />
+            </TouchableOpacity>
+          )}
+        </View>
+      ) : null}
     </>
   );
 }
@@ -139,5 +151,5 @@ const styles = StyleSheet.create({
   },
   backIcon: {
     transform: [{ rotateY: isRTL ? "180deg" : "0deg" }],
-  }  
+  },
 });

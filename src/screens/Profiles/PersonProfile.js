@@ -13,31 +13,20 @@ import {
 import posts from "../../data/posts";
 import languages from "../../strings/LanguagesController";
 import UserAvatar from "@muhzi/react-native-user-avatar";
-import AppHeader from "../../components/AppHeader";
-import users from "../../data/users";
+import OurUser from "../../OurUser";
 
 import { useNavigation } from "@react-navigation/native";
-import OurUser from "../../OurUser";
 import PostListView from "../post/PostListView";
 import { GraphQL } from "../../../API";
+import domain from "../../../API/domain";
 
 const isRTL = I18nManager.isRTL;
 
 export default function PersonProfile({ navigation, route }) {
-  const ourUser = route.params?.user;
+  const user = route.params?.user;
   const isDrawer = route.params?.isDrawer;
   const globleNavigation = useNavigation();
-
-  const isUserMe = ourUser.id === "u1" ? true : false;
-  let x = [];
-
-  for (let i = 0; i < posts.length; i++) {
-    if (posts[i].user.id === ourUser.id) {
-      x.push(posts[i]);
-      x.push(posts[i]);
-      x.push(posts[i]);
-    }
-  }
+  const isUserMe = route.params?.isMe;
 
   let currLang = languages.currLang();
   useEffect(() => {
@@ -55,9 +44,7 @@ export default function PersonProfile({ navigation, route }) {
             globleNavigation.dispatch(
               globleNavigation.reset({
                 index: 0,
-                routes: [
-                  { name: "SignUpPage", params: { user: OurUser.user } },
-                ],
+                routes: [{ name: "SignUpPage", params: { user: user } }],
               })
               // navigation.navigate({ name: "SignUpPage", params: {user: users[0]} })
             );
@@ -76,28 +63,55 @@ export default function PersonProfile({ navigation, route }) {
   };
 
   const retrieveData = async (params) => {
-    params.userId = OurUser.user.id;
-    params.conditionUserId = OurUser.user.id;
+    params.userId = user.id;
+    params.conditionUserId = user.id;
+
     const result = await GraphQL.PostApiLogic.Queries.Retrieve(params);
 
     return result;
   };
 
+  const messagePerson = () => {
+    var data = {
+      user1Id: OurUser.user.id,
+      user2Id: user.id,
+    };
+
+    GraphQL.ChatApiLogic.Rooms.Queries.Create(data).then((res) => {
+      if (res.success || res.roomId) {
+        navigation.navigate("Chat", {
+          screen: "ChatRoom",
+          initial: false,
+          params: {
+            roomId: res.roomId,
+            chatName: user.firstName + " " + user.lastName,
+            recieverId: user.id,
+          },
+        });
+      } else {
+        //to ar
+        Alert.alert("Error", res.errors.join("\n"));
+      }
+    });
+  };
+
   return (
     <>
-      <AppHeader style={{ top: -12 }} navigation={navigation} isDrawer />
+      {/* {<AppHeader style={{ top: -12 }} navigation={navigation} isDrawer />} */}
       <View style={headerStyles.headContaienr}>
         <View style={headerStyles.head}>
           <View style={headerStyles.profileContainer}>
             <View style={styles.imageContainer}>
               <UserAvatar
-                src={ourUser.profileImage}
-                userName={"Jhon"}
+                src={`${domain}/download/` + user.profileImage}
+                userName={user.firstName + " " + user.lastName}
                 size={80}
               />
             </View>
             <View style={headerStyles.detailsContaienr}>
-              <Text style={headerStyles.name}>{ourUser.firstName}</Text>
+              <Text style={headerStyles.name}>
+                {user.firstName + " " + user.lastName}
+              </Text>
               {/* <MaterialCommunityIcons
                     name={"dots-vertical"}
                     color={"#660032"}
@@ -108,18 +122,21 @@ export default function PersonProfile({ navigation, route }) {
           <View style={headerStyles.actionContaienr}>
             {!isUserMe ? (
               <>
-                <TouchableOpacity style={headerStyles.btnStyle}>
+                <TouchableOpacity
+                  style={headerStyles.btnStyle}
+                  onPress={messagePerson}
+                >
                   <View style={headerStyles.messageButton}>
                     <Text style={headerStyles.messageText}>Message</Text>
                   </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={headerStyles.btnStyle}>
+                {/* <TouchableOpacity style={headerStyles.btnStyle}>
                   <View style={headerStyles.lostAndFoundButton}>
                     <Text style={headerStyles.lostAndFoundText}>
                       Lost & Found
                     </Text>
                   </View>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </>
             ) : (
               <TouchableOpacity
@@ -139,7 +156,7 @@ export default function PersonProfile({ navigation, route }) {
         type={4}
         navigation={navigation}
         perPage={4}
-        Profile={ourUser}
+        Profile={user}
       />
     </>
   );
@@ -186,6 +203,7 @@ const headerStyles = StyleSheet.create({
     flex: 1,
     maxWidth: 170,
     minWidth: 170,
+    justifyContent: "center",
   },
   myBtnStyle: {
     flex: 1,
@@ -211,20 +229,19 @@ const headerStyles = StyleSheet.create({
   },
   messageButton: {
     flex: 1,
-    backgroundColor: "white",
     borderRadius: 99,
     borderWidth: 1,
     maxHeight: 40,
     minHeight: 40,
-    borderColor: "#660032",
+    backgroundColor: "#660032",
     alignItems: "center",
-    // paddingLeft: isRTL ? -20 : 10,
-    paddingTop: 5,
+    justifyContent: "center",
   },
   messageText: {
     // marginLeft: 30,
-    color: "#660032",
-    fontSize: 20,
+    color: "white",
+    fontSize: 15,
+    textAlign: "center",
   },
   lostAndFoundButton: {
     flex: 1,

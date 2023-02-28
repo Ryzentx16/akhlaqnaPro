@@ -102,6 +102,8 @@ const Queries = {
             id
             firstName
             lastName
+            profileImage
+            phoneNumber
           }
         }
       }

@@ -1,63 +1,44 @@
-import React, { useEffect, useRef, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
-import { SafeAreaView } from "react-native-safe-area-context";
-import chats from "../../data/chats";
-import ChatCard from "./ChatCard";
+import React, { useEffect } from "react";
+import { BackHandler } from "react-native";
 
-function prepareTempData() {
-  let chatList = [];
-
-  for (let i = 0; i < chats.length * 5; i++) {
-    let chat = chats[i % chats.length];
-
-    chatList.push(chat);
-  }
-
-  return chatList;
-}
+import OurUser from "../../OurUser";
+import themes from "../../ThemeController";
+import { GraphQL } from "../../../API";
+import ChatListView from "./ChatListView";
 
 export default function ChatsPage({ navigation }) {
-  let chatList = prepareTempData();
+  useEffect(() => {
+    const backAction = () => {
+      return true;
+    };
 
-  const onPress = (chat) => {
-    navigation.navigate("Chat", {
-      screen: "ChatRoom",
-      initial: false,
-      params: {roomId: chat.chatRoomId}
-    });
-    // console.log(chat.user.username + ':' + chat.chatRoomId);
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  });
+
+  useEffect(() => {
+    textColor = themes._currTextTheme;
+    backColor = themes._currBackColorTheme;
+    themeColor = themes._currTheme;
+  });
+
+  const retrieveData = async (params) => {
+    params.userId = OurUser.user.id;
+    const result = await GraphQL.ChatApiLogic.Rooms.Queries.Retrieve(params);
+    return result;
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        style={styles.scrollContainer}
-        data={chatList}
-        renderItem={(item, index) => {
-          return <ChatCard key={index} data={item.item} onPress={onPress}/>;
-        }}
-        keyExtractor={(item, index) => index}
+    <>
+      <ChatListView
+        retrieveData={retrieveData}
+        navigation={navigation}
+        perPage={10}
       />
-    </SafeAreaView>
+    </>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingBottom: 10,
-  },
-
-  scrollContainer: {
-    flex: 1,
-    paddingRight: 15,
-    paddingLeft: 10,
-  },
-});
-
-{
-  /* <View style={styles.chatsSection}>
-<ScrollView showsVerticalScrollIndicator={false}>{chatList}</ScrollView>
-</View> */
 }

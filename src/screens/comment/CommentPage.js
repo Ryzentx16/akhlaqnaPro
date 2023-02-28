@@ -27,8 +27,6 @@ export default function CommentPage(props) {
       quality: 1,
     });
 
-    console.log(result.assets[0].uri);
-
     if (!result.canceled) {
       setImage(result.assets[0]);
     } else {
@@ -61,10 +59,9 @@ export default function CommentPage(props) {
       // No permissions request is necessary for launching the image library
       const result = await ImagePicker.launchCameraAsync({
         aspect: [4, 3],
-        quality: 1,
+        quality: 0.4, // adjust the quality to reduce file size
+        exif: false, // ignore EXIF data to prevent image rotation
       }).catch((er) => console.error(er));
-
-      console.log(result);
 
       if (!result.canceled) {
         setImage(result.assets[0]);
@@ -98,7 +95,7 @@ export default function CommentPage(props) {
     };
 
     if (image) {
-      Utils.Uploader.Image(image.uri, "post", true).then(async (res) => {
+      Utils.Uploader.Image(image.uri, "comment", true).then(async (res) => {
         createComment(res);
       });
     } else {
@@ -136,6 +133,7 @@ export default function CommentPage(props) {
             }}
             isBottomSheet={true}
             isSend={isSend}
+            isHideRefreshAnimation={true}
           />
         </View>
       </View>

@@ -14,7 +14,6 @@ import {
   ScrollView,
   ActivityIndicator,
   Button,
-  Dimensions,
   Alert,
   Switch,
 } from "react-native";
@@ -39,17 +38,11 @@ import { GraphQL, Utils } from "../../API";
 import ImageViewer from "../components/ImageViewer";
 import GetMap from "../components/GetMap";
 import OurUser from "../OurUser";
+import domain from "../../API/domain";
 
 const isRTL = I18nManager.isRTL;
-const windowHeight = Dimensions.get("window").height;
-const windowWidth = Dimensions.get("window").width;
-
-const customMapStyle = [];
-const QAlat = 25.300946829658887;
-const QAlon = 51.465748474001884;
 
 const AddPostPage = ({ navigation }) => {
-  const user = users[0];
   const [content, setContent] = useState("");
   const [test, setTest] = useState("");
   const [modalStatus, setModalStatus] = useState(false);
@@ -59,6 +52,13 @@ const AddPostPage = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [isLost, setIsLost] = React.useState(false);
+
+  const [region, setRegion] = useState({
+    latitude: 25.300946829658887,
+    latitudeDelta: 0.6631861591450701,
+    longitude: 51.465748474001884,
+    longitudeDelta: 0.3281260281801224,
+  });
 
   const onToggle = () => setIsLost(!isLost);
 
@@ -77,8 +77,6 @@ const AddPostPage = ({ navigation }) => {
       quality: 1,
     });
 
-    console.log(result.assets[0].uri);
-
     if (!result.canceled) {
       setImage(result.assets[0]);
     } else {
@@ -95,9 +93,7 @@ const AddPostPage = ({ navigation }) => {
     setTest(JSON.stringify(r));
 
     if (!r.granted) {
-      console.log("1");
       if (r.canAskAgain) {
-        console.log("2");
         await ImagePicker.requestCameraPermissionsAsync();
         r = await ImagePicker.getCameraPermissionsAsync().catch((er) =>
           console.error(er)
@@ -113,11 +109,10 @@ const AddPostPage = ({ navigation }) => {
       // No permissions request is necessary for launching the image library
       const result = await ImagePicker.launchCameraAsync({
         aspect: [4, 3],
-        quality: 1,
+        quality: 0.4, // adjust the quality to reduce file size
+        exif: false, // ignore EXIF data to prevent image rotation
       }).catch((er) => console.error(er));
-
-      console.log(result);
-
+      
       if (!result.canceled) {
         setImage(result.assets[0]);
       } else {
@@ -133,7 +128,7 @@ const AddPostPage = ({ navigation }) => {
         content: content,
         area: "Alrayan - Alshafie",
         location: JSON.stringify(region),
-        userId: 22,
+        userId: OurUser.user.id,
         postTypes: isLost ? 2 : 3,
       };
 
@@ -246,7 +241,11 @@ const AddPostPage = ({ navigation }) => {
             }}
           >
             <View style={styles.avatarContainer}>
-              <UserAvatar size={55} src={user.profileImage} fontSize={20} />
+              <UserAvatar
+                size={55}
+                src={`${domain}/download/` + OurUser.user.profileImage}
+                fontSize={20}
+              />
             </View>
             <View style={styles.headerDetailsContainer}>
               <Text style={styles.userName}>
@@ -330,12 +329,12 @@ const AddPostPage = ({ navigation }) => {
               color={"#660032"}
             />
           </TouchableOpacity>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.actionBtnContainer}
             onPress={onLocation}
           >
             <Entypo name={"location"} size={30} color={"#660032"} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         <TouchableOpacity style={styles.postBtnContaianer} onPress={onPost}>
@@ -355,60 +354,7 @@ const AddPostPage = ({ navigation }) => {
         backdropOpacity={0.9}
         style={{ justifyContent: "center", alignItems: "center" }}
       >
-        <View style={styles.modalLocation}>
-          <View style={styles.container}>
-            <MapView
-              showsMyLocationButton={false}
-              showsUserLocation={true}
-              customMapStyle={customMapStyle}
-              onUserLocationChange={(e) =>
-                setCurrLocation(e.nativeEvent.coordinate)
-              } //here
-              ref={refMap}
-              style={{ height: "100%", width: "100%" }}
-              // onRegionChangeComplete={async (Region) => {
-              //   await getAddressAsync(Region.latitude, Region.longitude);
-              //   console.log(`${Region.latitude}, ${Region.longitude}`);
-
-              //   console.log(address);
-
-              //   await getAddressFromCoords(Region.latitude, Region.longitude);
-              // }}
-              initialRegion={{
-                latitude: QAlat,
-                latitudeDelta: 0.6631861591450701,
-                longitude: QAlon,
-                longitudeDelta: 0.3281260281801224,
-              }}
-              onPress={(e) => {
-                setMarkerPoint(e.nativeEvent.coordinate);
-              }}
-              // onRegionChangeComplete={setCoordinate}
-            ></MapView>
-            <View style={{ position: "absolute", top: 40, left: 0 }}>
-              <Button title={"to curr location"} onPress={onLocation} />
-            </View>
-            <Entypo
-              name={"location-pin"}
-              size={30}
-              color={"#660032"}
-              style={styles.pin}
-            />
-            <View
-              style={{
-                position: "absolute",
-                width: 6,
-                height: 6,
-                borderRadius: 0,
-                left: "50%",
-                top: "50%",
-              }}
-            />
-            <View style={{ position: "absolute", bottom: 0 }}>
-              <Text>{JSON.stringify(address)}</Text>
-            </View>
-          </View>
-        </View>
+        <GetMap />
       </Modal>
       {isLoading && (
         <View
@@ -557,17 +503,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
     color: "white",
-  },
-
-  modalLocation: {
-    flex: 1,
-    maxHeight: windowHeight,
-    minHeight: windowHeight,
-    maxWidth: windowWidth,
-    minWidth: windowWidth,
-    backgroundColor: "#660032",
-    justifyContent: "center",
-    alignItems: "center",
   },
 
   pinIcon: {
