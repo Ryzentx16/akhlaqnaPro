@@ -1,3 +1,3 @@
-const domain = "https://akhlaqna-competition.el.r.appspot.com/";
+const domain = "https://akhlqunaserver.onrender.com";
 
 export default domain;

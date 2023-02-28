@@ -22,6 +22,11 @@ const windowHeight = Dimensions.get("screen").height;
 const isRTL = I18nManager.isRTL;
 const isEdit = false;
 
+// import NetInfo from "@react-native-community/netinfo";
+// NetInfo.fetch().then(state => {
+//   console.log("Connection : ", state.details);
+// });
+
 export default function LoginPage({ navigation }) {
   const [value, setValue] = useState("");
   const [formattedValue, setFormattedValue] = useState("+97455298188");
@@ -32,21 +37,22 @@ export default function LoginPage({ navigation }) {
   const [password, setPassword] = useState("123");
 
   const checkLogin = () => {
-    const params = {
-      phoneNumber: phoneNumber,
-      password: password,
-    };
+    navigation.navigate("Home"); // TODO: return this after server bugs
 
-    GraphQL.UserApiLogic.Queries.Login(params).then((res) => {
-      if (!res) {
-        Alert.alert("Error", "Phone number or password incorrect");
-      } else if (res.errors) {
-        Alert.alert("Error", res.errors.join("\n"));
-      } else {
-        OurUser.user = res[0];
-        navigation.navigate("Home");
-      }
-    });
+    // const params = {
+    //   phoneNumber: phoneNumber,
+    //   password: password,
+    // };
+
+    // GraphQL.UserApiLogic.Queries.Login(params).then((res) => {
+    //   if (!res) {
+    //     Alert.alert("Error", "Phone number or password incorrect");
+    //   } else if (res.errors) {
+    //     Alert.alert("Error", res.errors.join("\n"));
+    //   } else {
+    //     OurUser.user = res[0];
+    //   }
+    // });
   };
 
   const onForget = () => {

@@ -1,7 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, I18nManager, Alert } from "react-native";
+import {
+  FlatList,
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  I18nManager,
+  Text,
+  View,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
 import posts from "../../data/posts";
 import languages from "../../strings/LanguagesController";
+import UserAvatar from "@muhzi/react-native-user-avatar";
 import AppHeader from "../../components/AppHeader";
 import users from "../../data/users";
 
@@ -75,6 +86,54 @@ export default function PersonProfile({ navigation, route }) {
   return (
     <>
       <AppHeader style={{ top: -12 }} navigation={navigation} isDrawer />
+      <View style={headerStyles.headContaienr}>
+        <View style={headerStyles.head}>
+          <View style={headerStyles.profileContainer}>
+            <View style={styles.imageContainer}>
+              <UserAvatar
+                src={ourUser.profileImage}
+                userName={"Jhon"}
+                size={80}
+              />
+            </View>
+            <View style={headerStyles.detailsContaienr}>
+              <Text style={headerStyles.name}>{ourUser.firstName}</Text>
+              {/* <MaterialCommunityIcons
+                    name={"dots-vertical"}
+                    color={"#660032"}
+                    size={50}
+                  /> */}
+            </View>
+          </View>
+          <View style={headerStyles.actionContaienr}>
+            {!isUserMe ? (
+              <>
+                <TouchableOpacity style={headerStyles.btnStyle}>
+                  <View style={headerStyles.messageButton}>
+                    <Text style={headerStyles.messageText}>Message</Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity style={headerStyles.btnStyle}>
+                  <View style={headerStyles.lostAndFoundButton}>
+                    <Text style={headerStyles.lostAndFoundText}>
+                      Lost & Found
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </>
+            ) : (
+              <TouchableOpacity
+                style={headerStyles.myBtnStyle}
+                onPress={onEdit}
+              >
+                <View style={headerStyles.editProfileButton}>
+                  <Text style={headerStyles.editProfileText}>Edit Profile</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+      </View>
       <PostListView
         retrieveData={retrieveData}
         type={4}
