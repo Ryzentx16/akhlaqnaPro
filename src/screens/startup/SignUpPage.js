@@ -23,6 +23,7 @@ import languages from "../../strings/LanguagesController";
 import { useNavigation } from "@react-navigation/native";
 import { GraphQL } from "../../../API";
 import LoadingHandler from "../../components/LoadingHandler";
+import WebViewerModal from "../../components/WebViewerModal";
 
 const windowHeight = Dimensions.get("window").height;
 const isRTL = I18nManager.isRTL;
@@ -36,6 +37,8 @@ export default function SignUpPage({ navigation, route }) {
   const inputMaxLength = 55;
 
   const [modalStatus, setModalStatus] = useState(false);
+
+  const [webViewerStatus, setWebViewerStatus] = useState(true);
 
   const [formattedValue, setFormattedValue] = useState("");
   const [valid, setValid] = useState(false);
@@ -65,7 +68,7 @@ export default function SignUpPage({ navigation, route }) {
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
-  // console.warn(isRTL)
+
   let currLang = languages.currLang();
   useEffect(() => {
     currLang = languages.currLang();
@@ -121,7 +124,8 @@ export default function SignUpPage({ navigation, route }) {
     if (!isEditProfile) {
       if (!vaildateSubmit()) {
         setModalStatus(false);
-        Alert.alert( // TODO: change it to ar 
+        Alert.alert(
+          // TODO: change it to ar
           "Error",
           "Please fill it up with your information " +
             "\n" +
@@ -162,6 +166,7 @@ export default function SignUpPage({ navigation, route }) {
   };
 
   const onLogin = () => {
+    setWebViewerStatus(false);
     globleNavigation.dispatch(
       globleNavigation.reset({
         index: 0,
@@ -367,6 +372,11 @@ export default function SignUpPage({ navigation, route }) {
         </View>
       </ScrollView>
 
+      <WebViewerModal
+        status={webViewerStatus}
+        onAgree={() => setWebViewerStatus(false)}
+        onDisagree={onLogin}
+      />
       <LoadingHandler status={modalStatus} />
     </View>
   );

@@ -47,6 +47,8 @@ export default function LoginPage({ navigation }) {
       password == "" ||
       password == null
     ) {
+      setModalStatus(false);
+
       Alert.alert("Error", "Phone number and password are required");
       return;
     }
