@@ -17,7 +17,7 @@ const posts = [
             'since the 1500s, when an unknown printer' +
             'took a galley of type and scrambled it to' +
             'make a type specimen book.',
-        image: require('../../assets/image_1.png'),
+        // image: require('../../assets/image_1.png'),
         commentsId: 'p1',
         type: 'lost',
         numberOfComments: 126,
@@ -43,7 +43,7 @@ const posts = [
         createdAt: '2022/12/04 2:03:14',
         content: 'Lorem Ipsum is simply dummy text of the printing and ' +
             'typesetting industry. ',
-        image: require('../../assets/image_2.png'),
+        // image: require('../../assets/image_2.png'),
         commentsId: 'p3',
         type: 'found',
         numberOfComments: 260,
@@ -56,7 +56,7 @@ const posts = [
         createdAt: '2022/07/04 14:02:00',
         content: 'Lorem Ipsum is simply dummy text of the printing and ' +
             'typesetting industry. ',
-        image: require('../../assets/image_3.jpg'),
+        // image: require('../../assets/image_3.jpg'),
         commentsId: 'p4',
         type: 'lost',
         numberOfComments: 126,

@@ -79,7 +79,7 @@ export default function PostCard(props) {
   const [numOfLikes, setNumOfLikes] = useState(post.numOfLikes); //To show ur remaining Text
   const [isLiked, setIsLiked] = useState(post.isLikedByMe);
   const [imageWidth, setImageWidth] = useState(null);
-  const [imageHeight, setImageHeight] = useState(null);
+  const [imageHeight, setImageHeight] = useState(450);
 
   const onMakeLike = () => {
     if (isLiked) {
@@ -111,6 +111,7 @@ export default function PostCard(props) {
   });
 
   useEffect(() => {
+    console.log(post.image !== null);
     if (post.image !== null) {
       Image.getSize(
         `${domain}/download/` + post.image,
