@@ -2,7 +2,7 @@
   "expo": {
     "owner": "ryzentx",
     "name": "Amanti",
-    "slug": "Amanti",
+    "slug": "akhlaqna",
     "version": "2.2.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -17,7 +17,7 @@
       ]
     ],
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/Amanti_splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#660032"
     },
@@ -31,12 +31,11 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/Amanti Adaptive.png",
         "backgroundColor": "#FFFFFF"
-        
       },
       "package": "com.ryzentx.amanti",
-      "versionCode": 4
+      "versionCode": 6
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -110,6 +110,13 @@ const en = {
   postcard: {
     readmore: "Read More",
   },
+
+  chatpage: {
+    bottomesheet: {
+      remove: "Remove",
+      block: "Block"
+    }
+  }
 };
 
 export default en;

@@ -3,20 +3,30 @@ import BottomSheet from "@gorhom/bottom-sheet";
 import InputBox from "../screens/chat/inputBox";
 
 export default BottomSheetHandler = (props) => {
-  const { post, isClosed, onSend, onPickImage, onCancel, onTakeImage, image } =
-    props;
+  const {
+    post,
+    onClose, // required
+    onSend,
+    snaps = ["25%", "65%", "100%"],
+
+    // For textinput
+    onPickImage,
+    onCancel,
+    onTakeImage,
+    image,
+
+    backgroundStyle
+  } = props;
   const [isFocus, setIsFocus] = useState(false);
   const [tiPlaceHolder, setTiPlaceHolder] = useState(null);
-  const commentSheetRef = useRef(BottomSheet);
-  const snapPoints = useMemo(() => ["25%", "65%", "100%"], []);
+  const snapPoints = useMemo(() => snaps, []);
 
   const onCommentClose = () => {
-    isClosed(false);
+    onClose(false);
   };
 
   return (
     <BottomSheet
-      ref={commentSheetRef}
       index={0}
       snapPoints={snapPoints}
       handleStyle={{
@@ -24,10 +34,12 @@ export default BottomSheetHandler = (props) => {
         borderTopLeftRadius: 15,
         borderTopRightRadius: 15,
       }}
-      onClose={onCommentClose}
+      onClose={onCommentClose} // required
       enablePanDownToClose={true}
+      backgroundStyle={backgroundStyle}
     >
       {props.children}
+
       {props.hasOwnProperty("InputBox") && (
         <InputBox
           replyPlaceHolder={tiPlaceHolder}

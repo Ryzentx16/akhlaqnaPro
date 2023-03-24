@@ -7,6 +7,7 @@ import languages from "../../strings/LanguagesController";
 import themes from "../../ThemeController";
 
 import { useNavigation } from "@react-navigation/native";
+import Storage from "../../components/Storage";
 
 let currLang = languages.currLang();
 let textColor = themes._currTextTheme;
@@ -48,6 +49,13 @@ export default function AccountPage() {
     // );
 
     Alert.alert("Sorry!", "Coming Soon");
+  };
+
+  const onRemoveKeepLogging = async () => {
+    await Storage.storeData("keepLogging", false);
+    await Storage.storeData("firstLogin", false);
+
+    Alert.alert("Info", "Keep Logging removed successfully");
   };
 
   useEffect(() => {
@@ -123,6 +131,31 @@ export default function AccountPage() {
                   style={{ fontSize: 20, color: textColor, textAlign: "left" }}
                 >
                   {currLang.accountPage.changepassword}
+                </Text>
+              </TouchableOpacity>
+            </TouchableOpacity>
+          </View>
+          <View style={{ flex: 1, justifyContent: "center" }}>
+            <TouchableOpacity
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                alignSelf: "center",
+                alignItems: "center",
+                maxHeight: 40,
+                maxWidth: 200,
+                backgroundColor: "#660032",
+                borderRadius: 99,
+              }}
+            >
+              <TouchableOpacity
+                style={{ flex: 5 }}
+                onPress={onRemoveKeepLogging}
+              >
+                <Text
+                  style={{ fontSize: 16, color: "white", textAlign: "center" }}
+                >
+                  {`Remove keep logging`}
                 </Text>
               </TouchableOpacity>
             </TouchableOpacity>

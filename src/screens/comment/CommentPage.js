@@ -110,7 +110,7 @@ export default function CommentPage(props) {
       onTakeImage={takeImage}
       InputBox={onSend}
       post={post}
-      isClosed={isClosed}
+      onClose={isClosed}
       image={image} // image to show in InputBox
       onCancel={() => setImage(null)}
     >

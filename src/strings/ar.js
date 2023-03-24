@@ -109,6 +109,13 @@ const ar = {
 
   postcard: {
     readmore: 'قرأة المزيد'
+  },
+
+  chatpage: {
+    bottomesheet: {
+      remove: "حذف المحادثة",
+      block: "حظر المحادثة"
+    }
   }
 };
 

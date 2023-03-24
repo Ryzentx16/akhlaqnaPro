@@ -9,7 +9,7 @@ let backColor = themes._currBackColorTheme;
 let themeColor = themes._currTheme;
 
 export default function ChatListView(props) {
-  const { retrieveData, perPage, navigation } = props;
+  const { retrieveData, perPage, navigation, onChatEdit } = props;
 
   let currLang = languages.currLang();
   useEffect(() => {
@@ -32,7 +32,14 @@ export default function ChatListView(props) {
   };
 
   const renderItem = (item) => {
-    return <ChatCard key={item.item.id} data={item.item} onPress={onPress} />;
+    return (
+      <ChatCard
+        key={item.item.id}
+        data={item.item}
+        onPress={onPress}
+        onChatEdit={onChatEdit}
+      />
+    );
   };
 
   return (

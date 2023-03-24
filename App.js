@@ -1,10 +1,10 @@
-
 import { useEffect, useState } from "react";
 import "react-native-gesture-handler";
-import { BackHandler } from "react-native";
+import { BackHandler, Button, Text, TextInput, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { SafeAreaView, StyleSheet, StatusBar } from "react-native";
 import AppStartupNavigator from "./src/navigator/AppStartupNavigator";
+import Storage from "./src/components/Storage";
 
 export default function App() {
   useEffect(() => {
@@ -20,6 +20,9 @@ export default function App() {
     return () => backHandler.remove();
   });
 
+  const [value, setValue] = useState(null);
+  var x = null;
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar barStyle="default" />
@@ -27,60 +30,6 @@ export default function App() {
         <AppStartupNavigator />
       </NavigationContainer>
     </SafeAreaView>
-    // <KeyboardAvoidingView
-    //   onLayout={(event) => {
-    //     var { x, y, width, height } = event.nativeEvent.layout;
-    //     console.warn(height);
-    //   }}
-    //   style={[
-    //     styles.container,
-    //     {
-    //       maxHeight: windowHeight - keyboardHeight,
-    //       minHeight: windowHeight - keyboardHeight,
-    //     },
-    //   ]}
-    //   behavior={"height"}
-    // >
-    //   <View
-    //     style={{
-    //       height: "50%",
-    //       justifyContent: "flex-end",
-    //       alignItems: "center",
-    //     }}
-    //   >
-    //     <Text style={styles.text}>
-    //       {"StatusBar Height: " + statusBarHeight}
-    //     </Text>
-    //     <Text style={styles.text}>{"Window Height: " + windowHeight}</Text>
-    //     <Text style={styles.text}>{"Keyboard Height: " + keyboardHeight}</Text>
-    //     <Text style={styles.text}>{"Green View Height: " + greenHeight}</Text>
-    //   </View>
-
-    //   <View
-    //     onLayout={(event) => {
-    //       var { x, y, width, height } = event.nativeEvent.layout;
-    //       setGreenHeight(height);
-    //     }}
-    //     style={{
-    //       flex: 1,
-    //       // height: windowHeight / 2,
-    //       backgroundColor: "green",
-    //       width: "100%",
-    //       justifyContent: "flex-end",
-    //     }}
-    //   >
-    //     <InputBox />
-    //     {/* <TextInput
-    //       style={{
-    //         flex: 1,
-    //         maxHeight: 25,
-    //         minHeight: 25,
-    //         backgroundColor: "red",
-    //       }}
-    //     /> */}
-    //   </View>
-    // </KeyboardAvoidingView>
-    /* #endregion */
   );
 }
 

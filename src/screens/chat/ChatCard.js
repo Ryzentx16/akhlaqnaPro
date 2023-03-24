@@ -5,15 +5,20 @@ import domain from "../../../API/domain";
 import themes from "../../ThemeController";
 import OurUser from "../../OurUser";
 import Helper from "../../shared/helpers";
+import { Entypo } from "react-native-vector-icons";
 
 let textColor = themes._currTextTheme;
 let backColor = themes._currBackColorTheme;
 let timeColor = themes._currTimeTheme;
 export default function ChatCard(props) {
+  const { onChatEdit } = props;
+  const [isEdit, setIsEdit] = useState(false);
+
   const getLastMessage = () => {
     var message = "";
 
     if (props.data.lastMessage) {
+      // TODO: change to ar
       if (props.data.lastMessage.senderUser.id == OurUser.user.id) {
         message = "You: ";
       }
@@ -33,6 +38,7 @@ export default function ChatCard(props) {
 
     return duration;
   };
+
   return (
     <TouchableOpacity
       style={styles.container}
@@ -51,6 +57,12 @@ export default function ChatCard(props) {
           <Text style={styles.header}>
             {props.data.user.firstName + " " + props.data.user.lastName}
           </Text>
+          <TouchableOpacity
+            style={{ justifyContent: "center", alignContent: "flex-end" }}
+            onPress={() => onChatEdit(true)}
+          >
+            <Entypo size={20} name={"dots-three-vertical"} color={"#660032"} />
+          </TouchableOpacity>
         </View>
 
         <View style={styles.detailsContainer}>

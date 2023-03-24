@@ -1,5 +1,4 @@
 import React, { useState, useRef, AsyncStorage, useEffect } from "react";
-// import AsyncStorage from '@react-native-community/async-storage';
 import {
   Alert,
   Dimensions,
@@ -11,6 +10,7 @@ import {
   TouchableOpacity,
   View,
   I18nManager,
+  Button,
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import PhoneInput from "react-native-phone-number-input";
@@ -18,36 +18,37 @@ import languages from "../../strings/LanguagesController";
 import { GraphQL } from "../../../API";
 import OurUser from "../../OurUser";
 import LoadingHandler from "../../components/LoadingHandler";
+import Storage from "../../components/Storage";
+import Checkbox from "expo-checkbox";
+import UserBackModal from "../../components/UserBackModal";
 
 const windowHeight = Dimensions.get("screen").height;
 const isRTL = I18nManager.isRTL;
 const isEdit = false;
 
-// import NetInfo from "@react-native-community/netinfo";
-// NetInfo.fetch().then(state => {
-//   console.log("Connection : ", state.details);
-// });
-
 export default function LoginPage({ navigation }) {
-  const [value, setValue] = useState("");
   const [formattedValue, setFormattedValue] = useState(null);
   const [valid, setValid] = useState(false);
+  const [userBackModalStatus, setUserBackModalStatus] = useState(false);
   const phoneInput = useRef(PhoneInput);
 
   const [phoneNumber, setPhoneNumber] = useState(null);
   const [password, setPassword] = useState(null);
 
-  const [modalStatus, setModalStatus] = useState(false);
+  const [loadingStatus, setLoadingStatus] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
 
   const checkLogin = () => {
-    setModalStatus(true);
+    setUserBackModalStatus(false);
+    setLoadingStatus(true);
+
     if (
       phoneInput == "" ||
       phoneInput == null ||
       password == "" ||
       password == null
     ) {
-      setModalStatus(false);
+      setLoadingStatus(false);
 
       Alert.alert("Error", "Phone number and password are required");
       return;
@@ -58,13 +59,18 @@ export default function LoginPage({ navigation }) {
     };
 
     GraphQL.UserApiLogic.Queries.Login(params).then((res) => {
-      setModalStatus(false);
+      setLoadingStatus(false);
       if (!res) {
         Alert.alert("Error", "Phone number or password incorrect");
       } else if (res.errors) {
         Alert.alert("Error", res.errors.join("\n"));
       } else {
         OurUser.user = res[0];
+        Storage.storeData("UserData", res[0]);
+        Storage.storeData("firstLogin", true);
+        if (isChecked) {
+          Storage.storeData("keepLogging", true);
+        }
         navigation.navigate("Home");
       }
     });
@@ -85,6 +91,31 @@ export default function LoginPage({ navigation }) {
   useEffect(() => {
     currLang = languages.currLang();
   });
+
+  useEffect(() => {
+    Storage.getData("UserData").then((v) => {
+      setPhoneNumber(v.phoneNumber);
+    });
+
+    const checkLogin = async () => {
+      setLoadingStatus(true);
+
+      if (await Storage.getData("keepLogging")) {
+        OurUser.user = await Storage.getData("UserData");
+        setLoadingStatus(false);
+
+        navigation.navigate("Home");
+        return;
+      } else if (await Storage.getData("firstLogin")) {
+        setLoadingStatus(false);
+
+        setUserBackModalStatus(true);
+      }
+    };
+
+    checkLogin();
+    setLoadingStatus(false);
+  }, []);
 
   return (
     <View style={styles.background}>
@@ -209,7 +240,74 @@ export default function LoginPage({ navigation }) {
         </View>
       </ScrollView>
 
-      <LoadingHandler status={modalStatus} />
+      <LoadingHandler status={loadingStatus} />
+      <UserBackModal
+        status={userBackModalStatus}
+        phoneNumber={phoneNumber}
+        onCancel={() => setUserBackModalStatus(false)}
+      >
+        {/* 0 */}
+        <View style={inputsStyle.passInputSection}>
+          <View style={inputsStyle.passInput}>
+            <View style={inputsStyle.lockIconHolder}>
+              <MaterialCommunityIcons
+                size={30}
+                name={"lock"}
+                color={"#660032"}
+              />
+            </View>
+
+            <View style={inputsStyle.passInputHolder}>
+              <TextInput
+                placeholder={currLang.loginPage.password + " *"}
+                placeholderTextColor={"#660032"}
+                value={password}
+                onChangeText={(text) => {
+                  setPassword(text);
+                }}
+                secureTextEntry={true}
+                style={[
+                  {
+                    textAlign: isRTL ? "right" : "left",
+                  },
+                  isRTL ? { paddingRight: 10 } : { paddingLeft: 10 },
+                ]}
+              />
+            </View>
+          </View>
+        </View>
+
+        {/* 1 */}
+        <>
+          <TouchableOpacity
+            onPress={checkLogin}
+            style={[actionsStyle.loginContainer]}
+          >
+            <Text style={actionsStyle.textLogin}>
+              {currLang.loginPage.login}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setUserBackModalStatus(false)}
+            style={[
+              actionsStyle.loginContainer,
+              { width: "22%", marginTop: 4, backgroundColor: "white" },
+            ]}
+          >
+            <Text style={[actionsStyle.textLogin, { color: "#660032" }]}>
+              {`إلغاء`}
+            </Text>
+          </TouchableOpacity>
+        </>
+
+        {/* 2 */}
+        <Checkbox
+          style={{ marginRight: 5 }}
+          value={isChecked}
+          onValueChange={setIsChecked}
+          color={isChecked ? "#660032" : undefined}
+        />
+      </UserBackModal>
     </View>
   );
 }

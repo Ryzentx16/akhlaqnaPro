@@ -87,7 +87,7 @@ export default function CommentCard(props) {
               />
             </View>
           )}
-          <View style={detailsStyles.actionContainer}>
+          {/* <View style={detailsStyles.actionContainer}>
             {!isReplying && (
               <TouchableOpacity
                 style={detailsStyles.replybutton}
@@ -101,7 +101,7 @@ export default function CommentCard(props) {
                 <Text style={detailsStyles.replybuttonText}>Reply</Text>
               </TouchableOpacity>
             )}
-          </View>
+          </View> */}
         </View>
       </View>
       {haveReplies && (
