@@ -1,7 +1,7 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 import domain from "../domain";
 
-const endPointUrl = `${domain}/graphql`
+const endPointUrl = `${domain}/graphql`;
 const client = new ApolloClient({
   uri: endPointUrl,
   cache: new InMemoryCache(),
@@ -17,20 +17,14 @@ const client = new ApolloClient({
   },
 });
 
-const ClearCache = async () => {
-  await client.clearStore().catch((er) => console.error(er));
-};
-
 const Handler = {
   Query: async (params) => {
-    // console.log(params)
     try {
       const result = await client.query({
         query: params.statement,
         variables: params.variables,
       });
 
-      // await ClearCache();
       return result;
     } catch (error) {
       console.error("req error: " + error);

@@ -1,3 +1,5 @@
+import Storage from "./components/Storage";
+
 class OurUser {
   static user = {
     id: 22,
@@ -19,6 +21,17 @@ class OurUser {
 
     return this.user;
   }
+
+  static logOut = async (next) => {
+    await Storage.storeData("keepLogging", false);
+    await Storage.storeData("firstLogin", false);
+    await Storage.storeData("UserData", {});
+
+    // API Logout
+    // ..........
+
+    next();
+  };
 }
 
 export default OurUser;

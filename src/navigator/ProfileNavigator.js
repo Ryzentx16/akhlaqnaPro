@@ -6,6 +6,7 @@ import PersonProfile from "../screens/Profiles/PersonProfile";
 import SignUpPage from "../screens/startup/SignUpPage";
 import AppStartupNavigator from "./AppStartupNavigator";
 import { BackHandler } from "react-native";
+import EditProfilePage from "../screens/startup/EditProfilePage";
 
 const Stack = createStackNavigator();
 
@@ -53,13 +54,6 @@ export default function ProfileNavigator({ navigation, route }) {
         }}
       />
 
-      {/* <Stack.Screen
-        name="AppStartupNavigator"
-        component={AppStartupNavigator}
-        options={{
-          headerShown: false,
-        }}
-      /> */}
     </Stack.Navigator>
   );
 }

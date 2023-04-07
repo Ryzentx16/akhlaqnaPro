@@ -11,7 +11,7 @@
     },
     "development": {
       "developmentClient": true,
-      "distribution": "internal",
+      "distribution": "store",
       "ios": {
         "resourceClass": "m1-medium"
       }
@@ -23,6 +23,11 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "pc-api-7212081418258603919-849-da3349bcfc91.json",
+        "track": "production"
+      }
+    }
   }
 }

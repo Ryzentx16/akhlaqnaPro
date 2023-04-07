@@ -65,8 +65,8 @@ export default function LoginPage({ navigation }) {
       } else if (res.errors) {
         Alert.alert("Error", res.errors.join("\n"));
       } else {
-        OurUser.user = res[0];
-        Storage.storeData("UserData", res[0]);
+        OurUser.user = res.result;
+        Storage.storeData("UserData", res.result);
         Storage.storeData("firstLogin", true);
         if (isChecked) {
           Storage.storeData("keepLogging", true);
@@ -240,7 +240,7 @@ export default function LoginPage({ navigation }) {
         </View>
       </ScrollView>
 
-      <LoadingHandler status={loadingStatus} />
+      <LoadingHandler status={loadingStatus} onImmediateBreak={() => setLoadingStatus(false)}/>
       <UserBackModal
         status={userBackModalStatus}
         phoneNumber={phoneNumber}

@@ -23,6 +23,21 @@ const en = {
       content: "Your account changed successfully",
     },
   },
+  edituserPage: {
+    title: "Edit Profile",
+    firstname: "First Name",
+    lastname: "Last Name",
+    phonenumber: "Phone Numebr",
+    birthday: "Birthday",
+    createnewpassword: "Create New Password *",
+    confirmpassword: "Confirm Password *",
+    submit: "Submit",
+    login: "Login",
+    editalert: {
+      title: "Congratulations !",
+      content: "Your account changed successfully",
+    },
+  },
   otpPage: {
     wesentotp: "Your OTP: ",
     resendotp: "Resend",

@@ -1,16 +1,39 @@
-import React, { useState } from "react";
-import { StyleSheet, View, Dimensions, ActivityIndicator } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Pressable } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Dimensions,
+  ActivityIndicator,
+  TouchableWithoutFeedback,
+} from "react-native";
 import Modal from "react-native-modal";
 
 const deviceWidth = Dimensions.get("window").width;
 const deviceHeight = Dimensions.get("window").height;
 
 export default function LoadingHandler(props) {
-  const { status } = props;
+  var { status, onImmediateBreak } = props;
+  const [counter, setCounter] = useState(1);
+  const [immediateBreak, setImmediateBreak] = useState(false);
+
+  useEffect(() => {
+    console.log("enter" + counter);
+    if (counter % 10 === 0) {
+      setImmediateBreak(true);
+      onImmediateBreak();
+      setTimeout(() => {
+        setImmediateBreak(false);
+        console.log("false done");
+      }, 4000);
+      status = false;
+      console.log("set");
+    }
+  }, [counter]);
 
   return (
     <Modal
-      isVisible={status}
+      isVisible={!immediateBreak ? status : false}
       animationIn={"flash"}
       animationOut={"flash"}
       useNativeDriver={true}
@@ -23,7 +46,10 @@ export default function LoadingHandler(props) {
       backdropOpacity={0.4}
       style={{ justifyContent: "center", alignItems: "center" }}
     >
-      <View style={styles.contentContainer}>
+      <Pressable
+        style={styles.contentContainer}
+        onPress={() => setCounter(counter + 1)}
+      >
         <View
           style={{
             position: "absolute",
@@ -39,7 +65,7 @@ export default function LoadingHandler(props) {
         >
           <ActivityIndicator size="large" color="#FFD700" />
         </View>
-      </View>
+      </Pressable>
     </Modal>
   );
 }
@@ -54,5 +80,7 @@ const styles = StyleSheet.create({
     minHeight: deviceHeight,
     maxWidth: deviceWidth,
     minWidth: deviceWidth,
+    height: deviceHeight,
+    width: deviceWidth,
   },
 });

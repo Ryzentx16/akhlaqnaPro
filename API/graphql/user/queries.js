@@ -27,10 +27,14 @@ const Queries = {
 
     return result.data.addUser;
   },
+
   Login: async (params) => {
     const query = gql`
-      query ($phoneNumber: String!, $password: String!) {
-        user(phoneNumber: $phoneNumber, password: $password) {
+    mutation ($phoneNumber: String!, $password: String!) {
+      loginUser(phoneNumber: $phoneNumber, password: $password) {
+        success
+        message
+        result  {
           id
           firstName
           lastName
@@ -39,10 +43,12 @@ const Queries = {
           isOtpChecked
           roleLvl
         }
+        errors
       }
+    }
     `;
 
-    const result = await Handler.Query({
+    const result = await Handler.Mutate({
       statement: query,
       variables: params,
     });
@@ -52,7 +58,34 @@ const Queries = {
       return result;
     }
 
-    return result.data.user;
+    return result.data.loginUser;
+  },
+
+  Edit: async (params) => {
+    const query = gql`
+      mutation ($phoneNumber: String!, $input: EditUserInput!) {
+        editUser(phoneNumber: $phoneNumber, input: $input) {
+          success
+          message
+          errors
+        }
+      }
+    `;
+
+    const result = await Handler.Query({
+      statement: query,
+      variables: {
+        phoneNumber: params.phoneNumber,
+        input: params.input,
+      },
+    });
+
+    if ("type" in result && "errors" in result) {
+      //error
+      return result;
+    }
+
+    return result.data.editUser;
   },
 };
 

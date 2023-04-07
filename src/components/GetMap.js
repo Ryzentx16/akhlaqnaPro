@@ -1,23 +1,27 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button, StyleSheet, Text, View, Dimensions } from "react-native";
 import MapView from "react-native-maps";
 import * as Location from "expo-location";
 import { FontAwesome, MaterialIcons, Entypo } from "react-native-vector-icons";
 import axios from "axios";
+import AmantiButton from "./AmantiButton";
 
 const customMapStyle = [];
-const QAlat = 25.300946829658887;
-const QAlon = 51.465748474001884;
+// const QAlat = 25.300946829658887;
+// const QAlon = 51.465748474001884;
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
-export default function GetMap() {
+export default function GetMap(props) {
+  console.log(props.initRegion.latitude + "asdasd" + props.initRegion.longitude)
+  const QAlat = props.initRegion.latitude;
+  const QAlon = props.initRegion.longitude;
   const [markerPoint, setMarkerPoint] = useState({
-    latitude: 25.188497182423752,
-    longitude: 51.40093171969056,
+    latitude: QAlat,
+    longitude: QAlon,
   });
   const [currLocation, setCurrLocation] = useState(null);
-  const [address, setAddress] = useState(null);
+
   const refMap = useRef(MapView);
 
   const getAddressAsync = async (latitude, longitude) => {
@@ -25,6 +29,29 @@ export default function GetMap() {
     setAddress(address[0]);
     return address;
   };
+
+  const [address, setAddress] = useState({
+    city: "Ar-Rayyan",
+    country: "Qatar",
+    district: "Al Rayyan Al Jadeed",
+    isoCountryCode: "QA",
+    name: "8C2C+939",
+    postalCode: null,
+    region: "Al Rayyan Municipality",
+    street: null,
+    streetNumber: null,
+    subregion: null,
+    timezone: null,
+  });
+
+  useEffect(() => {
+    const init = async () => {
+      await Location.requestForegroundPermissionsAsync();
+      await getAddressAsync(QAlat, QAlon).catch(console.error);
+    };
+
+    init();
+  }, []);
 
   const onLocation = async () => {
     const location = {
@@ -40,8 +67,6 @@ export default function GetMap() {
     });
 
     await getAddressAsync(location.latitude, location.longitude);
-    // console.log(`${location.latitude}, ${location.longitude}`);
-    console.log(address);
   };
 
   const getAddressFromCoords = async (lat, lng) => {
@@ -49,6 +74,7 @@ export default function GetMap() {
       const response = await axios.get(
         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyBb2lef_VaN4m9OlvngArW3h84ul1DHZIo`
       );
+      // console.log(response);
       if (response.data.status === "OK") {
         const { address_components } = response.data.results[0];
         // find the street name component in the address_components array
@@ -64,26 +90,35 @@ export default function GetMap() {
         return null;
       }
     } catch (error) {
-      console.log(error);
+      console.log(`from getAddressFromCoords: ${error}`);
       return null;
     }
   };
 
   return (
-    <>
+    <View
+      style={{
+        maxHeight: windowHeight,
+        minHeight: windowHeight,
+        maxWidth: windowWidth,
+        minWidth: windowWidth,
+      }}
+    >
       <MapView
-        showsMyLocationButton={false}
+        showsMyLocationButton={true}
         showsUserLocation={true}
         customMapStyle={customMapStyle}
         onUserLocationChange={(e) => setCurrLocation(e.nativeEvent.coordinate)} //here
         ref={refMap}
         style={styles.container}
         onRegionChangeComplete={async (Region) => {
-          await getAddressAsync(Region.latitude, Region.longitude);
+          await getAddressAsync(Region.latitude, Region.longitude).catch(
+            console.error
+          );
           console.log(`${Region.latitude}, ${Region.longitude}`);
 
           console.log(address);
-
+          setMarkerPoint(Region);
           await getAddressFromCoords(Region.latitude, Region.longitude);
         }}
         initialRegion={{
@@ -95,11 +130,10 @@ export default function GetMap() {
         onPress={(e) => {
           setMarkerPoint(e.nativeEvent.coordinate);
         }}
-        // onRegionChangeComplete={setCoordinate}
       />
-      <View style={{ position: "absolute", top: 40, left: 0 }}>
+      {/* <View style={{ position: "absolute", top: 40, left: 0 }}>
         <Button title={"to curr location"} onPress={onLocation} />
-      </View>
+      </View> */}
       <Entypo
         name={"location-pin"}
         size={30}
@@ -107,20 +141,44 @@ export default function GetMap() {
         style={styles.pin}
       />
       <View style={styles.centerRefrence} />
-      <View style={{ position: "absolute", bottom: 0 }}>
-        <Text>{JSON.stringify(address)}</Text>
+      <View
+        style={{
+          position: "absolute",
+          backgroundColor: "white",
+          opacity: 0.7,
+          bottom: 0,
+          width: "100%",
+          height: "10%",
+        }}
+      />
+      <View
+        style={{
+          position: "absolute",
+          bottom: 0,
+
+          width: "100%",
+          // height: "25%",
+
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text
+          style={{ marginBottom: 10 }}
+        >{`City: ${address.city} | district: ${address.district}`}</Text>
+        <AmantiButton
+          title={"Set Location"}
+          style={{ marginBottom: 15 }}
+          onPress={() => props.onSetLocation(markerPoint)}
+        />
       </View>
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    maxHeight: windowHeight,
-    minHeight: windowHeight,
-    maxWidth: windowWidth,
-    minWidth: windowWidth,
     height: windowHeight,
     width: windowWidth,
     backgroundColor: "#660032",

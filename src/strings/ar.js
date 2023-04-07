@@ -9,7 +9,21 @@ const ar = {
   },
   signupPage: {
     title: "إنشاء حساب جديد",
-    editprofile: 'تعديل الحساب',
+    firstname: "الاسم الاول",
+    lastname: "الاسم الاخير",
+    phonenumber: "رقم الهاتف",
+    birthday: "تاريخ الميلاد",
+    createnewpassword: "* ادخل كلمة مرور",
+    confirmpassword: "* تأكيد كلمة المرور",
+    submit: "المتابعة",
+    login: "تسجيل الدخول",
+    editalert: {
+      title: "! مبروك",
+      content: "لقد تم تعديل الحساب بنجاح"
+    }
+  },
+  edituserPage: {
+    title: "تعديل الحساب",
     firstname: "الاسم الاول",
     lastname: "الاسم الاخير",
     phonenumber: "رقم الهاتف",

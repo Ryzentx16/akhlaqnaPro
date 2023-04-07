@@ -45,11 +45,10 @@ import LoadingHandler from "../components/LoadingHandler";
 const isRTL = I18nManager.isRTL;
 
 const AddPostPage = ({ navigation }) => {
-  const [content, setContent] = useState("");
-  const [test, setTest] = useState("");
+  const [content, setContent] = useState(null);
   const [modalStatus, setModalStatus] = useState(false);
   const [image, setImage] = useState(null);
-  const [createdDateTime, setcreatedDateTime] = useState(Date.now());
+  // const [createdDateTime, setcreatedDateTime] = useState(Date.now());
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -63,8 +62,6 @@ const AddPostPage = ({ navigation }) => {
   });
 
   const onToggle = () => setIsLost(!isLost);
-
-  const mapViewRef = useRef(MapView);
 
   let currLang = languages.currLang();
   useEffect(() => {
@@ -92,7 +89,6 @@ const AddPostPage = ({ navigation }) => {
     let r = await ImagePicker.getCameraPermissionsAsync().catch((er) =>
       console.error(er)
     );
-    setTest(JSON.stringify(r));
 
     if (!r.granted) {
       if (r.canAskAgain) {
@@ -126,6 +122,12 @@ const AddPostPage = ({ navigation }) => {
   const onPost = () => {
     setIsLoading(true);
     const createPost = (imagePath = null) => {
+      if (!content) {
+        Alert.alert("Error", "We cannot accept empty text post");
+        setIsLoading(false);
+        return;
+      }
+
       const data = {
         content: content,
         area: "Alrayan - Alshafie",
@@ -158,64 +160,10 @@ const AddPostPage = ({ navigation }) => {
     } else {
       createPost();
     }
+    // setIsLoading(false);
   };
+
   //----------------------------------------------------
-  const [markerPoint, setMarkerPoint] = useState({
-    latitude: 25.188497182423752,
-    longitude: 51.40093171969056,
-  });
-  const [currLocation, setCurrLocation] = useState(null);
-  const [address, setAddress] = useState(null);
-  const refMap = useRef(MapView);
-
-  const getAddressAsync = async (latitude, longitude) => {
-    let address = await Location.reverseGeocodeAsync({ latitude, longitude });
-    setAddress(address[0]);
-    return address;
-  };
-
-  const onSetLocation = async () => {
-    const location = {
-      latitude: currLocation.latitude,
-      longitude: currLocation.longitude,
-    };
-
-    refMap.current.animateCamera({
-      center: location,
-
-      // Only when using Google Maps.
-      zoom: 17,
-    });
-
-    await getAddressAsync(location.latitude, location.longitude);
-    // console.log(`${location.latitude}, ${location.longitude}`);
-    console.log(address);
-  };
-
-  const getAddressFromCoords = async (lat, lng) => {
-    try {
-      const response = await axios.get(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyBb2lef_VaN4m9OlvngArW3h84ul1DHZIo`
-      );
-      if (response.data.status === "OK") {
-        const { address_components } = response.data.results[0];
-        // find the street name component in the address_components array
-        const streetName = address_components.find((component) =>
-          component.types.includes("route")
-        ).long_name;
-        return streetName;
-      } else {
-        console.log(
-          "Geocode was not successful for the following reason: ",
-          response.data.status
-        );
-        return null;
-      }
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
-  };
 
   const onLocation = () => {
     setModalStatus(true);
@@ -331,12 +279,12 @@ const AddPostPage = ({ navigation }) => {
               color={"#660032"}
             />
           </TouchableOpacity>
-          {/* <TouchableOpacity
+          <TouchableOpacity
             style={styles.actionBtnContainer}
             onPress={onLocation}
           >
             <Entypo name={"location"} size={30} color={"#660032"} />
-          </TouchableOpacity> */}
+          </TouchableOpacity>
         </View>
 
         <TouchableOpacity style={styles.postBtnContaianer} onPress={onPost}>
@@ -356,10 +304,16 @@ const AddPostPage = ({ navigation }) => {
         backdropOpacity={0.9}
         style={{ justifyContent: "center", alignItems: "center" }}
       >
-        <GetMap />
+        <GetMap
+          initRegion={region}
+          onSetLocation={(region) => {
+            setRegion(region);
+            setModalStatus(false);
+          }}
+        />
       </Modal>
 
-      <LoadingHandler status={isLoading} />
+      <LoadingHandler status={isLoading} onImmediateBreak={() => setIsLoading(false)}/>
     </KeyboardAvoidingView>
   );
 };

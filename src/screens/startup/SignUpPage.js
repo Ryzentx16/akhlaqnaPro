@@ -31,13 +31,11 @@ const isEdit = false;
 
 export default function SignUpPage({ navigation, route }) {
   const ourUser = route.params?.user;
-  const isEditProfile = ourUser === null ? false : true;
+  // const isEditProfile = ourUser === null ? false : true;
   const globleNavigation = useNavigation();
-
   const inputMaxLength = 55;
 
   const [modalStatus, setModalStatus] = useState(false);
-
   const [webViewerStatus, setWebViewerStatus] = useState(true);
 
   const [formattedValue, setFormattedValue] = useState("");
@@ -45,25 +43,11 @@ export default function SignUpPage({ navigation, route }) {
   const phoneInput = useRef(PhoneInput);
 
   const [birthday, setbirthday] = useState(new Date());
-
-  const [firstName, setFirstName] = useState(
-    isEditProfile ? ourUser.username : ""
-  );
-  const [lastName, setLastName] = useState(
-    isEditProfile
-      ? ourUser.name.charAt(ourUser.name.length - 2) +
-          ourUser.name.charAt(ourUser.name.length - 1)
-      : ""
-  );
-  const [phoneNumber, setPhoneNumber] = useState(
-    isEditProfile ? ourUser.phoneNumber : ""
-  );
-  const [newPassword, setNewPassword] = useState(
-    isEditProfile ? ourUser.password : ""
-  );
-  const [confirmPassword, setConfirmPassword] = useState(
-    isEditProfile ? ourUser.password : ""
-  );
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
@@ -121,48 +105,36 @@ export default function SignUpPage({ navigation, route }) {
 
   const onSubmit = () => {
     setModalStatus(true);
-    if (!isEditProfile) {
-      if (!vaildateSubmit()) {
-        setModalStatus(false);
-        Alert.alert(
-          // TODO: change it to ar
-          "Error",
-          "Please fill it up with your information " +
-            "\n" +
-            "and use the same password on both inputs " +
-            "number-pad"
-        );
-        return;
-      }
-
-      var data = {
-        firstName: firstName,
-        lastName: lastName,
-        phoneNumber: phoneNumber,
-        password: confirmPassword,
-      };
-
-      GraphQL.UserApiLogic.Queries.Signup(data).then((res) => {
-        setModalStatus(false);
-        if (res.success) {
-          navigation.navigate("LoginPage");
-        } else {
-          //to ar
-          Alert.alert("Error", res.errors.join("\n"));
-        }
-      });
-    } else {
+    if (!vaildateSubmit()) {
+      setModalStatus(false);
       Alert.alert(
-        currLang.signupPage.editalert.title,
-        currLang.signupPage.editalert.content
+        // TODO: change it to ar
+        "Error",
+        "Please fill it up with your information " +
+          "\n" +
+          "and use the same password on both inputs " +
+          "number-pad"
       );
-      globleNavigation.dispatch(
-        globleNavigation.reset({
-          index: 0,
-          routes: [{ name: "LoginPage" }],
-        })
-      );
+      return;
     }
+
+    var data = {
+      firstName: firstName,
+      lastName: lastName,
+      phoneNumber: phoneNumber,
+      password: confirmPassword,
+    };
+
+    GraphQL.UserApiLogic.Queries.Signup(data).then((res) => {
+      setModalStatus(false);
+      if (res.success) {
+        navigation.navigate("LoginPage");
+      } else {
+        //to ar
+        Alert.alert("Error", res.errors.join("\n"));
+      }
+    });
+    setModalStatus(false);
   };
 
   const onLogin = () => {
@@ -197,11 +169,7 @@ export default function SignUpPage({ navigation, route }) {
         </View>
 
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>
-            {isEditProfile
-              ? currLang.signupPage.editprofile
-              : currLang.signupPage.title}
-          </Text>
+          <Text style={styles.title}>{currLang.signupPage.title}</Text>
         </View>
 
         <View style={styles.inputsContainer}>
@@ -244,36 +212,34 @@ export default function SignUpPage({ navigation, route }) {
             </View>
           </View>
 
-          {!isEditProfile && (
-            <View style={styles.phonenumberContainer}>
-              <View style={styles.phonenumber}>
-                <PhoneInput
-                  ref={phoneInput}
-                  defaultCode="QA"
-                  layout="second"
-                  onChangeText={(text) => {
-                    setValid(phoneInput.current?.isValidNumber(text));
-                  }}
-                  onChangeFormattedText={(text) => {
-                    setPhoneNumber(text);
-                    setFormattedValue(text);
-                  }}
-                  textContainerStyle={{ flex: 1, backgroundColor: "white" }}
-                  textInputStyle={{
-                    fontSize: 16,
-                    height: 50,
-                    // backgroundColor: "red",
-                    textAlign: isRTL ? "right" : "left",
-                  }}
-                  textInputProps={{
-                    maxLength: inputMaxLength,
-                    placeholder: currLang.signupPage.phonenumber + " *",
-                    placeholderTextColor: "rgba(102,0,50,0.75)",
-                  }}
-                />
-              </View>
+          <View style={styles.phonenumberContainer}>
+            <View style={styles.phonenumber}>
+              <PhoneInput
+                ref={phoneInput}
+                defaultCode="QA"
+                layout="second"
+                onChangeText={(text) => {
+                  setValid(phoneInput.current?.isValidNumber(text));
+                }}
+                onChangeFormattedText={(text) => {
+                  setPhoneNumber(text);
+                  setFormattedValue(text);
+                }}
+                textContainerStyle={{ flex: 1, backgroundColor: "white" }}
+                textInputStyle={{
+                  fontSize: 16,
+                  height: 50,
+                  // backgroundColor: "red",
+                  textAlign: isRTL ? "right" : "left",
+                }}
+                textInputProps={{
+                  maxLength: inputMaxLength,
+                  placeholder: currLang.signupPage.phonenumber + " *",
+                  placeholderTextColor: "rgba(102,0,50,0.75)",
+                }}
+              />
             </View>
-          )}
+          </View>
 
           <View style={styles.birthdayContainer}>
             <TouchableOpacity style={styles.birthday} onPress={showDatepicker}>
@@ -315,41 +281,37 @@ export default function SignUpPage({ navigation, route }) {
           </View>
 
           <View style={styles.passwordContainer}>
-            {!isEditProfile && (
-              <>
-                <View style={styles.newPasswordContainer}>
-                  <TextInput
-                    maxLength={inputMaxLength}
-                    placeholder={currLang.signupPage.createnewpassword}
-                    placeholderTextColor={"rgba(102,0,50,0.75)"}
-                    onChangeText={(text) => {
-                      setNewPassword(text);
-                    }}
-                    secureTextEntry={true}
-                    style={{
-                      flex: 1,
-                      textAlign: isRTL ? "right" : "left",
-                      // backgroundColor: "red",
-                    }}
-                  />
-                </View>
-                <View style={styles.confirmPasswordContainer}>
-                  <TextInput
-                    placeholder={currLang.signupPage.confirmpassword}
-                    placeholderTextColor={"rgba(102,0,50,0.75)"}
-                    onChangeText={(text) => {
-                      setConfirmPassword(text);
-                    }}
-                    secureTextEntry={true}
-                    style={{
-                      flex: 1,
-                      textAlign: isRTL ? "right" : "left",
-                      // backgroundColor: "red",
-                    }}
-                  />
-                </View>
-              </>
-            )}
+            <View style={styles.newPasswordContainer}>
+              <TextInput
+                maxLength={inputMaxLength}
+                placeholder={currLang.signupPage.createnewpassword}
+                placeholderTextColor={"rgba(102,0,50,0.75)"}
+                onChangeText={(text) => {
+                  setNewPassword(text);
+                }}
+                secureTextEntry={true}
+                style={{
+                  flex: 1,
+                  textAlign: isRTL ? "right" : "left",
+                  // backgroundColor: "red",
+                }}
+              />
+            </View>
+            <View style={styles.confirmPasswordContainer}>
+              <TextInput
+                placeholder={currLang.signupPage.confirmpassword}
+                placeholderTextColor={"rgba(102,0,50,0.75)"}
+                onChangeText={(text) => {
+                  setConfirmPassword(text);
+                }}
+                secureTextEntry={true}
+                style={{
+                  flex: 1,
+                  textAlign: isRTL ? "right" : "left",
+                  // backgroundColor: "red",
+                }}
+              />
+            </View>
           </View>
         </View>
 
@@ -377,7 +339,11 @@ export default function SignUpPage({ navigation, route }) {
         onAgree={() => setWebViewerStatus(false)}
         onDisagree={onLogin}
       />
-      <LoadingHandler status={modalStatus} />
+
+      <LoadingHandler
+        status={modalStatus}
+        onImmediateBreak={() => setModalStatus(false)}
+      />
     </View>
   );
 }

@@ -7,7 +7,7 @@ import AppBottomTabNavigator from "./AppBottomTabNavigator";
 import ChangePasswordPage from "../screens/startup/ChangePasswordPage";
 import AppDrawerNavigator from "./AppDrawerNavigator";
 import { BackHandler, Alert, I18nManager } from "react-native";
-// import { Flag } from "react-native-country-picker-modal";
+import EditProfilePage from "../screens/startup/EditProfilePage";
 
 const Stack = createStackNavigator();
 
@@ -39,7 +39,7 @@ export default function AppStartupNavigator({ navigation, route }) {
           borderTopWidth: 3,
         },
       }}
-      screenListeners={{beforeRemove: null}}
+      screenListeners={{ beforeRemove: null }}
       tabbarop
       barStyle={{ backgroundColor: "black" }} //This is where you can manipulate its look.
     >
@@ -54,6 +54,8 @@ export default function AppStartupNavigator({ navigation, route }) {
       <Stack.Screen name="SignUpConfirmation" component={SignUpConfirmation} />
       <Stack.Screen name="ChangePasswordPage" component={ChangePasswordPage} />
       <Stack.Screen name="Home" component={AppDrawerNavigator} />
+
+      <Stack.Screen name="EditProfile" component={EditProfilePage} />
     </Stack.Navigator>
   );
 }

@@ -36,30 +36,36 @@ export default function PersonProfile({ navigation, route }) {
   });
 
   const onEdit = () => {
-    Alert.alert("Sorry!", "Coming Soon");
+    // Alert.alert("Sorry!", "Coming Soon");
 
-    // Alert.alert(
-    //   currLang.languagepage.applychangealert.title,
-    //   currLang.languagepage.applychangealert.content,
-    //   [
-    //     {
-    //       text: currLang.languagepage.applychangealert.buttons.yessingout,
-    //       onPress: () => {
-    //         globleNavigation.dispatch(
-    //           globleNavigation.reset({
-    //             index: 0,
-    //             routes: [{ name: "SignUpPage", params: { user: user } }],
-    //           })
-    //           // navigation.navigate({ name: "SignUpPage", params: {user: users[0]} })
-    //         );
-    //       },
-    //     },
-    //     {
-    //       text: currLang.languagepage.applychangealert.buttons.cancel,
-    //       onPress: null,
-    //     },
-    //   ]
-    // );
+    Alert.alert(
+      currLang.languagepage.applychangealert.title,
+      currLang.languagepage.applychangealert.content,
+      [
+        {
+          text: currLang.languagepage.applychangealert.buttons.yessingout,
+          onPress: () => {
+            OurUser.logOut(() => {
+              globleNavigation.dispatch(
+                globleNavigation.reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: "EditProfile",
+                      params: { user: user },
+                    },
+                  ],
+                })
+              );
+            });
+          },
+        },
+        {
+          text: currLang.languagepage.applychangealert.buttons.cancel,
+          onPress: null,
+        },
+      ]
+    );
   };
 
   const onImage = () => {
@@ -164,7 +170,10 @@ export default function PersonProfile({ navigation, route }) {
         perPage={4}
         Profile={user}
       />
-      <LoadingHandler status={modalStatus} />
+      <LoadingHandler
+        status={modalStatus}
+        onImmediateBreak={() => setModalStatus(false)}
+      />
     </>
   );
 }
