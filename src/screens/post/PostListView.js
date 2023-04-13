@@ -4,6 +4,7 @@ import PaginationListView from "../../components/PaginationListView";
 import languages from "../../strings/LanguagesController";
 import CommentPage from "../comment/CommentPage";
 import themes from "../../ThemeController";
+import MapViewer from "../../components/MapViewer";
 
 let textColor = themes._currTextTheme;
 let backColor = themes._currBackColorTheme;
@@ -11,7 +12,7 @@ let themeColor = themes._currTheme;
 
 //type of posts 1 for general 2 for islost and 3 for isfound and 4 for both
 export default function PostListView(props) {
-  const { retrieveData, type, perPage, navigation } = props;
+  const { retrieveData, type, perPage, navigation, MapViewer } = props;
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [commentPost, setCommentPost] = useState(null);
 
@@ -60,6 +61,7 @@ export default function PostListView(props) {
           }}
         />
       )}
+      
     </>
   );
 }

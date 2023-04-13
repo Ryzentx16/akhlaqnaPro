@@ -24,7 +24,7 @@ export default function InputBox(props) {
   var heightLimit = 135;
 
   const [message, setMessage] = useState("");
-  const [isComment, setIsComment] = useState(props.hasOwnProperty("isComment"));
+  const isComment = props.hasOwnProperty("isComment");
   const [textInputHeight, setTextInputHeight] = useState(25);
   const [isFocus, setIsFocus] = useState(props.onFocus);
   const [bPlaceholder, setBplaceholder] = useState(
@@ -67,7 +67,7 @@ export default function InputBox(props) {
   });
 
   const onSend = () => {
-    props.onSendReply(message);
+    props.onSendReply(message.trim());
     Keyboard.dismiss();
     setIsFocus(false);
     setBplaceholder(isComment ? "Type a comment" : "Type a message");

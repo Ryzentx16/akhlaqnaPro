@@ -39,7 +39,6 @@ export default function LoginPage({ navigation }) {
   const [isChecked, setIsChecked] = useState(false);
 
   const checkLogin = () => {
-    setUserBackModalStatus(false);
     setLoadingStatus(true);
 
     if (
@@ -71,6 +70,8 @@ export default function LoginPage({ navigation }) {
         if (isChecked) {
           Storage.storeData("keepLogging", true);
         }
+        setUserBackModalStatus(false);
+
         navigation.navigate("Home");
       }
     });
@@ -94,7 +95,7 @@ export default function LoginPage({ navigation }) {
 
   useEffect(() => {
     Storage.getData("UserData").then((v) => {
-      setPhoneNumber(v.phoneNumber);
+      setPhoneNumber(v?.phoneNumber);
     });
 
     const checkLogin = async () => {
@@ -240,7 +241,10 @@ export default function LoginPage({ navigation }) {
         </View>
       </ScrollView>
 
-      <LoadingHandler status={loadingStatus} onImmediateBreak={() => setLoadingStatus(false)}/>
+      <LoadingHandler
+        status={loadingStatus}
+        onImmediateBreak={() => setLoadingStatus(false)}
+      />
       <UserBackModal
         status={userBackModalStatus}
         phoneNumber={phoneNumber}

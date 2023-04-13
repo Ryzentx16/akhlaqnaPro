@@ -1,11 +1,12 @@
 import React, { useMemo, useRef, useState, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import CommentCard from "./CommentCard";
 import { GraphQL, Utils } from "../../../API";
 import PaginationListView from "../../components/PaginationListView";
 import BottomSheetHandler from "../../components/BottomSheetHandler";
 import OurUser from "../../OurUser";
+import * as CameraPicker from "../../components/CameraPicker";
 
 export default function CommentPage(props) {
   const { post, isClosed } = props;
@@ -19,61 +20,14 @@ export default function CommentPage(props) {
     return result;
   };
 
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setImage(result.assets[0]);
-    } else {
-      console.log("cancelled");
-    }
-  };
-
-  const takeImage = async () => {
-    // let pS = ;
-    await ImagePicker.requestCameraPermissionsAsync();
-    let r = await ImagePicker.getCameraPermissionsAsync().catch((er) =>
-      console.error(er)
-    );
-    setTest(JSON.stringify(r));
-
-    if (!r.granted) {
-      if (r.canAskAgain) {
-        await ImagePicker.requestCameraPermissionsAsync();
-        r = await ImagePicker.getCameraPermissionsAsync().catch((er) =>
-          console.error(er)
-        );
-        console.log(r);
-      } else {
-        alert("u refused!");
-        return;
-      }
-    }
-
-    if (r.granted) {
-      // No permissions request is necessary for launching the image library
-      const result = await ImagePicker.launchCameraAsync({
-        aspect: [4, 3],
-        quality: 0.4, // adjust the quality to reduce file size
-        exif: false, // ignore EXIF data to prevent image rotation
-      }).catch((er) => console.error(er));
-
-      if (!result.canceled) {
-        setImage(result.assets[0]);
-      } else {
-        console.log("cancelled");
-      }
-    }
-  };
-
   const onSend = async (message) => {
     setIsSend(true);
     const createComment = (imagePath = null) => {
+      if (!message) {
+        Alert.alert("Error", "We cannot accept empty text comment");
+        return;
+      }
+
       const data = {
         content: message,
         userId: OurUser.user.id,
@@ -106,8 +60,8 @@ export default function CommentPage(props) {
 
   return (
     <BottomSheetHandler
-      onPickImage={pickImage}
-      onTakeImage={takeImage}
+      onPickImage={() => CameraPicker.pickImage(setImage)}
+      onTakeImage={() => CameraPicker.takeImage(setImage)}
       InputBox={onSend}
       post={post}
       onClose={isClosed}

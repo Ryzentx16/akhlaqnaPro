@@ -46,7 +46,7 @@ const PaginationListView = (props) => {
 
   // On First Render
   useMemo(() => {
-    console.log("New Render");
+    // console.log("New Render");
 
     //Reset Pages
     setIsEndReached(false);
@@ -63,9 +63,9 @@ const PaginationListView = (props) => {
 
   const handleLoadMore = async () => {
     counter += 1;
-    console.log(`..................Loading More (${counter}).................`);
+    // console.log(`..................Loading More (${counter}).................`);
 
-    console.log(`isEnd: ${isEndReached}`);
+    // console.log(`isEnd: ${isEndReached}`);
     if (!isEndReached) {
       result = await fetchData(page + 1);
 
@@ -76,9 +76,9 @@ const PaginationListView = (props) => {
         setIsEndReached(true); // mohm
       }
     }
-    console.log(
-      `..................Loading More Done (${counter}).................`
-    );
+    // console.log(
+    //   `..................Loading More Done (${counter}).................`
+    // );
   };
 
   const refreshHandler = () => {

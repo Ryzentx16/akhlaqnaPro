@@ -2,23 +2,18 @@ import React from "react";
 import { TouchableOpacity } from "react-native";
 import { View, StyleSheet, Text } from "react-native";
 
-export default function AmantiButton(props) {
-  const isSwapColors = props.hasOwnProperty("Swap");
+export default function SwappedColors(props) {
 
   return (
     <TouchableOpacity
       style={[
         styles.container,
         props.style,
-        { backgroundColor: isSwapColors ? "transparent" : "#660032" },
+        { backgroundColor: "transparent" },
       ]}
       onPress={props.onPress}
     >
-      <Text
-        style={[styles.title, { color: isSwapColors ? "#660032" : "white" }]}
-      >
-        {props.title}
-      </Text>
+      <Text style={[styles.title, { color: "#660032" }]}>{props.title}</Text>
     </TouchableOpacity>
   );
 }

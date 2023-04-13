@@ -97,6 +97,17 @@ const styles = StyleSheet.create({
     height: 140,
     justifyContent: "center",
     backgroundColor: backColor,
+    shadowColor: "#944d6f",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.29,
+    shadowRadius: 4.65,
+
+    elevation: 7,
+    borderBottomRightRadius: 10,
+    borderBottomLeftRadius: 10,
   },
   circle: {
     width: 750,

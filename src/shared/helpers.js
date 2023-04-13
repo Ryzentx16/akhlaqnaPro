@@ -28,12 +28,13 @@ const Helper = {
     var nd = new Date(utc + 3600000 * offset);
 
     // return time as a string
-    return nd.toLocaleString();
+    return nd;
   },
   getDuration: (date) => {
     var date = new Date(parseInt(date)).getTime();
-    var currDate = new Date(Helper.calcTime("+0")).getTime();
+    var currDate = new Date(Helper.calcTime("+3")).getTime();
     var duration = currDate - date;
+    // console.log(currDate);
 
     var days = Math.floor(duration / (1000 * 60 * 60 * 24));
     var hours = Math.floor(
@@ -41,6 +42,8 @@ const Helper = {
     );
     var minutes = Math.floor((duration % (1000 * 60 * 60)) / (1000 * 60));
     var seconds = Math.floor((duration % (1000 * 60)) / 1000);
+
+      // console.log(`${days} days | ${hours} hours | ${minutes} minutes | ${seconds} seconds`);
 
     var durationString = "";
 

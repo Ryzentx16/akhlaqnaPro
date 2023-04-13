@@ -12,7 +12,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import SearchPage from "../screens/search/SearchPage";
-import AddPostPage from "../screens/AddpostPage";
 import commentPage from "../screens/comment/CommentPage";
 import NotificationsPage from "../screens/notification/NotificationsPage";
 import AppHeader from "../components/AppHeader";
@@ -22,6 +21,7 @@ import AppDrawerNavigator from "./AppDrawerNavigator";
 
 import logo from "../../assets/logo.js";
 import Svg, { Ellipse, Path, SvgXml } from "react-native-svg";
+import AddPostPage from "./../screens/addpost/AddpostPage";
 
 const Tab = createBottomTabNavigator();
 const iconsize = 30;
@@ -58,7 +58,7 @@ export default function AppBottomTabNavigator({ navigation }) {
         header: () => <AppHeader navigation={navigation} isDrawer={true} />,
       }}
       backBehavior={"initialRoute"}
-      screenListeners={{beforeRemove: null}}
+      screenListeners={{ beforeRemove: null }}
       tabbarop
       barStyle={{ backgroundColor: "black" }} //This is where you can manipulate its look.
     >

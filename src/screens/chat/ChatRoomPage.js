@@ -111,6 +111,11 @@ export default function ChatsPage({ route }) {
 
   const onSend = async (message) => {
     const createMessage = (imagePath = null) => {
+      if (!message) {
+        Alert.alert("Error", "We cannot accept empty text message");
+        return;
+      }
+
       const data = {
         content: message,
         senderId: OurUser.user.id,

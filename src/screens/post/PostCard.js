@@ -9,8 +9,12 @@ import {
   Alert,
 } from "react-native";
 import UserAvatar from "@muhzi/react-native-user-avatar";
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import { Ionicons, AntDesign } from "react-native-vector-icons";
+import {
+  Ionicons,
+  AntDesign,
+  Entypo,
+  FontAwesome5,
+} from "react-native-vector-icons";
 import SeeMoreText from "../../components/SeeMoreText";
 import Helper from "../../shared/helpers";
 
@@ -19,6 +23,7 @@ import { GraphQL } from "../../../API";
 import ImageViewer from "../../components/ImageViewer";
 import OurUser from "../../OurUser";
 import domain from "../../../API/domain";
+import MapViewer from "../../components/MapViewer";
 
 let textColor = themes._currTextTheme;
 let backColor = themes._currBackColorTheme;
@@ -80,6 +85,7 @@ export default function PostCard(props) {
   const [isLiked, setIsLiked] = useState(post.isLikedByMe);
   const [imageWidth, setImageWidth] = useState(null);
   const [imageHeight, setImageHeight] = useState(450);
+  const [mapViewStatus, setMapViewStatus] = useState(false);
 
   const onMakeLike = () => {
     if (isLiked) {
@@ -111,7 +117,7 @@ export default function PostCard(props) {
   });
 
   useEffect(() => {
-    console.log(post.image !== null);
+    // console.log(post.image !== null);
     if (post.image !== null) {
       Image.getSize(
         `${domain}/download/` + post.image,
@@ -142,13 +148,24 @@ export default function PostCard(props) {
           />
         </TouchableOpacity>
         <View style={headerStyles.headerDetailsContainer}>
-          <Text style={headerStyles.userName}>
-            {post.user.firstName + " " + post.user.lastName}
-          </Text>
+          <View style={{ flex: 1, alignItems: "flex-start" }}>
+            <Text style={headerStyles.userName}>
+              {post.user.firstName + " " + post.user.lastName}
+            </Text>
 
-          <Text style={headerStyles.postTime}>
-            {postDuration + " (Al Rayaan)"}
-          </Text>
+            <Text style={headerStyles.postTime}>
+              {postDuration + ` (${post.area || "Area Disabled"})`}
+            </Text>
+          </View>
+
+          {post.location && (
+            <TouchableOpacity
+              style={headerStyles.location}
+              onPress={() => setMapViewStatus(true)}
+            >
+              <Entypo name={"location"} size={25} color={"#660032"} />
+            </TouchableOpacity>
+          )}
         </View>
         <View style={headerStyles.headerIconContainer}>
           {isTypeEnable && postType(post.postTypes)}
@@ -191,6 +208,20 @@ export default function PostCard(props) {
         />
         {/* <ActionButton type={"share"} details={post.numOfShares} /> */}
       </View>
+
+      <MapViewer
+        status={mapViewStatus}
+        initRegion={
+          JSON.parse(post.location) || {
+            latitude: 25.300946829658887,
+            longitude: 51.465748474001884,
+            latitudeDelta: 0.6631861591450701,
+            longitudeDelta: 0.3281260281801224,
+          }
+        }
+        onCancel={() => setMapViewStatus(false)}
+        fixedView={true}
+      />
     </View>
   );
 }
@@ -217,6 +248,8 @@ const headerStyles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "flex-start", //for RTL
+    // backgroundColor: 'red',
+    flexDirection: "row",
     paddingLeft: 5,
   },
 
@@ -240,6 +273,14 @@ const headerStyles = StyleSheet.create({
   postTime: {
     fontSize: 9,
     color: timeColor,
+  },
+
+  location: {
+    // flex: 1,
+    // flexDirection: "row",
+    justifyContent: "center",
+    alignSelf: "center",
+    // backgroundColor: "red",
   },
 });
 

@@ -29,7 +29,7 @@ export default function PostsPage({ navigation }) {
   const retrieveData = async (params) => {
     params.userId = OurUser.user.id;
     const result = await GraphQL.PostApiLogic.Queries.Retrieve(params);
-
+    // console.log(result[0]);
     return result;
   };
 
@@ -40,6 +40,7 @@ export default function PostsPage({ navigation }) {
         type={1}
         navigation={navigation}
         perPage={4}
+        
       />
     </>
   );

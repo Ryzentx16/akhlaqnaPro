@@ -113,12 +113,12 @@ const Queries = {
       statement: query,
       variables: params,
     });
-
+    // console.warn(result.data.post[2]);
     if ("type" in result && "errors" in result) {
       //error
       return result;
     }
-    
+
     return result.data.post;
   },
 };
