@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   FlatList,
   Image,
@@ -20,10 +20,14 @@ import PostListView from "../post/PostListView";
 import { GraphQL } from "../../../API";
 import domain from "../../../API/domain";
 import LoadingHandler from "../../components/LoadingHandler";
+import ThemeContext from "../../themes/ThemeContext";
+import { OriginalColors } from "../../components/AmantiButtons";
 
 const isRTL = I18nManager.isRTL;
 
 export default function PersonProfile({ navigation, route }) {
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+
   const user = route.params?.user;
   const isDrawer = route.params?.isDrawer;
   const globleNavigation = useNavigation();
@@ -108,10 +112,12 @@ export default function PersonProfile({ navigation, route }) {
   };
 
   return (
-    <>
+    <View style={{ flex: 1, backgroundColor: theme.backColor }}>
       {/* {<AppHeader style={{ top: -12 }} navigation={navigation} isDrawer />} */}
-      <View style={headerStyles.headContaienr}>
-        <View style={headerStyles.head}>
+      <View
+        style={[headerStyles.headContaienr, { backgroundColor: theme.primary }]}
+      >
+        <View style={[headerStyles.head, { borderColor: theme.border }]}>
           <View style={headerStyles.profileContainer}>
             <View style={styles.imageContainer}>
               <UserAvatar
@@ -121,7 +127,7 @@ export default function PersonProfile({ navigation, route }) {
               />
             </View>
             <View style={headerStyles.detailsContaienr}>
-              <Text style={headerStyles.name}>
+              <Text style={[headerStyles.name, { color: theme.largeText }]}>
                 {user.firstName + " " + user.lastName}
               </Text>
               {/* <MaterialCommunityIcons
@@ -134,14 +140,19 @@ export default function PersonProfile({ navigation, route }) {
           <View style={headerStyles.actionContaienr}>
             {!isUserMe ? (
               <>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   style={headerStyles.btnStyle}
                   onPress={messagePerson}
                 >
                   <View style={headerStyles.messageButton}>
                     <Text style={headerStyles.messageText}>Message</Text>
                   </View>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
+                <OriginalColors
+                  title={"Message"}
+                  onPress={messagePerson}
+                  textStyle={{ fontSize: 16 }}
+                />
                 {/* <TouchableOpacity style={headerStyles.btnStyle}>
                   <View style={headerStyles.lostAndFoundButton}>
                     <Text style={headerStyles.lostAndFoundText}>
@@ -151,14 +162,19 @@ export default function PersonProfile({ navigation, route }) {
                 </TouchableOpacity> */}
               </>
             ) : (
-              <TouchableOpacity
-                style={headerStyles.myBtnStyle}
+              // <TouchableOpacity
+              //   style={headerStyles.myBtnStyle}
+              //   onPress={onEdit}
+              // >
+              //   <View style={headerStyles.editProfileButton}>
+              //     <Text style={headerStyles.editProfileText}>Edit Profile</Text>
+              //   </View>
+              // </TouchableOpacity>
+              <OriginalColors
+                title={"Edit Profile"}
                 onPress={onEdit}
-              >
-                <View style={headerStyles.editProfileButton}>
-                  <Text style={headerStyles.editProfileText}>Edit Profile</Text>
-                </View>
-              </TouchableOpacity>
+                textStyle={{ fontSize: 16 }}
+              />
             )}
           </View>
         </View>
@@ -174,7 +190,7 @@ export default function PersonProfile({ navigation, route }) {
         status={modalStatus}
         onImmediateBreak={() => setModalStatus(false)}
       />
-    </>
+    </View>
   );
 }
 

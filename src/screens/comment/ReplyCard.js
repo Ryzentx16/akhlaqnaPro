@@ -1,25 +1,13 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import UserAvatar from "@muhzi/react-native-user-avatar";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import SeeMoreText from "../../components/SeeMoreText";
 import Helper from "../../shared/helpers";
 
-import themes from "../../ThemeController";
-
-let textColor = themes._currTextTheme;
-let backColor = themes._currBackColorTheme;
-let themeColor = themes._currTheme;
-
 export default function ReplyCard(props) {
   const { reply } = props;
-  var postDuration = Helper.getPostDuration(reply.createdAt);
-
-  useEffect(() => {
-    textColor = themes._currTextTheme;
-    backColor = themes._currBackColorTheme;
-    themeColor = themes._currTheme;
-  });
+  var postDuration = Helper.getDuration(reply.createdAt);
 
   return (
     <View style={styles.container}>
@@ -51,7 +39,7 @@ const detailsStyles = StyleSheet.create({
     marginLeft: 5,
     marginRight: 20,
     borderRadius: 18,
-    backgroundColor: themeColor === 'light' ? '#ffffff' : "#CCCCCC",
+    backgroundColor: "#ffffff",
   },
 
   headerContainer: {
@@ -80,12 +68,12 @@ const detailsStyles = StyleSheet.create({
 
   postTime: {
     fontSize: 9,
-    color: themeColor === 'light' ? "#65676b" : '#FFFFFF',
+    color: "#65676b",
   },
 
   detailsText: {
     fontSize: 13,
-    color: textColor,
+    color: "#65676b",
     lineHeight: 18,
   },
 
@@ -95,7 +83,7 @@ const detailsStyles = StyleSheet.create({
   replybuttonText: {
     fontSize: 12,
     fontWeight: "bold",
-    color: themeColor === 'light' ? "#65676b" : '#FFFFFF',
+    color: "#65676b",
     marginLeft: 5,
   },
 });
@@ -109,7 +97,7 @@ const styles = StyleSheet.create({
     marginBottom: 17,
     paddingLeft: 10,
     // backgroundColor:'red',
-    marginLeft: 60 ,
+    marginLeft: 60,
   },
 
   avatarContainer: {

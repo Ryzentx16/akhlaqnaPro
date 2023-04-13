@@ -1,5 +1,5 @@
 import UserAvatar from "@muhzi/react-native-user-avatar";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   Image,
   ScrollView,
@@ -12,17 +12,15 @@ import {
   Alert,
 } from "react-native";
 import { FontAwesome, Entypo, Ionicons } from "react-native-vector-icons";
-
-import themes from "../ThemeController";
 import OurUser from "../OurUser";
 import domain from "../../API/domain";
+import ThemeContext from "./../themes/ThemeContext";
 
-let textColor = themes._currTextTheme;
-let backColor = themes._currBackColorTheme;
 const isRTL = I18nManager.isRTL;
 
 export default function AppHeader(props) {
   const { navigation, isDrawer } = props;
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
 
   const onLogo = () => {
     navigation.navigate("PostsPage");
@@ -36,19 +34,27 @@ export default function AppHeader(props) {
 
   const isSettings = props.hasOwnProperty("isSettings");
 
-  useEffect(() => {
-    textColor = themes._currTextTheme;
-    backColor = themes._currBackColorTheme;
-  });
-
   return (
     <>
       {isDrawer ? (
-        <View style={[styles.container, props.style]}>
-          <View style={styles.circle}></View>
-          <TouchableOpacity style={styles.logo} onPress={onLogo}>
+        <View
+          style={[
+            styles.container,
+            props.style,
+            { backgroundColor: theme.primary },
+          ]}
+        >
+          <View style={[styles.circle, { borderColor: theme.secondary }]} />
+          <TouchableOpacity
+            style={[styles.logo, { borderColor: theme.secondary }]}
+            onPress={onLogo}
+          >
             <Image
-              source={require("../../assets/Logo.png")}
+              source={
+                isDarkMode
+                  ? require("../../assets/Amanti.png")
+                  : require("../../assets/Logo.png")
+              }
               style={styles.imageLogo}
             />
             {/*<AmanatiLogo style={styles.imageLogo}/>*/}
@@ -69,7 +75,7 @@ export default function AppHeader(props) {
             <Entypo
               name="menu"
               size={30}
-              color={textColor}
+              color={theme.secondary}
               style={styles.menuIcon}
             />
           </TouchableOpacity>
@@ -81,7 +87,7 @@ export default function AppHeader(props) {
               <Ionicons
                 name="arrow-back"
                 size={45}
-                color={textColor}
+                color={"#660032"}
                 style={styles.backIcon}
               />
             </TouchableOpacity>
@@ -96,7 +102,6 @@ const styles = StyleSheet.create({
   container: {
     height: 140,
     justifyContent: "center",
-    backgroundColor: backColor,
     shadowColor: "#944d6f",
     shadowOffset: {
       width: 0,
@@ -113,7 +118,7 @@ const styles = StyleSheet.create({
     width: 750,
     height: 800,
     borderRadius: 800,
-    borderColor: textColor,
+    borderColor: "#660032",
     borderWidth: 2,
     alignSelf: "center",
     marginTop: -700,
@@ -124,7 +129,7 @@ const styles = StyleSheet.create({
     height: 70,
     width: 70,
     alignSelf: "center",
-    borderColor: textColor,
+    borderColor: "#660032",
     borderWidth: 2,
     borderRadius: 150 / 2,
 

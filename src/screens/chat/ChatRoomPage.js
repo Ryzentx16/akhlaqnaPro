@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { BackHandler, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import OurUser from "../../OurUser";
-import themes from "../../ThemeController";
 import { GraphQL } from "../../../API";
 import ChatRoomListView from "./ChatRoomListView";
 import InputBox from "./inputBox";
 import { Utils } from "../../../API";
+import * as CameraPicker from "../../components/CameraPicker";
+import ThemeContext from "../../themes/ThemeContext";
 
 export default function ChatsPage({ route }) {
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+
   const [isSend, setIsSend] = useState(false);
   const [image, setImage] = useState(null);
   const [message, setMessage] = useState(null);
@@ -24,12 +27,6 @@ export default function ChatsPage({ route }) {
     );
 
     return () => backHandler.remove();
-  });
-
-  useEffect(() => {
-    textColor = themes._currTextTheme;
-    backColor = themes._currBackColorTheme;
-    themeColor = themes._currTheme;
   });
 
   useEffect(() => {
@@ -50,57 +47,6 @@ export default function ChatsPage({ route }) {
 
   const refreshCallBack = () => {
     setIsSend(false);
-  };
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setImage(result.assets[0]);
-    } else {
-      console.log("cancelled");
-    }
-  };
-
-  const takeImage = async () => {
-    // let pS = ;
-    await ImagePicker.requestCameraPermissionsAsync();
-    let r = await ImagePicker.getCameraPermissionsAsync().catch((er) =>
-      console.error(er)
-    );
-    setTest(JSON.stringify(r));
-
-    if (!r.granted) {
-      if (r.canAskAgain) {
-        await ImagePicker.requestCameraPermissionsAsync();
-        r = await ImagePicker.getCameraPermissionsAsync().catch((er) =>
-          console.error(er)
-        );
-        console.log(r);
-      } else {
-        alert("u refused!");
-        return;
-      }
-    }
-
-    if (r.granted) {
-      // No permissions request is necessary for launching the image library
-      const result = await ImagePicker.launchCameraAsync({
-        aspect: [4, 3],
-        quality: 0.4, // adjust the quality to reduce file size
-        exif: false, // ignore EXIF data to prevent image rotation
-      }).catch((er) => console.error(er));
-
-      if (!result.canceled) {
-        setImage(result.assets[0]);
-      } else {
-        console.log("cancelled");
-      }
-    }
   };
 
   const retrieveData = async (params) => {
@@ -142,7 +88,7 @@ export default function ChatsPage({ route }) {
   };
 
   return (
-    <View style={{ flex: 1, marginTop: 10 }}>
+    <View style={{ flex: 1, marginTop: 10, backgroundColor: theme.backColor }}>
       <ChatRoomListView
         retrieveData={retrieveData}
         perPage={10}
@@ -152,8 +98,8 @@ export default function ChatsPage({ route }) {
       />
       <InputBox
         image={image}
-        onPickImage={pickImage}
-        onTakeImage={takeImage}
+        onPickImage={() => CameraPicker.pickImage(setImage)}
+        onTakeImage={() => CameraPicker.takeImage(setImage)}
         onCancel={() => setImage(null)}
         onSendReply={onSend}
       />

@@ -30,18 +30,18 @@ export default function AppStartupNavigator({ navigation, route }) {
       screenOptions={{
         gestureEnabled: false,
         headerShown: false,
-        tabBarActiveTintColor: "red",
-        tabBarInactiveTintColor: "black",
-        tabBarHideOnKeyboard: true,
-        tabBarStyle: {
-          backgroundColor: "white",
-          borderTopColor: "#660032",
-          borderTopWidth: 3,
-        },
+        // tabBarActiveTintColor: "red",
+        // tabBarInactiveTintColor: "black",
+        // tabBarHideOnKeyboard: true,
+        // tabBarStyle: {
+        //   backgroundColor: "white",
+        //   borderTopColor: "#660032",
+        //   borderTopWidth: 3,
+        // },
       }}
       screenListeners={{ beforeRemove: null }}
-      tabbarop
-      barStyle={{ backgroundColor: "black" }} //This is where you can manipulate its look.
+      // tabbarop
+      // barStyle={{ backgroundColor: "black" }} //This is where you can manipulate its look.
     >
       <Stack.Screen name="LoginPage" component={LoginPage} />
       <Stack.Screen

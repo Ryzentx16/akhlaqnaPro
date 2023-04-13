@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -13,14 +13,12 @@ import SeeMoreText from "../../components/SeeMoreText";
 import Helper from "../../shared/helpers";
 import ReplyCard from "./ReplyCard";
 import ImageViewer from "../../components/ImageViewer";
-import themes from "../../ThemeController";
 import domain from "../../../API/domain";
-
-let textColor = themes._currTextTheme;
-let backColor = themes._currBackColorTheme;
-let themeColor = themes._currTheme;
+import ThemeContext from "../../themes/ThemeContext";
 
 export default function CommentCard(props) {
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+
   const { comment, onReply } = props;
   const [isReplying, setIsReplying] = useState(false);
   const [replyContent, setReplyContent] = useState("");
@@ -34,12 +32,6 @@ export default function CommentCard(props) {
     setIsReplying(false);
     setReplyContent("");
   };
-
-  useEffect(() => {
-    textColor = themes._currTextTheme;
-    backColor = themes._currBackColorTheme;
-    themeColor = themes._currTheme;
-  });
 
   useEffect(() => {
     if (comment.image !== null) {
@@ -57,18 +49,29 @@ export default function CommentCard(props) {
     <>
       <View style={styles.container}>
         <View style={styles.avatarContainer}>
-          <UserAvatar size={35} src={`${domain}/download/` + comment.user.profileImage} fontSize={15} />
+          <UserAvatar
+            size={35}
+            src={`${domain}/download/` + comment.user.profileImage}
+            fontSize={15}
+          />
         </View>
-        <View style={detailsStyles.container}>
+        <View
+          style={[detailsStyles.container, { backgroundColor: theme.primary }]}
+        >
           <View style={detailsStyles.headerContainer}>
             <Text
-              style={detailsStyles.userName}
+              style={[detailsStyles.userName, { color: theme.largeText }]}
             >{`${comment.user.firstName} ${comment.user.lastName}`}</Text>
-            <Text style={detailsStyles.postTime}>{commentDuration}</Text>
+            <Text style={[detailsStyles.postTime, { color: theme.smallText }]}>
+              {commentDuration}
+            </Text>
           </View>
           <View style={detailsStyles.commentDetailsContainer}>
             <SeeMoreText
-              textStyle={detailsStyles.detailsText}
+              textStyle={[
+                detailsStyles.detailsText,
+                { color: theme.mediumText },
+              ]}
               text={comment.content}
               numberOfLines={6}
             />
@@ -76,10 +79,7 @@ export default function CommentCard(props) {
           {comment.image !== null && (
             <View style={detailsStyles.imageContainer}>
               <ImageViewer
-                uri={
-                  `${domain}/download/` +
-                  comment.image
-                }
+                uri={`${domain}/download/` + comment.image}
                 isFullScreen={true}
                 maxHeight={imageHeight >= 250 ? 250 : imageHeight}
                 imageHeight={imageHeight}
@@ -95,7 +95,7 @@ export default function CommentCard(props) {
               >
                 <MaterialCommunityIcons
                   name={"reply"}
-                  color={themeColor === "light" ? "#65676b" : "#FFFFFF"}
+                  color={"#65676b"}
                   size={20}
                 />
                 <Text style={detailsStyles.replybuttonText}>Reply</Text>
@@ -127,7 +127,7 @@ const detailsStyles = StyleSheet.create({
     marginLeft: 5,
     marginRight: 20,
     borderRadius: 18,
-    backgroundColor: themeColor === "light" ? "#ffffff" : "#CCCCCC",
+    backgroundColor: "#ffffff",
 
     overflow: "hidden",
   },
@@ -152,18 +152,18 @@ const detailsStyles = StyleSheet.create({
   userName: {
     fontSize: 12,
     fontWeight: "bold",
-    color: textColor,
+    color: "#660032",
     marginRight: 5,
   },
 
   postTime: {
     fontSize: 9,
-    color: themeColor === "light" ? "#65676b" : "#FFFFFF",
+    color: "#65676b",
   },
 
   detailsText: {
     fontSize: 13,
-    color: textColor,
+    color: "#660032",
     lineHeight: 18,
   },
   imageContainer: {
@@ -181,7 +181,7 @@ const detailsStyles = StyleSheet.create({
   replybuttonText: {
     fontSize: 12,
     fontWeight: "bold",
-    color: themeColor === "light" ? "#65676b" : "#FFFFFF",
+    color: "#65676b",
     marginLeft: 5,
   },
 

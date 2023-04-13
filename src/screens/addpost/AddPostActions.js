@@ -6,7 +6,8 @@ import { MaterialIcons } from "react-native-vector-icons";
 import { Entypo } from "react-native-vector-icons";
 import OriginalColors from "./../../components/AmantiButtons/OriginalColors";
 import languages from "./../../strings/LanguagesController";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
+import ThemeContext from "../../themes/ThemeContext";
 
 export default function AddpostActions({
   takeImage,
@@ -14,6 +15,8 @@ export default function AddpostActions({
   onLocation,
   onPost,
 }) {
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+
   let currLang = languages.currLang();
   useEffect(() => {
     currLang = languages.currLang();
@@ -23,20 +26,20 @@ export default function AddpostActions({
     <View style={styles.actionsContainer}>
       <View style={styles.attachmentContainer}>
         <TouchableOpacity style={styles.actionBtnContainer} onPress={takeImage}>
-          <FontAwesome name={"camera"} size={30} color={"#660032"} />
+          <FontAwesome name={"camera"} size={30} color={theme.secondary} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.actionBtnContainer} onPress={pickImage}>
           <MaterialIcons
             name={"add-photo-alternate"}
             size={40}
-            color={"#660032"}
+            color={theme.secondary}
           />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.actionBtnContainer}
           onPress={onLocation}
         >
-          <Entypo name={"location"} size={30} color={"#660032"} />
+          <Entypo name={"location"} size={30} color={theme.secondary} />
         </TouchableOpacity>
       </View>
 

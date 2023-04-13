@@ -4,7 +4,6 @@ import { BackHandler } from "react-native";
 import AppHeader from "../../components/AppHeader";
 import PostListView from "./PostListView";
 import OurUser from "../../OurUser";
-import themes from "../../ThemeController";
 import { GraphQL } from "../../../API";
 
 function FoundPage({ navigation }) {
@@ -19,12 +18,6 @@ function FoundPage({ navigation }) {
     );
 
     return () => backHandler.remove();
-  });
-
-  useEffect(() => {
-    textColor = themes._currTextTheme;
-    backColor = themes._currBackColorTheme;
-    themeColor = themes._currTheme;
   });
 
   const retrieveData = async (params) => {

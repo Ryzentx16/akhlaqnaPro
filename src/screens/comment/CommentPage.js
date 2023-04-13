@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState, useEffect } from "react";
+import React, { useMemo, useRef, useState, useEffect, useContext } from "react";
 import { View, StyleSheet, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import CommentCard from "./CommentCard";
@@ -7,8 +7,11 @@ import PaginationListView from "../../components/PaginationListView";
 import BottomSheetHandler from "../../components/BottomSheetHandler";
 import OurUser from "../../OurUser";
 import * as CameraPicker from "../../components/CameraPicker";
+import ThemeContext from "../../themes/ThemeContext";
 
 export default function CommentPage(props) {
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+
   const { post, isClosed } = props;
   const [isSend, setIsSend] = useState(false);
   const [image, setImage] = useState(null);
@@ -68,7 +71,12 @@ export default function CommentPage(props) {
       image={image} // image to show in InputBox
       onCancel={() => setImage(null)}
     >
-      <View style={commentsStyles.container}>
+      <View
+        style={[
+          commentsStyles.container,
+          { backgroundColor: isDarkMode ? theme.backColor : "#c8c7c8" },
+        ]}
+      >
         <View style={commentsStyles.commentsContainer}>
           <PaginationListView
             perPage={5}

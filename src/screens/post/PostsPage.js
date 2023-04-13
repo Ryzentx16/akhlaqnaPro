@@ -1,12 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { BackHandler } from "react-native";
 
 import PostListView from "./PostListView";
 import OurUser from "../../OurUser";
-import themes from "../../ThemeController";
 import { GraphQL } from "../../../API";
+import ThemeContext from "../../themes/ThemeContext";
+import { View } from "react-native";
 
 export default function PostsPage({ navigation }) {
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+
   useEffect(() => {
     const backAction = () => {
       return true;
@@ -20,12 +23,6 @@ export default function PostsPage({ navigation }) {
     return () => backHandler.remove();
   });
 
-  useEffect(() => {
-    textColor = themes._currTextTheme;
-    backColor = themes._currBackColorTheme;
-    themeColor = themes._currTheme;
-  });
-
   const retrieveData = async (params) => {
     params.userId = OurUser.user.id;
     const result = await GraphQL.PostApiLogic.Queries.Retrieve(params);
@@ -33,15 +30,16 @@ export default function PostsPage({ navigation }) {
     return result;
   };
 
+  // console.log(theme);
+
   return (
-    <>
+    <View style={{ flex: 1, backgroundColor: theme.backColor }}>
       <PostListView
         retrieveData={retrieveData}
         type={1}
         navigation={navigation}
         perPage={4}
-        
       />
-    </>
+    </View>
   );
 }

@@ -1,8 +1,11 @@
-import React, { useMemo, useRef, useState, useEffect } from "react";
+import React, { useMemo, useRef, useState, useEffect, useContext } from "react";
 import BottomSheet from "@gorhom/bottom-sheet";
 import InputBox from "../screens/chat/inputBox";
+import ThemeContext from "../themes/ThemeContext";
 
 export default BottomSheetHandler = (props) => {
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+
   const {
     post,
     onClose, // required
@@ -15,7 +18,7 @@ export default BottomSheetHandler = (props) => {
     onTakeImage,
     image,
 
-    backgroundStyle
+    backgroundStyle,
   } = props;
   const [isFocus, setIsFocus] = useState(false);
   const [tiPlaceHolder, setTiPlaceHolder] = useState(null);
@@ -30,13 +33,13 @@ export default BottomSheetHandler = (props) => {
       index={0}
       snapPoints={snapPoints}
       handleStyle={{
-        backgroundColor: "#660032",
+        backgroundColor: theme.secondary,
         borderTopLeftRadius: 15,
         borderTopRightRadius: 15,
       }}
       onClose={onCommentClose} // required
       enablePanDownToClose={true}
-      backgroundStyle={backgroundStyle}
+      backgroundStyle={[{ backgroundColor: theme.backColor }, backgroundStyle]}
     >
       {props.children}
 

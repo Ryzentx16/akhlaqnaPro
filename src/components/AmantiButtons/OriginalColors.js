@@ -1,14 +1,29 @@
-import React from "react";
+import React, { useContext } from "react";
 import { TouchableOpacity } from "react-native";
 import { View, StyleSheet, Text } from "react-native";
+import ThemeContext from "../../themes/ThemeContext";
 
 export default function OriginalColors(props) {
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+
   return (
     <TouchableOpacity
-      style={[styles.container, props.style, { backgroundColor: "#660032" }]}
+      style={[
+        styles.container,
+        props.style,
+        { backgroundColor: theme.OriginalColors.background },
+      ]}
       onPress={props.onPress}
     >
-      <Text style={[styles.title, props.textStyle, { color: "white" }]}>{props.title}</Text>
+      <Text
+        style={[
+          styles.title,
+          props.textStyle,
+          { color: theme.OriginalColors.text },
+        ]}
+      >
+        {props.title}
+      </Text>
     </TouchableOpacity>
   );
 }

@@ -12,6 +12,7 @@ import AccountPage from "../screens/settings/AccountPage";
 import LanguagePage from "..//screens/settings/LanguagePage";
 import ChatsSettingPage from "../screens/settings/ChatsSettingPage";
 import AppStartupNavigator from "./AppStartupNavigator";
+import ThemePage from "../screens/settings/ThemePage";
 
 const Stack = createStackNavigator();
 
@@ -66,6 +67,7 @@ export default function SettingNavigator({ navigation, route }) {
         // initialParams={{ drawerNavigation: drawerNavigation }}
       />
       <Stack.Screen name="ChatsSettingPage" component={ChatsSettingPage} />
+      <Stack.Screen name="ThemePage" component={ThemePage} />
       {/* <Stack.Screen name="AppStartupNavigator" component={AppStartupNavigator} /> */}
     </Stack.Navigator>
   );

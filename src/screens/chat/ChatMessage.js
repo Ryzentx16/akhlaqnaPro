@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -12,14 +12,12 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import SeeMoreText from "../../components/SeeMoreText";
 import Helper from "../../shared/helpers";
 import ImageViewer from "../../components/ImageViewer";
-import themes from "../../ThemeController";
 import domain from "../../../API/domain";
-
-let textColor = themes._currTextTheme;
-let backColor = themes._currBackColorTheme;
-let themeColor = themes._currTheme;
+import ThemeContext from "./../../themes/ThemeContext";
 
 export default function CommentCard(props) {
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+
   const { message, myId, roomId } = props;
   const [imageWidth, setImageWidth] = useState(200);
   const [imageHeight, setImageHeight] = useState(250);
@@ -27,9 +25,6 @@ export default function CommentCard(props) {
   let isItMyMessage = message.senderUser.id == myId;
 
   useEffect(() => {
-    textColor = themes._currTextTheme;
-    backColor = themes._currBackColorTheme;
-    themeColor = themes._currTheme;
     isItMyMessage = message.senderUser.id == myId;
   });
 
@@ -68,14 +63,14 @@ export default function CommentCard(props) {
         style={[
           detailsStyles.container,
           {
-            backgroundColor: isItMyMessage ? "#660032" : "#ffffff",
+            backgroundColor: isItMyMessage ? theme.secondary : theme.primary,
           },
         ]}
       >
         <View style={detailsStyles.headerContainer}>
           {!isItMyMessage && (
             <Text
-              style={detailsStyles.userName}
+              style={[detailsStyles.userName, { color: theme.largeText }]}
             >{`${message.senderUser.firstName} ${message.senderUser.lastName}`}</Text>
           )}
         </View>
@@ -89,7 +84,7 @@ export default function CommentCard(props) {
           <Text
             style={[
               detailsStyles.detailsText,
-              { color: isItMyMessage ? "white" : "black" },
+              { color: isItMyMessage ? "white" : theme.mediumText },
             ]}
           >
             {message.content}
@@ -112,7 +107,7 @@ export default function CommentCard(props) {
           <Text
             style={[
               detailsStyles.postTime,
-              { color: isItMyMessage ? "#E0E0E0" : "#65676b" },
+              { color: isItMyMessage ? "#E0E0E0" : theme.smallText },
             ]}
           >
             {messageDuration}
@@ -131,7 +126,7 @@ const detailsStyles = StyleSheet.create({
     marginLeft: 5,
     marginRight: 5,
     borderRadius: 18,
-    // backgroundColor: themeColor === "light" ? "#ffffff" : "#CCCCCC",
+    // backgroundColor: "#ffffff",
 
     overflow: "hidden",
 
@@ -159,7 +154,7 @@ const detailsStyles = StyleSheet.create({
   userName: {
     fontSize: 12,
     fontWeight: "bold",
-    color: textColor,
+    color: "#660032",
     marginRight: 5,
   },
 
@@ -170,7 +165,7 @@ const detailsStyles = StyleSheet.create({
   },
   postTime: {
     fontSize: 9,
-    color: themeColor === "light" ? "#65676b" : "#FFFFFF",
+    color: "#65676b",
   },
 
   detailsText: {
@@ -192,7 +187,7 @@ const detailsStyles = StyleSheet.create({
   replybuttonText: {
     fontSize: 12,
     fontWeight: "bold",
-    color: themeColor === "light" ? "#65676b" : "#FFFFFF",
+    color: "#65676b",
     marginLeft: 5,
   },
 

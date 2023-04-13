@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Image,
   StyleSheet,
@@ -18,36 +18,32 @@ import {
 import SeeMoreText from "../../components/SeeMoreText";
 import Helper from "../../shared/helpers";
 
-import themes from "../../ThemeController";
 import { GraphQL } from "../../../API";
 import ImageViewer from "../../components/ImageViewer";
 import OurUser from "../../OurUser";
 import domain from "../../../API/domain";
 import MapViewer from "../../components/MapViewer";
+import ThemeContext from "./../../themes/ThemeContext";
 
-let textColor = themes._currTextTheme;
-let backColor = themes._currBackColorTheme;
-let timeColor = themes._currTimeTheme;
 const isRTL = I18nManager.isRTL;
 
 function ActionButton(props) {
+  const { color } = props;
   let CurrentIcon;
 
   switch (props.type) {
     case "share":
-      CurrentIcon = <FontAwesome5 size={30} name={"share"} color={textColor} />;
+      CurrentIcon = <FontAwesome5 size={30} name={"share"} color={color} />;
       break;
     case "not-liked":
-      CurrentIcon = (
-        <Ionicons size={30} name={"heart-outline"} color={textColor} />
-      );
+      CurrentIcon = <Ionicons size={30} name={"heart-outline"} color={color} />;
       break;
     case "liked":
-      CurrentIcon = <Ionicons size={30} name={"heart"} color={textColor} />;
+      CurrentIcon = <Ionicons size={30} name={"heart"} color={color} />;
       break;
     case "comment":
       CurrentIcon = (
-        <Ionicons size={30} name={"chatbubbles-outline"} color={textColor} />
+        <Ionicons size={30} name={"chatbubbles-outline"} color={color} />
       );
       break;
   }
@@ -55,20 +51,22 @@ function ActionButton(props) {
   return (
     <TouchableOpacity style={actionBtnStyles.container} onPress={props.onPress}>
       {CurrentIcon}
-      <Text style={actionBtnStyles.actionText}>{props.details}</Text>
+      <Text style={[actionBtnStyles.actionText, { color: color }]}>
+        {props.details}
+      </Text>
     </TouchableOpacity>
   );
 }
 
-function postType(type) {
+function postType(type, color) {
   let result = null;
 
   switch (type) {
     case 2: // isLost
-      result = <AntDesign name="questioncircle" size={25} color={textColor} />;
+      result = <AntDesign name="questioncircle" size={25} color={color} />;
       break;
     case 3: // isFound
-      result = <Ionicons name="checkmark-circle" size={25} color={textColor} />;
+      result = <Ionicons name="checkmark-circle" size={25} color={color} />;
       break;
     default:
       result = null;
@@ -86,6 +84,7 @@ export default function PostCard(props) {
   const [imageWidth, setImageWidth] = useState(null);
   const [imageHeight, setImageHeight] = useState(450);
   const [mapViewStatus, setMapViewStatus] = useState(false);
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
 
   const onMakeLike = () => {
     if (isLiked) {
@@ -112,11 +111,6 @@ export default function PostCard(props) {
   var postDuration = Helper.getDuration(post.createdDateTime);
 
   useEffect(() => {
-    textColor = themes._currTextTheme;
-    backColor = themes._currBackColorTheme;
-  });
-
-  useEffect(() => {
     // console.log(post.image !== null);
     if (post.image !== null) {
       Image.getSize(
@@ -130,7 +124,14 @@ export default function PostCard(props) {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: theme.primary,
+        },
+      ]}
+    >
       <View style={headerStyles.container}>
         <TouchableOpacity
           style={headerStyles.avatarContainer}
@@ -149,11 +150,25 @@ export default function PostCard(props) {
         </TouchableOpacity>
         <View style={headerStyles.headerDetailsContainer}>
           <View style={{ flex: 1, alignItems: "flex-start" }}>
-            <Text style={headerStyles.userName}>
+            <Text
+              style={[
+                headerStyles.userName,
+                {
+                  color: theme.largeText,
+                },
+              ]}
+            >
               {post.user.firstName + " " + post.user.lastName}
             </Text>
 
-            <Text style={headerStyles.postTime}>
+            <Text
+              style={[
+                headerStyles.postTime,
+                {
+                  color: theme.smallText,
+                },
+              ]}
+            >
               {postDuration + ` (${post.area || "Area Disabled"})`}
             </Text>
           </View>
@@ -163,18 +178,18 @@ export default function PostCard(props) {
               style={headerStyles.location}
               onPress={() => setMapViewStatus(true)}
             >
-              <Entypo name={"location"} size={25} color={"#660032"} />
+              <Entypo name={"location"} size={25} color={theme.secondary} />
             </TouchableOpacity>
           )}
         </View>
         <View style={headerStyles.headerIconContainer}>
-          {isTypeEnable && postType(post.postTypes)}
+          {isTypeEnable && postType(post.postTypes, theme.secondary)}
         </View>
       </View>
 
       <View style={styles.detailsContainer}>
         <SeeMoreText
-          textStyle={styles.detailsText}
+          textStyle={[styles.detailsText, { color: theme.secondary }]}
           text={post.content}
           numberOfLines={4}
         />
@@ -197,6 +212,7 @@ export default function PostCard(props) {
           type={isLiked ? "liked" : "not-liked"}
           details={numOfLikes}
           onPress={onMakeLike}
+          color={theme.secondary}
         />
         <ActionButton
           type={"comment"}
@@ -205,6 +221,7 @@ export default function PostCard(props) {
             onPressComment(post);
             console.log("Action Pressed");
           }}
+          color={theme.secondary}
         />
         {/* <ActionButton type={"share"} details={post.numOfShares} /> */}
       </View>
@@ -268,11 +285,11 @@ const headerStyles = StyleSheet.create({
   userName: {
     fontSize: 12,
     fontWeight: "bold",
-    color: textColor,
+    color: "#660032",
   },
   postTime: {
     fontSize: 9,
-    color: timeColor,
+    color: "#65676b",
   },
 
   location: {
@@ -294,7 +311,7 @@ const actionBtnStyles = StyleSheet.create({
 
   actionText: {
     fontSize: 12,
-    color: textColor,
+    color: "#660032",
     marginLeft: 10,
   },
 });
@@ -302,7 +319,8 @@ const actionBtnStyles = StyleSheet.create({
 const styles = StyleSheet.create({
   container: {
     flexShrink: 1,
-    backgroundColor: backColor,
+
+    // theme controller
     marginBottom: 10,
     paddingVertical: 10,
   },
@@ -323,7 +341,7 @@ const styles = StyleSheet.create({
 
   detailsText: {
     fontSize: 13,
-    color: textColor,
+    color: "#660032",
     lineHeight: 18,
     textAlign: "auto",
   },

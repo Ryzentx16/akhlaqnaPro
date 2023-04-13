@@ -3,19 +3,11 @@ import { StyleSheet, Text, TouchableOpacity, View, Switch } from "react-native";
 import { Ionicons } from "react-native-vector-icons";
 import AppHeader from "../../components/AppHeader";
 import languages from "../../strings/LanguagesController";
-import themes from "../../ThemeController";
 
 const currLang = languages.currLang();
-let textColor = themes._currTextTheme;
-let backColor = themes._currBackColorTheme;
 
 export default function ChatsSettingPage({ navigation }) {
   const [switchValue, setSwitchValue] = useState(false);
-
-  useEffect(() => {
-    textColor = themes._currTextTheme;
-    backColor = themes._currBackColorTheme;
-  });
 
   return (
     <View style={styles.container}>
@@ -31,8 +23,8 @@ export default function ChatsSettingPage({ navigation }) {
         }}
       >
         <View style={{ flex: 1, alignItems: "center" }}>
-          <Ionicons size={80} name={"chatbubbles"} color={textColor} />
-          <Text style={{ fontSize: 36, color: textColor }}>Chats</Text>
+          <Ionicons size={80} name={"chatbubbles"} color={'#660032'} />
+          <Text style={{ fontSize: 36, color: '#660032' }}>Chats</Text>
         </View>
         <View
           style={{
@@ -50,7 +42,7 @@ export default function ChatsSettingPage({ navigation }) {
             <Text
               style={{
                 fontSize: 22,
-                color: textColor,
+                color: '#660032',
                 alignSelf: "center",
                 marginBottom: 20,
               }}
@@ -58,7 +50,7 @@ export default function ChatsSettingPage({ navigation }) {
               Theme: Dark/Light
             </Text>
             <Switch
-              thumbColor={textColor}
+              thumbColor={'#660032'}
               style={{
                 alignSelf: "flex-start",
                 transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
@@ -76,7 +68,7 @@ export default function ChatsSettingPage({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: backColor,
+    backgroundColor: '#FFFFFF',
 
     paddingBottom: "72%",
   },

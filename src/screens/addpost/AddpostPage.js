@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { I18nManager, KeyboardAvoidingView, Alert } from "react-native";
 
 import languages from "../../strings/LanguagesController";
@@ -12,10 +12,14 @@ import AddPostContent from "./AddPostContent";
 import AddpostActions from "./AddPostActions";
 import * as CameraPicker from "../../components/CameraPicker";
 import MapViewer from "../../components/MapViewer";
+import styles from "./styles";
+import ThemeContext from "./../../themes/ThemeContext";
 
 const isRTL = I18nManager.isRTL;
 
 const AddPostPage = ({ navigation }) => {
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+
   const [content, setContent] = useState("");
   const [modalStatus, setModalStatus] = useState(false);
   const [image, setImage] = useState(null);
@@ -98,7 +102,10 @@ const AddPostPage = ({ navigation }) => {
     <KeyboardAvoidingView
       behavior={"height"}
       keyboardVerticalOffset={"100%"}
-      style={[styles.container, { width: "100%" }]}
+      style={[
+        styles.container,
+        { width: "100%", backgroundColor: theme.primary },
+      ]}
     >
       <AddPostHeader
         isLocation={isLocation}

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import {
   BackHandler,
   Alert,
@@ -22,13 +22,18 @@ import AppDrawerNavigator from "./AppDrawerNavigator";
 import logo from "../../assets/logo.js";
 import Svg, { Ellipse, Path, SvgXml } from "react-native-svg";
 import AddPostPage from "./../screens/addpost/AddpostPage";
+import ThemeContext from "../themes/ThemeContext";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
 const iconsize = 30;
-const iconcolor = "#660032";
+let iconcolor = "#660032";
 const isRTL = I18nManager.isRTL;
 
 export default function AppBottomTabNavigator({ navigation }) {
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+  iconcolor = theme.secondary;
+
   useEffect(() => {
     const backAction = () => {
       return false;
@@ -47,26 +52,30 @@ export default function AppBottomTabNavigator({ navigation }) {
       initialRouteName={"Post"}
       screenOptions={{
         headerShown: true,
-        tabBarActiveTintColor: "red",
-        tabBarInactiveTintColor: "black",
+        tabBarShowLabel: false,
         tabBarHideOnKeyboard: true,
+
+        // Don't forget to change the ChatNavigator
+        // Style after change this
         tabBarStyle: {
-          backgroundColor: "white",
-          borderTopColor: "#660032",
+          display: "flex",
+          backgroundColor: theme.primary,
+          borderTopColor: theme.secondary,
           borderTopWidth: 3,
         },
         header: () => <AppHeader navigation={navigation} isDrawer={true} />,
       }}
-      backBehavior={"initialRoute"}
+      backBehavior={"Post"}
       screenListeners={{ beforeRemove: null }}
       tabbarop
-      barStyle={{ backgroundColor: "black" }} //This is where you can manipulate its look.
+
+      // barStyle={{ backgroundColor: "black" }} //This is where you can manipulate its look.
     >
       <Tab.Screen
         name="Search"
         component={SearchPage}
         options={{
-          tabBarShowLabel: false,
+          tabBarVisible: false,
           tabBarIcon: ({ focused }) => (
             <Ionicons
               name={focused ? "search" : "search-outline"}
@@ -80,7 +89,6 @@ export default function AppBottomTabNavigator({ navigation }) {
         name="Notification"
         component={NotificationsPage}
         options={{
-          tabBarShowLabel: false,
           tabBarIcon: ({ focused }) => (
             <Ionicons
               name={focused ? "notifications" : "notifications-outline"}
@@ -94,11 +102,10 @@ export default function AppBottomTabNavigator({ navigation }) {
         name="Post"
         component={PostNavigator}
         options={{
-          tabBarShowLabel: false,
           tabBarIcon: ({ focused }) => (
             <View>
-              <View>
-                {!focused ? (
+              {!isDarkMode ? (
+                !focused ? (
                   <Image
                     source={require("../../assets/Logo1.png")}
                     style={styles.imageLogo}
@@ -108,8 +115,18 @@ export default function AppBottomTabNavigator({ navigation }) {
                     source={require("../../assets/akhlaqna.png")}
                     style={styles.imageLogo}
                   />
-                )}
-              </View>
+                )
+              ) : !focused ? (
+                <Image
+                  source={require("../../assets/AmantiDark.png")}
+                  style={styles.imageLogo}
+                />
+              ) : (
+                <Image
+                  source={require("../../assets/AmantiDarkClicked.png")}
+                  style={styles.imageLogo}
+                />
+              )}
             </View>
           ),
         }}
@@ -119,7 +136,6 @@ export default function AppBottomTabNavigator({ navigation }) {
         name="Chat"
         component={ChatNavigator}
         options={{
-          tabBarShowLabel: false,
           tabBarIcon: ({ focused }) => (
             <Ionicons
               name={focused ? "chatbubbles" : "chatbubbles-outline"}

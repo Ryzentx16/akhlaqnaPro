@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import {
   StyleSheet,
   TextInput,
@@ -13,15 +13,14 @@ import Entypo from "react-native-vector-icons/Entypo";
 import Fontisto from "react-native-vector-icons/Fontisto";
 import ImageViewer from "../../components/ImageViewer";
 import languages from "../../strings/LanguagesController";
-import themes from "../../ThemeController";
+import ThemeContext from "./../../themes/ThemeContext";
 
-let textColor = themes._currTextTheme;
-let backColor = themes._currBackColorTheme;
-let themeColor = themes._currTheme;
 const isRTL = I18nManager.isRTL;
 
 export default function InputBox(props) {
   var heightLimit = 135;
+
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
 
   const [message, setMessage] = useState("");
   const isComment = props.hasOwnProperty("isComment");
@@ -35,9 +34,6 @@ export default function InputBox(props) {
   let currLang = languages.currLang();
   useEffect(() => {
     currLang = languages.currLang();
-    textColor = themes._currTextTheme;
-    backColor = themes._currBackColorTheme;
-    themeColor = themes._currTheme;
 
     setIsFocus(props.onFocus);
 
@@ -77,30 +73,40 @@ export default function InputBox(props) {
   };
 
   return (
-    <View style={[styles.container, props.style]}>
-      <View style={styles.mainContainer}>
-        <TextInput
-          ref={ref}
-          maxLength={2500}
-          placeholder={bPlaceholder}
-          multiline={true}
-          value={message}
-          onChangeText={setMessage}
-          onContentSizeChange={(event) => {
-            setTextInputHeight(event.nativeEvent.contentSize.height);
-          }}
-          style={[
-            styles.textInput,
-            {
-              height:
-                props.image !== null
-                  ? heightLimit
-                  : textInputHeight > heightLimit
-                  ? heightLimit
-                  : textInputHeight,
-            },
-          ]}
-        />
+    <View
+      style={[
+        styles.container,
+        props.style,
+        { backgroundColor: theme.backColor },
+      ]}
+    >
+      <View style={[styles.mainContainer, { backgroundColor: theme.primary }]}>
+        <View style={{ flex: 1, justifyContent: "center" }}>
+          <TextInput
+            ref={ref}
+            maxLength={2500}
+            placeholder={bPlaceholder}
+            placeholderTextColor={theme.smallText}
+            multiline={true}
+            value={message}
+            onChangeText={setMessage}
+            onContentSizeChange={(event) => {
+              setTextInputHeight(event.nativeEvent.contentSize.height);
+            }}
+            style={[
+              styles.textInput,
+              { backgroundColor: "transparent", color: theme.mediumText },
+              {
+                height:
+                  props.image !== null
+                    ? heightLimit
+                    : textInputHeight > heightLimit
+                    ? heightLimit
+                    : textInputHeight,
+              },
+            ]}
+          />
+        </View>
         {props.image !== null && (
           <View style={styles.imageContainer}>
             <ImageViewer
@@ -139,7 +145,7 @@ export default function InputBox(props) {
             <MaterialIcons
               name={"add-photo-alternate"}
               size={25}
-              color={"#660032"}
+              color={theme.secondary}
               style={styles.icon}
             />
           </TouchableOpacity>
@@ -150,17 +156,23 @@ export default function InputBox(props) {
             <Fontisto
               name="camera"
               size={20}
-              color={"#660032"}
+              color={theme.secondary}
               style={styles.icon}
             />
           </TouchableOpacity>
         </View>
       </View>
-      <TouchableOpacity style={styles.buttonContainer} onPress={onSend}>
+      <TouchableOpacity
+        style={[
+          styles.buttonContainer,
+          { backgroundColor: theme.OriginalColors.background },
+        ]}
+        onPress={onSend}
+      >
         <MaterialIcons
           name="send"
           size={20}
-          color="white"
+          color={theme.OriginalColors.text}
           style={{ transform: [{ rotateY: isRTL ? "180deg" : "0deg" }] }}
         />
       </TouchableOpacity>
@@ -188,9 +200,10 @@ const styles = StyleSheet.create({
   },
   textInput: {
     flex: 1,
-    backgroundColor: themeColor === "light" ? "#ffffff" : "#CCCCCC",
+    backgroundColor: "#ffffff",
     marginHorizontal: 10,
     textAlign: "auto",
+    textAlignVertical: "auto",
   },
   icon: {
     marginHorizontal: 5,
@@ -198,7 +211,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     height: 40,
     width: 40,
-    backgroundColor: textColor,
+    backgroundColor: "#660032",
     borderRadius: 50,
     justifyContent: "center",
     alignItems: "center",

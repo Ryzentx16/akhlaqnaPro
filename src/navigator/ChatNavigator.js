@@ -1,13 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect, useLayoutEffect } from "react";
 import { BackHandler } from "react-native";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import ChatRoomPage from "../screens/chat/ChatRoomPage";
 import ChatsPage from "../screens/chat/ChatsPage";
+import ThemeContext from "../themes/ThemeContext";
 
 const Stack = createStackNavigator();
 
 export default function ChatNavigator({ navigation, route }) {
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
   // useEffect(() => {
   //   const backAction = () => {
   //     return false;
@@ -21,33 +23,42 @@ export default function ChatNavigator({ navigation, route }) {
   //   return () => backHandler.remove();
   // });
 
-  React.useLayoutEffect(() => {
-    const tabHiddenRoutes = ["ChatRoom"];
+  useLayoutEffect(() => {
+    const focusedRouteName = getFocusedRouteNameFromRoute(route);
+    const hideTabBar = focusedRouteName === "ChatRoom";
 
-    if (tabHiddenRoutes.includes(getFocusedRouteNameFromRoute(route))) {
-      navigation.setOptions({ tabBarStyle: { display: "none" } });
-    } else {
-      navigation.setOptions({ tabBarStyle: { display: "flex" } });
-    }
-  }, [navigation, route]);
+    navigation.setOptions({
+      tabBarStyle: hideTabBar
+        ? { display: "none" }
+        : {
+            backgroundColor: theme.primary,
+            borderTopColor: theme.secondary,
+            borderTopWidth: 3,
+          },
+    });
+  }, [navigation, route, theme]);
 
   return (
     <Stack.Navigator
       screenListeners={{ beforeRemove: null }}
       screenOptions={{
+        headerTintColor: theme.largeText,
+        headerStyle: {
+          backgroundColor: theme.primary
+        },
         gestureEnabled: false,
         headerShown: false,
-        tabBarActiveTintColor: "red",
-        tabBarInactiveTintColor: "black",
-        tabBarHideOnKeyboard: true,
+        // tabBarActiveTintColor: "red",
+        // tabBarInactiveTintColor: "black",
+        // tabBarHideOnKeyboard: true,
         tabBarStyle: {
-          backgroundColor: "white",
-          borderTopColor: "#660032",
+          backgroundColor: theme.primary,
+          borderTopColor: theme.secondary,
           borderTopWidth: 3,
         },
       }}
-      tabbarop
-      barStyle={{ backgroundColor: "black" }} //This is where you can manipulate its look.
+      // tabbarop
+      // barStyle={{ backgroundColor: "black" }} //This is where you can manipulate its look.
     >
       <Stack.Screen name="ChatPage" component={ChatsPage} />
       <Stack.Screen

@@ -1,16 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import UserAvatar from "@muhzi/react-native-user-avatar";
 import domain from "../../../API/domain";
-import themes from "../../ThemeController";
 import OurUser from "../../OurUser";
 import Helper from "../../shared/helpers";
 import { Entypo } from "react-native-vector-icons";
+import ThemeContext from "../../themes/ThemeContext";
 
-let textColor = themes._currTextTheme;
-let backColor = themes._currBackColorTheme;
-let timeColor = themes._currTimeTheme;
 export default function ChatCard(props) {
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+
   const { onChatEdit } = props;
   const [isEdit, setIsEdit] = useState(false);
 
@@ -52,23 +51,31 @@ export default function ChatCard(props) {
           src={`${domain}/download/` + props.data.user.profileImage}
         />
       </View>
-      <View style={styles.bodyContainer}>
+      <View style={[styles.bodyContainer, { borderColor: theme.border }]}>
         <View style={styles.headerContainer}>
-          <Text style={styles.header}>
+          <Text style={[styles.header, { color: theme.secondary }]}>
             {props.data.user.firstName + " " + props.data.user.lastName}
           </Text>
           <TouchableOpacity
             style={{ justifyContent: "center", alignContent: "flex-end" }}
             onPress={() => onChatEdit(true)}
           >
-            <Entypo size={20} name={"dots-three-vertical"} color={"#660032"} />
+            <Entypo
+              size={20}
+              name={"dots-three-vertical"}
+              color={theme.secondary}
+            />
           </TouchableOpacity>
         </View>
 
         <View style={styles.detailsContainer}>
-          <Text style={styles.details}>{getLastMessage()}</Text>
+          <Text style={[styles.details, { color: theme.mediumText }]}>
+            {getLastMessage()}
+          </Text>
           {props.data.lastMessage && (
-            <Text style={styles.seen}>{getDuration() + " ago"}</Text>
+            <Text style={[styles.seen, { color: theme.smallText }]}>
+              {getDuration() + " ago"}
+            </Text>
           )}
         </View>
       </View>

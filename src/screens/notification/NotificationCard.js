@@ -1,9 +1,10 @@
 import UserAvatar from "@muhzi/react-native-user-avatar";
-import React from "react";
+import React, { useContext } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import ThemeContext from "./../../themes/ThemeContext";
 
 let size = 60;
 
@@ -28,14 +29,15 @@ function NotificationIcon(props) {
 
 export default function NotificationCard(props) {
   const { notification, type, navigation } = props;
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
 
   // console.log(navigation?.navigate());
   const onAvatar = () => {
-    console.warn('Navigate To User\'s Profile');
+    console.warn("Navigate To User's Profile");
   };
 
   const onNotification = () => {
-    console.warn('Navigate To Notification Post Page');
+    console.warn("Navigate To Notification Post Page");
   };
 
   return (
@@ -48,10 +50,12 @@ export default function NotificationCard(props) {
         />
         <NotificationIcon type={type} />
       </TouchableOpacity>
-       
-      <View style={styles.bodyContainer}>
+
+      <View style={[styles.bodyContainer, { borderBottomColor: theme.border }]}>
         <View style={styles.headerContainer}>
-          <Text style={styles.header}>{notification.user.name}</Text>
+          <Text style={[styles.header, { color: theme.largeText }]}>
+            {"unknowen"}
+          </Text>
           {/* <TouchableOpacity>
             <MaterialCommunityIcons
               name={"close"}
@@ -60,9 +64,11 @@ export default function NotificationCard(props) {
             />
           </TouchableOpacity> */}
         </View>
-        
+
         <View style={styles.detailsContainer}>
-          <Text style={styles.details}>{`Coming Soon`}</Text>
+          <Text
+            style={[styles.details, { color: theme.smallText }]}
+          >{`Coming Soon`}</Text>
         </View>
       </View>
     </TouchableOpacity>

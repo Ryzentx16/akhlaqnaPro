@@ -3,12 +3,9 @@ import PostCard from "./PostCard";
 import PaginationListView from "../../components/PaginationListView";
 import languages from "../../strings/LanguagesController";
 import CommentPage from "../comment/CommentPage";
-import themes from "../../ThemeController";
 import MapViewer from "../../components/MapViewer";
 
-let textColor = themes._currTextTheme;
-let backColor = themes._currBackColorTheme;
-let themeColor = themes._currTheme;
+
 
 //type of posts 1 for general 2 for islost and 3 for isfound and 4 for both
 export default function PostListView(props) {
@@ -18,9 +15,6 @@ export default function PostListView(props) {
 
   let currLang = languages.currLang();
   useEffect(() => {
-    textColor = themes._currTextTheme;
-    backColor = themes._currBackColorTheme;
-    themeColor = themes._currTheme;
     currLang = languages.currLang();
   });
 

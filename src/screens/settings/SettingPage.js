@@ -11,13 +11,11 @@ import UserAvatar from "@muhzi/react-native-user-avatar";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import AppHeader from "../../components/AppHeader";
 import languages from "../../strings/LanguagesController";
-import themes from "../../ThemeController";
 import OurUser from "../../OurUser";
 import domain from "../../../API/domain";
+import { MaterialCommunityIcons } from "react-native-vector-icons";
 
 const isRTL = I18nManager.isRTL;
-let textColor = themes._currTextTheme;
-let backColor = themes._currBackColorTheme;
 
 export default function SettingPage({ navigation }) {
   const onAccount = () => {
@@ -29,12 +27,13 @@ export default function SettingPage({ navigation }) {
   const onChats = () => {
     navigation.navigate("ChatsSettingPage");
   };
+  const onTheme = () => {
+    navigation.navigate("ThemePage");
+  };
 
   let currLang = languages.currLang();
   useEffect(() => {
     currLang = languages.currLang();
-    textColor = themes._currTextTheme;
-    backColor = themes._currBackColorTheme;
   });
 
   return (
@@ -58,7 +57,7 @@ export default function SettingPage({ navigation }) {
         <View style={styles.btnsBody}>
           <TouchableOpacity style={styles.accountContainer} onPress={onAccount}>
             <View style={styles.iconAccountContainer}>
-              <Ionicons size={60} name={"person-circle"} color={textColor} />
+              <Ionicons size={60} name={"person-circle"} color={"#660032"} />
             </View>
             <View style={styles.textAccountContainer}>
               <Text style={styles.text}>{currLang.settingPage.account}</Text>
@@ -70,16 +69,29 @@ export default function SettingPage({ navigation }) {
             onPress={onLanguage}
           >
             <View style={styles.iconLanguageContainer}>
-              <Ionicons size={50} name={"language"} color={textColor} />
+              <Ionicons size={50} name={"language"} color={"#660032"} />
             </View>
             <View style={styles.textLanguageContainer}>
               <Text style={styles.text}>{currLang.settingPage.language}</Text>
             </View>
           </TouchableOpacity>
 
+          <TouchableOpacity style={styles.languageContainer} onPress={onTheme}>
+            <View style={styles.iconLanguageContainer}>
+              <MaterialCommunityIcons
+                size={50}
+                name={"theme-light-dark"}
+                color={"#660032"}
+              />
+            </View>
+            <View style={styles.textLanguageContainer}>
+              <Text style={styles.text}>{`Theme`}</Text>
+            </View>
+          </TouchableOpacity>
+
           {/* <TouchableOpacity style={styles.chatsContainer} onPress={onChats}>
             <View style={styles.iconChatsContainer}>
-              <Ionicons size={45} name={"chatbubbles"} color={textColor} />
+              <Ionicons size={45} name={"chatbubbles"} color={'#660032'} />
             </View>
             <View style={styles.textChatsContainer}>
               <Text style={styles.text}>{currLang.settingPage.chats}</Text>
@@ -94,7 +106,7 @@ export default function SettingPage({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: backColor,
+    backgroundColor: "#FFFFFF",
   },
 
   bodyContainer: {
@@ -107,7 +119,7 @@ const styles = StyleSheet.create({
     flex: 1,
     // backgroundColor: 'green',
 
-    borderColor: textColor,
+    borderColor: "#660032",
     borderBottomWidth: 3,
     borderRadius: 43,
 
@@ -132,7 +144,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 26,
-    color: textColor,
+    color: "#660032",
     textAlign: "left",
   },
 
@@ -161,7 +173,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 24,
-    color: textColor,
+    color: "#660032",
     textAlign: "left",
   },
   languageContainer: {

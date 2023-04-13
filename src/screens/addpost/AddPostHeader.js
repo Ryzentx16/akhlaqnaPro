@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   TouchableWithoutFeedback,
   View,
@@ -13,6 +13,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import OurUser from "../../OurUser";
 import domain from "./../../../API/domain";
+import ThemeContext from "../../themes/ThemeContext";
 
 export default function AddPostHeader({
   isLocation,
@@ -20,6 +21,8 @@ export default function AddPostHeader({
   isLost,
   onToggleIsLost,
 }) {
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+
   return (
     <TouchableWithoutFeedback
       onPress={Keyboard.dismiss}
@@ -43,7 +46,7 @@ export default function AddPostHeader({
             />
           </View>
           <View style={styles.headerDetailsContainer}>
-            <Text style={styles.userName}>
+            <Text style={[styles.userName, { color: theme.largeText }]}>
               {OurUser.user.firstName + " " + OurUser.user.lastName}
             </Text>
           </View>
@@ -60,14 +63,22 @@ export default function AddPostHeader({
           <Switch
             value={isLocation}
             onValueChange={onToggleIsLocation}
-            thumbColor={isLost ? "#660032" : "#660032"}
+            thumbColor={theme.secondary}
             trackColor={{ false: "#767577", true: "#660032" }}
             style={{ marginRight: 10 }}
           />
           {isLocation ? (
-            <MaterialIcons name="location-on" size={35} color={"#660032"} />
+            <MaterialIcons
+              name="location-on"
+              size={35}
+              color={theme.secondary}
+            />
           ) : (
-            <MaterialIcons name="location-off" size={35} color={"#660032"} />
+            <MaterialIcons
+              name="location-off"
+              size={35}
+              color={theme.secondary}
+            />
           )}
         </View>
 
@@ -83,15 +94,23 @@ export default function AddPostHeader({
           <Switch
             value={isLost}
             onValueChange={onToggleIsLost}
-            thumbColor={isLost ? "#660032" : "#660032"}
+            thumbColor={theme.secondary}
             trackColor={{ false: "#767577", true: "#660032" }}
             style={{ marginRight: 10 }}
           />
 
           {isLost ? (
-            <AntDesign name="questioncircle" size={30} color={"#660032"} />
+            <AntDesign
+              name="questioncircle"
+              size={30}
+              color={theme.secondary}
+            />
           ) : (
-            <Ionicons name="checkmark-circle" size={36} color={"#660032"} />
+            <Ionicons
+              name="checkmark-circle"
+              size={36}
+              color={theme.secondary}
+            />
           )}
         </View>
       </View>

@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { BackHandler, View, StyleSheet, Text } from "react-native";
 
 import OurUser from "../../OurUser";
-import themes from "../../ThemeController";
 import { GraphQL } from "../../../API";
 import ChatListView from "./ChatListView";
 
@@ -10,10 +9,13 @@ import BottomSheetHandler from "../../components/BottomSheetHandler";
 import { MaterialCommunityIcons } from "react-native-vector-icons";
 import { TouchableOpacity } from "react-native";
 import languages from "../../strings/LanguagesController";
+import ThemeContext from "./../../themes/ThemeContext";
 
 let currLang = languages.currLang();
 
-export default function ChatsPage(props, { navigation }) {
+export default function ChatsPage({ navigation }) {
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+
   const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {
@@ -29,12 +31,6 @@ export default function ChatsPage(props, { navigation }) {
     return () => backHandler.remove();
   });
 
-  useEffect(() => {
-    textColor = themes._currTextTheme;
-    backColor = themes._currBackColorTheme;
-    themeColor = themes._currTheme;
-  });
-
   const retrieveData = async (params) => {
     params.userId = OurUser.user.id;
     const result = await GraphQL.ChatApiLogic.Rooms.Queries.Retrieve(params);
@@ -42,7 +38,7 @@ export default function ChatsPage(props, { navigation }) {
   };
 
   return (
-    <>
+    <View style={{ flex: 1, backgroundColor: theme.backColor }}>
       <ChatListView
         retrieveData={retrieveData}
         navigation={navigation}
@@ -51,22 +47,31 @@ export default function ChatsPage(props, { navigation }) {
       />
       {isEdit && (
         <BottomSheetHandler
-          backgroundStyle={{ backgroundColor: "grey" }}
+          backgroundStyle={{ backgroundColor: theme.primary }}
           snaps={["40%"]}
           onClose={setIsEdit}
         >
-          <View style={BottomSheetStyle.background}>
+          <View
+            style={[
+              BottomSheetStyle.background,
+              { backgroundColor: theme.backColor },
+            ]}
+          >
             <TouchableOpacity style={BottomSheetStyle.removeContainer}>
               <View style={BottomSheetStyle.removeIcon}>
                 <MaterialCommunityIcons
                   size={30}
                   name={"chat-remove"}
-                  color={"#660032"}
+                  color={theme.secondary}
                 />
               </View>
               <View style={BottomSheetStyle.remove}>
                 <Text
-                  style={{ color: "#660032", fontSize: 16, fontWeight: "bold" }}
+                  style={{
+                    color: theme.largeText,
+                    fontSize: 16,
+                    fontWeight: "bold",
+                  }}
                 >
                   {currLang.chatpage.bottomesheet.remove}
                 </Text>
@@ -77,13 +82,17 @@ export default function ChatsPage(props, { navigation }) {
                 <MaterialCommunityIcons
                   size={30}
                   name={"block-helper"}
-                  color={"#660032"}
+                  color={theme.secondary}
                 />
               </View>
 
               <View style={BottomSheetStyle.block}>
                 <Text
-                  style={{ color: "#660032", fontSize: 16, fontWeight: "bold" }}
+                  style={{
+                    color: theme.largeText,
+                    fontSize: 16,
+                    fontWeight: "bold",
+                  }}
                 >
                   {currLang.chatpage.bottomesheet.block}
                 </Text>
@@ -92,7 +101,7 @@ export default function ChatsPage(props, { navigation }) {
           </View>
         </BottomSheetHandler>
       )}
-    </>
+    </View>
   );
 }
 
@@ -101,6 +110,7 @@ const BottomSheetStyle = StyleSheet.create({
     flex: 1,
     margin: 10,
     backgroundColor: "white", //k
+    borderRadius: 15,
   },
   removeContainer: {
     flex: 1,

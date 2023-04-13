@@ -22,6 +22,7 @@ export const pickImage = async (setImage) => {
 };
 
 export const takeImage = async (setImage) => {
+  Alert.alert("Sorry", "Sorry, this feature is not available yet.");
   // const [permission, requestPermission] = Camera.useCameraPermissions();
 
   // if (permission.granted) {
@@ -36,21 +37,21 @@ export const takeImage = async (setImage) => {
   //   console.log(result);
   // }
 
-  let permissionResult = await Camera.getCameraPermissionsAsync();
-  if (permissionResult.status !== "granted") {
-    permissionResult = await Camera.requestCameraPermissionsAsync();
-  }
-  if (permissionResult.status !== "granted") {
-    alert("You must turn on camera permissions to record a video.");
-  } else {
-    // Camera.
-    let result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Videos,
-      allowsEditing: true,
-      aspect: [3, 4],
-    });
-    console.log(result);
-  }
+  // let permissionResult = await Camera.getCameraPermissionsAsync();
+  // if (permissionResult.status !== "granted") {
+  //   permissionResult = await Camera.requestCameraPermissionsAsync();
+  // }
+  // if (permissionResult.status !== "granted") {
+  //   alert("You must turn on camera permissions to record a video.");
+  // } else {
+  //   // Camera.
+  //   let result = await ImagePicker.launchCameraAsync({
+  //     mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+  //     allowsEditing: true,
+  //     aspect: [3, 4],
+  //   });
+  //   console.log(result);
+  // }
 
   // ImagePicker.requestCameraPermissionsAsync()
   //   .then((permission) => {

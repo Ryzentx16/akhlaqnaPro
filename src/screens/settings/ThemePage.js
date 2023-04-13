@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   StyleSheet,
   Switch,
@@ -9,52 +9,17 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons, Ionicons } from "react-native-vector-icons";
 import AppHeader from "../../components/AppHeader";
-import languages from "../../strings/LanguagesController";
 import { useNavigation } from "@react-navigation/native";
+import ThemeContext from "../../themes/ThemeContext";
 
-
-export default function LanguagePage() {
+export default function ThemePage() {
   const [switchValue, setSwitchValue] = useState(false);
-  const [switchChanged, setSwitchChanged] = useState(false);
-
+  // const [switchChanged, setSwitchChanged] = useState(false);
   const navigation = useNavigation();
-
-  const onApplyChange = () => {
-    Alert.alert(
-      currLang.languagepage.applychangealert.title,
-      currLang.languagepage.applychangealert.content,
-      [
-        {
-          text: currLang.languagepage.applychangealert.buttons.yessingout,
-          onPress: () => {
-            if (!switchValue) {
-              languages.currLang("Ar");
-              console.warn("Changed to Ar");
-            } else {
-              languages.currLang("En");
-              console.warn("Changed to En");
-            }
-            navigation.reset({ index: 0, routes: [{ name: "LoginPage" }] });
-          },
-        },
-        {
-          text: currLang.languagepage.applychangealert.buttons.cancel,
-          onPress: null,
-        },
-      ]
-    );
-  };
-
-  let currLang = languages.currLang();
-  useEffect(() => {
-    currLang = languages.currLang();
-    // console.warn(languages.langType());
-  });
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
 
   useEffect(() => {
-    if (languages.langType() === "En") {
-      setSwitchValue(true);
-    }
+    setSwitchValue(isDarkMode);
   }, []);
 
   return (
@@ -71,8 +36,12 @@ export default function LanguagePage() {
         }}
       >
         <View style={{ flex: 1, alignItems: "center" }}>
-          <Ionicons size={80} name={"language"} color={'#660032'} />
-          <Text style={{ fontSize: 36, color: '#660032' }}>Language</Text>
+          <MaterialCommunityIcons
+            size={80}
+            name={"theme-light-dark"}
+            color={"#660032"}
+          />
+          <Text style={{ fontSize: 36, color: "#660032" }}>Theme</Text>
         </View>
 
         <View
@@ -91,50 +60,51 @@ export default function LanguagePage() {
             <Text
               style={{
                 fontSize: 22,
-                color: '#660032',
+                color: "#660032",
                 alignSelf: "center",
                 marginBottom: 20,
               }}
             >
-              {"العربية " + "/" + " English"}
+              {"Dark / Light Mode"}
             </Text>
             <Switch
-              thumbColor={'#660032'}
+              thumbColor={"#660032"}
               style={{
                 alignSelf: "flex-start",
                 transform: [{ rotateY: "180deg" }],
               }}
               value={switchValue}
               onValueChange={(value) => {
-                setSwitchChanged(true);
+                // setSwitchChanged(true);
+                toggleTheme();
                 setSwitchValue(value);
               }}
             />
           </View>
         </View>
 
-        {switchChanged && (
+        {/* {switchChanged && (
           <View style={{ backgroundColor: "red", alignItems: "flex-end" }}>
             <TouchableOpacity
               style={{
                 position: "absolute",
                 maxheight: 60,
                 borderRadius: 99,
-                backgroundColor: '#660032',
+                backgroundColor: "#660032",
                 top: 150,
                 justifyContent: "center",
                 alignItems: "center",
                 paddingHorizontal: 10,
                 paddingVertical: 5,
               }}
-              onPress={onApplyChange}
+              // onPress={onApplyChange}
             >
               <Text style={{ fontSize: 22, color: "white" }}>
-                {currLang.languagepage.applychange}
+                {`apply changes ?`}
               </Text>
             </TouchableOpacity>
           </View>
-        )}
+        )} */}
       </View>
     </View>
   );
@@ -143,7 +113,7 @@ export default function LanguagePage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
 
     paddingBottom: "72%",
   },

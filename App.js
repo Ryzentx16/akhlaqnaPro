@@ -5,6 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { SafeAreaView, StyleSheet, StatusBar } from "react-native";
 import AppStartupNavigator from "./src/navigator/AppStartupNavigator";
 import Storage from "./src/components/Storage";
+import ThemeProvider from "./src/themes/ThemeProvider";
 
 export default function App() {
   useEffect(() => {
@@ -26,9 +27,11 @@ export default function App() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar barStyle="default" />
-      <NavigationContainer style={styles.container}>
-        <AppStartupNavigator />
-      </NavigationContainer>
+      <ThemeProvider>
+        <NavigationContainer style={styles.container}>
+          <AppStartupNavigator />
+        </NavigationContainer>
+      </ThemeProvider>
     </SafeAreaView>
   );
 }
@@ -36,7 +39,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "grey",
+    // backgroundColor: "grey",
   },
   text: {
     color: "white",

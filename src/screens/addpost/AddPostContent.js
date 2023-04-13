@@ -3,7 +3,8 @@ import ImageViewer from "./../../components/ImageViewer";
 import { ScrollView, TextInput } from "react-native";
 import { View } from "react-native";
 import languages from "./../../strings/LanguagesController";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
+import ThemeContext from "../../themes/ThemeContext";
 
 export default function AddPostContent({
   setContent,
@@ -11,19 +12,27 @@ export default function AddPostContent({
   image = null,
   setImage,
 }) {
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+
   let currLang = languages.currLang();
   useEffect(() => {
     currLang = languages.currLang();
   });
 
   return (
-    <View style={styles.contentContainer}>
+    <View
+      style={[
+        styles.contentContainer,
+        { backgroundColor: isDarkMode ? theme.backColor : "#F0F2F5" },
+      ]}
+    >
       <ScrollView>
         <View style={styles.content}>
           <TextInput
             maxLength={5000}
             style={styles.contentInput}
             placeholder={currLang.addpostPage.hint}
+            placeholderTextColor={theme.smallText}
             multiline={true}
             value={content}
             onChangeText={(text) => {
