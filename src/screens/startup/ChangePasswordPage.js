@@ -11,9 +11,12 @@ import {
   View,
   Alert,
 } from "react-native";
-import users from "../../data/users";
+// import users from "../../data/users";
+import { GraphQL } from "../../../API";
 
 import languages from "../../strings/LanguagesController";
+import OurUser from "../../OurUser";
+import LoadingHandler from "./../../components/LoadingHandler";
 
 const windowHeight = Dimensions.get("window").height;
 const isRTL = I18nManager.isRTL;
@@ -27,11 +30,12 @@ export default function ChangePasswordPage({ navigation, route }) {
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const inputMaxLength = 55;
 
-  const isValide = () => {
-    if (newPassword === "" || confirmPassword === "") {
+  const isValid = () => {
+    if (newPassword.trim() === "" || confirmPassword.trim() === "") {
       return false;
     } else if (newPassword === confirmPassword) {
       return true;
@@ -42,20 +46,44 @@ export default function ChangePasswordPage({ navigation, route }) {
     return null;
   };
 
-  const onSubmit = () => {
-    setNewPassword("");
-    setConfirmPassword("");
-    isValide()
-      ? navigation.dispatch(
-          navigation.reset({
-            index: 0,
-            routes: [{ name: "LoginPage" }],
-          })
-        )
-      : Alert.alert(
-          currLang.changepasswordpage.submitalert.title,
-          currLang.changepasswordpage.submitalert.content
-        );
+  const onSubmit = async () => {
+    setIsLoading(true);
+    const params = {
+      phoneNumber: route.params?.phoneNumber || OurUser.user.phoneNumber,
+      input: {
+        password: confirmPassword,
+      },
+    };
+
+    await OurUser.logOut(() => {
+      return;
+    });
+
+    if (isValid()) {
+      GraphQL.UserApiLogic.Queries.Edit(params).then((res) => {
+        setIsLoading(false);
+
+        if (!res) {
+          Alert.alert(
+            currLang.changepasswordpage.submitalert.title,
+            currLang.changepasswordpage.submitalert.content
+          );
+        } else if (res.errors) {
+          Alert.alert("Error", res.errors.join("\n"));
+        } else {
+          setNewPassword("");
+          setConfirmPassword("");
+          navigation.dispatch(navigation.goBack());
+        }
+      });
+    } else {
+      setIsLoading(false);
+
+      Alert.alert(
+        currLang.changepasswordpage.submitalert.title,
+        currLang.changepasswordpage.submitalert.content
+      );
+    }
   };
 
   return (
@@ -82,9 +110,7 @@ export default function ChangePasswordPage({ navigation, route }) {
           <View style={styles.textContainer}>
             <Text style={styles.text}>
               {currLang.changepasswordpage.changepasswordfor +
-                "(" +
-                route.params?.phoneNumber +
-                ")"}
+                `(${route.params?.phoneNumber || OurUser.user.phoneNumber})`}
             </Text>
           </View>
         </View>
@@ -130,6 +156,10 @@ export default function ChangePasswordPage({ navigation, route }) {
           </View>
         </View>
       </ScrollView>
+      <LoadingHandler
+        status={isLoading}
+        onImmediateBreak={() => setIsLoading(false)}
+      />
     </View>
   );
 }

@@ -17,13 +17,14 @@ export default function ThemePage() {
   // const [switchChanged, setSwitchChanged] = useState(false);
   const navigation = useNavigation();
   const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+  const textColor = theme.largeText;
 
   useEffect(() => {
     setSwitchValue(isDarkMode);
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.primary }]}>
       <AppHeader navigation={navigation} isDrawer={true} isSettings />
 
       <View
@@ -39,9 +40,9 @@ export default function ThemePage() {
           <MaterialCommunityIcons
             size={80}
             name={"theme-light-dark"}
-            color={"#660032"}
+            color={theme.secondary}
           />
-          <Text style={{ fontSize: 36, color: "#660032" }}>Theme</Text>
+          <Text style={{ fontSize: 36, color: textColor }}>Theme</Text>
         </View>
 
         <View
@@ -60,7 +61,7 @@ export default function ThemePage() {
             <Text
               style={{
                 fontSize: 22,
-                color: "#660032",
+                color: textColor,
                 alignSelf: "center",
                 marginBottom: 20,
               }}
@@ -68,7 +69,7 @@ export default function ThemePage() {
               {"Dark / Light Mode"}
             </Text>
             <Switch
-              thumbColor={"#660032"}
+              thumbColor={theme.secondary}
               style={{
                 alignSelf: "flex-start",
                 transform: [{ rotateY: "180deg" }],

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, Alert } from "react-native";
 import { MaterialCommunityIcons } from "react-native-vector-icons";
 import AppHeader from "../../components/AppHeader";
@@ -7,45 +7,45 @@ import languages from "../../strings/LanguagesController";
 
 import { useNavigation } from "@react-navigation/native";
 import Storage from "../../components/Storage";
+import ThemeContext from "../../themes/ThemeContext";
+import OriginalColors from "./../../components/AmantiButtons/OriginalColors";
 
 let currLang = languages.currLang();
 
 export default function AccountPage() {
   const navigation = useNavigation();
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+  const iconColor = theme.secondary;
+  const textColor = theme.largeText;
 
   const onChangePass = () => {
     // console.warn(users[0].phoneNumber);
 
-    // Alert.alert(
-    //   "Warning",
-    //   "In order to Change The password you need to sign out",
-    //   [
-    //     {
-    //       text: "Yes, Sign Out",
-    //       onPress: () =>
-    //         navigation.dispatch(
-    //           navigation.reset({
-    //             index: 1,
-    //             routes: [
-    //               {
-    //                 name: "SignUpConfirmation",
-    //                 params: {
-    //                   isChangePass: true,
-    //                   phoneNumber: users[0].phoneNumber,
-    //                 },
-    //               },
-    //             ],
-    //           })
-    //         ),
-    //     },
-    //     {
-    //       text: "Cancel",
-    //       onPress: null,
-    //     },
-    //   ]
-    // );
+    Alert.alert(
+      "Warning",
+      "In order to Change The password you need to sign out",
+      [
+        {
+          text: "Yes, Sign Out",
+          onPress: () =>
+            navigation.dispatch(
+              navigation.reset({
+                index: 1,
+                routes: [
+                  { name: "LoginPage", params: { passBy: true } },
+                  { name: "ChangePasswordPage" },
+                ],
+              })
+            ),
+        },
+        {
+          text: "Cancel",
+          onPress: null,
+        },
+      ]
+    );
 
-    Alert.alert("Sorry!", "Coming Soon");
+    // Alert.alert("Sorry!", "Coming Soon");
   };
 
   const onRemoveKeepLogging = async () => {
@@ -60,7 +60,7 @@ export default function AccountPage() {
   });
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.primary }]}>
       <AppHeader navigation={navigation} isDrawer={true} isSettings />
 
       <View style={{ flex: 1, paddingHorizontal: 42, marginTop: 9 }}>
@@ -68,9 +68,9 @@ export default function AccountPage() {
           <MaterialCommunityIcons
             name={"account"}
             size={80}
-            color={'#660032'}
+            color={iconColor}
           />
-          <Text style={{ fontSize: 36, color: '#660032' }}>
+          <Text style={{ fontSize: 36, color: textColor }}>
             {currLang.settingPage.account}
           </Text>
         </View>
@@ -93,12 +93,12 @@ export default function AccountPage() {
                 <MaterialCommunityIcons
                   name={"delete"}
                   size={40}
-                  color={'#660032'}
+                  color={iconColor}
                 />
               </View>
               <View style={{ flex: 5 }}>
                 <Text
-                  style={{ fontSize: 20, color: '#660032', textAlign: "left" }}
+                  style={{ fontSize: 20, color: textColor, textAlign: "left" }}
                 >
                   {currLang.accountPage.delete}
                 </Text>
@@ -118,12 +118,12 @@ export default function AccountPage() {
                 <MaterialCommunityIcons
                   name={"lock"}
                   size={40}
-                  color={'#660032'}
+                  color={iconColor}
                 />
               </View>
               <TouchableOpacity style={{ flex: 5 }} onPress={onChangePass}>
                 <Text
-                  style={{ fontSize: 20, color: '#660032', textAlign: "left" }}
+                  style={{ fontSize: 20, color: textColor, textAlign: "left" }}
                 >
                   {currLang.accountPage.changepassword}
                 </Text>
@@ -131,29 +131,11 @@ export default function AccountPage() {
             </TouchableOpacity>
           </View>
           <View style={{ flex: 1, justifyContent: "center" }}>
-            <TouchableOpacity
-              style={{
-                flex: 1,
-                flexDirection: "row",
-                alignSelf: "center",
-                alignItems: "center",
-                maxHeight: 40,
-                maxWidth: 200,
-                backgroundColor: "#660032",
-                borderRadius: 99,
-              }}
-            >
-              <TouchableOpacity
-                style={{ flex: 5 }}
-                onPress={onRemoveKeepLogging}
-              >
-                <Text
-                  style={{ fontSize: 16, color: "white", textAlign: "center" }}
-                >
-                  {`Remove keep logging`}
-                </Text>
-              </TouchableOpacity>
-            </TouchableOpacity>
+            <OriginalColors
+              style={{ alignSelf: "center" }}
+              title={`Remove keep logging`}
+              onPress={onRemoveKeepLogging}
+            />
           </View>
         </View>
       </View>
@@ -164,7 +146,7 @@ export default function AccountPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
 
     paddingBottom: "72%",
   },

@@ -30,22 +30,22 @@ const Queries = {
 
   Login: async (params) => {
     const query = gql`
-    mutation ($phoneNumber: String!, $password: String!) {
-      loginUser(phoneNumber: $phoneNumber, password: $password) {
-        success
-        message
-        result  {
-          id
-          firstName
-          lastName
-          profileImage
-          phoneNumber
-          isOtpChecked
-          roleLvl
+      mutation ($phoneNumber: String!, $password: String!) {
+        loginUser(phoneNumber: $phoneNumber, password: $password) {
+          success
+          message
+          result {
+            id
+            firstName
+            lastName
+            profileImage
+            phoneNumber
+            isOtpChecked
+            roleLvl
+          }
+          errors
         }
-        errors
       }
-    }
     `;
 
     const result = await Handler.Mutate({

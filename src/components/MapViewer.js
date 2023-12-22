@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,14 +12,250 @@ import MapView, { Marker } from "react-native-maps";
 import axios from "axios";
 import { Entypo } from "react-native-vector-icons";
 import { OriginalColors, SwappedColors } from "./AmantiButtons";
+import ThemeContext from "../themes/ThemeContext";
 
 const MAPS_API_KEY = "AIzaSyBb2lef_VaN4m9OlvngArW3h84ul1DHZIo";
 
 const customMapStyle = [];
+const DarkMapStyle = [
+  {
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#1d2c4d",
+      },
+    ],
+  },
+  {
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#8ec3b9",
+      },
+    ],
+  },
+  {
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        color: "#1a3646",
+      },
+    ],
+  },
+  {
+    featureType: "administrative.country",
+    elementType: "geometry.stroke",
+    stylers: [
+      {
+        color: "#4b6878",
+      },
+    ],
+  },
+  {
+    featureType: "administrative.land_parcel",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#64779e",
+      },
+    ],
+  },
+  {
+    featureType: "administrative.province",
+    elementType: "geometry.stroke",
+    stylers: [
+      {
+        color: "#4b6878",
+      },
+    ],
+  },
+  {
+    featureType: "landscape.man_made",
+    elementType: "geometry.stroke",
+    stylers: [
+      {
+        color: "#334e87",
+      },
+    ],
+  },
+  {
+    featureType: "landscape.natural",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#023e58",
+      },
+    ],
+  },
+  {
+    featureType: "poi",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#283d6a",
+      },
+    ],
+  },
+  {
+    featureType: "poi",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#6f9ba5",
+      },
+    ],
+  },
+  {
+    featureType: "poi",
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        color: "#1d2c4d",
+      },
+    ],
+  },
+  {
+    featureType: "poi.park",
+    elementType: "geometry.fill",
+    stylers: [
+      {
+        color: "#023e58",
+      },
+    ],
+  },
+  {
+    featureType: "poi.park",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#3C7680",
+      },
+    ],
+  },
+  {
+    featureType: "road",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#304a7d",
+      },
+    ],
+  },
+  {
+    featureType: "road",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#98a5be",
+      },
+    ],
+  },
+  {
+    featureType: "road",
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        color: "#1d2c4d",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#2c6675",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "geometry.stroke",
+    stylers: [
+      {
+        color: "#255763",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#b0d5ce",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        color: "#023e58",
+      },
+    ],
+  },
+  {
+    featureType: "transit",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#98a5be",
+      },
+    ],
+  },
+  {
+    featureType: "transit",
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        color: "#1d2c4d",
+      },
+    ],
+  },
+  {
+    featureType: "transit.line",
+    elementType: "geometry.fill",
+    stylers: [
+      {
+        color: "#283d6a",
+      },
+    ],
+  },
+  {
+    featureType: "transit.station",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#3a4762",
+      },
+    ],
+  },
+  {
+    featureType: "water",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#0e1626",
+      },
+    ],
+  },
+  {
+    featureType: "water",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#4e6d70",
+      },
+    ],
+  },
+];
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
 export default function MapViewer(props) {
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+
   const isFixedView = props.fixedView;
   const INlat = props.initRegion.latitude;
   const INlon = props.initRegion.longitude;
@@ -101,7 +337,8 @@ export default function MapViewer(props) {
         <MapView
           showsMyLocationButton={true}
           showsUserLocation={true}
-          customMapStyle={customMapStyle}
+          userInterfaceStyle={isDarkMode ? "dark" : "light"}
+          customMapStyle={isDarkMode ? DarkMapStyle : customMapStyle}
           ref={refMap}
           style={styles.container}
           onRegionChangeComplete={async (Region) => {
@@ -128,7 +365,7 @@ export default function MapViewer(props) {
                 });
               }}
             >
-              <Entypo name={"location-pin"} size={30} color={"#660032"} />
+              <Entypo name={"location-pin"} size={30} color={theme.secondary} />
             </Marker>
           )}
         </MapView>
@@ -137,14 +374,14 @@ export default function MapViewer(props) {
             <Entypo
               name={"location-pin"}
               size={30}
-              color={"#660032"}
+              color={theme.secondary}
               style={styles.pin}
             />
             <View style={styles.centerRefrence} />
             <View
               style={{
                 position: "absolute",
-                backgroundColor: "white",
+                backgroundColor: theme.primary,
                 opacity: 0.7,
                 bottom: 0,
                 width: "100%",
@@ -163,7 +400,9 @@ export default function MapViewer(props) {
           }}
         >
           {!isFixedView && (
-            <Text style={{ marginBottom: 10 }}>{`Area Name: ${areaName}`}</Text>
+            <Text
+              style={{ marginBottom: 10, color: theme.mediumText }}
+            >{`Area Name: ${areaName}`}</Text>
           )}
           <View
             style={{

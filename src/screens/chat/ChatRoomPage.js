@@ -88,7 +88,7 @@ export default function ChatsPage({ route }) {
   };
 
   return (
-    <View style={{ flex: 1, marginTop: 10, backgroundColor: theme.backColor }}>
+    <View style={{ flex: 1, paddingTop: 10, backgroundColor: theme.backColor }}>
       <ChatRoomListView
         retrieveData={retrieveData}
         perPage={10}

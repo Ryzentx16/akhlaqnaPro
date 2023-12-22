@@ -43,7 +43,7 @@ export default function ProfileNavigator({ navigation, route }) {
       barStyle={{ backgroundColor: "black" }} //This is where you can manipulate its look.
     >
       <Stack.Screen
-        name="PersonProfile"
+        name="ProfilePage"
         component={PersonProfile}
         initialParams={route.params}
         options={{

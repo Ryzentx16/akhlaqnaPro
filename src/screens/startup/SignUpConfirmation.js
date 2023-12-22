@@ -47,10 +47,11 @@ export default function SignUpConfirmation({ navigation, route }) {
     // );
     // return;
   };
+
   const onResend = () => {
     //fake OTP generator:
-    otp = Math.floor(Math.random() * 1000000).toString();
-    Alert.alert("OTP number", otp);
+    setOtp(Math.floor(Math.random() * 1000000).toString());
+    Alert.alert("OTP number", OTP);
   };
 
   return (
@@ -147,13 +148,13 @@ const styles = StyleSheet.create({
 
   headContainer: {
     flex: 3,
-    backgroundColor: isEdit ? 'red' : 'white',
+    backgroundColor: isEdit ? "red" : "white",
     // marginTop: 90,
   },
   logoContainer: {
     flex: 3,
     alignItems: "center",
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
 
     // backgroundColor: 'green',
 
@@ -179,7 +180,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
     // marginTop: "20%",
     alignItems: "center",
     // backgroundColor: 'lightblue',
@@ -192,7 +193,7 @@ const styles = StyleSheet.create({
 
   inputContainer: {
     flex: 1,
-    backgroundColor: isEdit ? '#165815' : 'white',
+    backgroundColor: isEdit ? "#165815" : "white",
     justifyContent: "center",
 
     paddingHorizontal: 90,
@@ -212,8 +213,7 @@ const styles = StyleSheet.create({
 
   actionsContainer: {
     flex: 3,
-    backgroundColor: isEdit ? 'blue' : 'white',
-
+    backgroundColor: isEdit ? "blue" : "white",
   },
   submitContainer: {
     marginTop: 7,

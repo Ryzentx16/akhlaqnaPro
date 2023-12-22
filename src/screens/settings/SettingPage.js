@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -14,10 +14,13 @@ import languages from "../../strings/LanguagesController";
 import OurUser from "../../OurUser";
 import domain from "../../../API/domain";
 import { MaterialCommunityIcons } from "react-native-vector-icons";
+import ThemeContext from "../../themes/ThemeContext";
 
 const isRTL = I18nManager.isRTL;
 
 export default function SettingPage({ navigation }) {
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+
   const onAccount = () => {
     navigation.navigate("AccountPage");
   };
@@ -37,11 +40,16 @@ export default function SettingPage({ navigation }) {
   });
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.primary }]}>
       <AppHeader navigation={navigation} isDrawer={true} />
 
       <View style={styles.bodyContainer}>
-        <View style={styles.accountInfoContainer}>
+        <View
+          style={[
+            styles.accountInfoContainer,
+            { borderColor: theme.largeText },
+          ]}
+        >
           <View style={styles.avatarContainer}>
             <UserAvatar
               src={`${domain}/download/` + OurUser.user.profileImage}
@@ -50,17 +58,23 @@ export default function SettingPage({ navigation }) {
           </View>
           <View style={styles.nameContainer}>
             <Text
-              style={styles.name}
+              style={[styles.name, { color: theme.largeText }]}
             >{`${OurUser.user.firstName} ${OurUser.user.lastName}`}</Text>
           </View>
         </View>
         <View style={styles.btnsBody}>
           <TouchableOpacity style={styles.accountContainer} onPress={onAccount}>
             <View style={styles.iconAccountContainer}>
-              <Ionicons size={60} name={"person-circle"} color={"#660032"} />
+              <Ionicons
+                size={60}
+                name={"person-circle"}
+                color={theme.secondary}
+              />
             </View>
             <View style={styles.textAccountContainer}>
-              <Text style={styles.text}>{currLang.settingPage.account}</Text>
+              <Text style={[styles.text, { color: theme.largeText }]}>
+                {currLang.settingPage.account}
+              </Text>
             </View>
           </TouchableOpacity>
 
@@ -69,10 +83,12 @@ export default function SettingPage({ navigation }) {
             onPress={onLanguage}
           >
             <View style={styles.iconLanguageContainer}>
-              <Ionicons size={50} name={"language"} color={"#660032"} />
+              <Ionicons size={50} name={"language"} color={theme.secondary} />
             </View>
             <View style={styles.textLanguageContainer}>
-              <Text style={styles.text}>{currLang.settingPage.language}</Text>
+              <Text style={[styles.text, { color: theme.largeText }]}>
+                {currLang.settingPage.language}
+              </Text>
             </View>
           </TouchableOpacity>
 
@@ -81,11 +97,13 @@ export default function SettingPage({ navigation }) {
               <MaterialCommunityIcons
                 size={50}
                 name={"theme-light-dark"}
-                color={"#660032"}
+                color={theme.secondary}
               />
             </View>
             <View style={styles.textLanguageContainer}>
-              <Text style={styles.text}>{`Theme`}</Text>
+              <Text
+                style={[styles.text, { color: theme.largeText }]}
+              >{`Theme`}</Text>
             </View>
           </TouchableOpacity>
 

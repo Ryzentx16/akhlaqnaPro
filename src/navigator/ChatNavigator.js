@@ -44,7 +44,16 @@ export default function ChatNavigator({ navigation, route }) {
       screenOptions={{
         headerTintColor: theme.largeText,
         headerStyle: {
-          backgroundColor: theme.primary
+          backgroundColor: theme.primary,
+          shadowColor: "#944d6f",
+          shadowOffset: {
+            width: 0,
+            height: 3,
+          },
+          shadowOpacity: 0.29,
+          shadowRadius: 4.65,
+
+          elevation: 7,
         },
         gestureEnabled: false,
         headerShown: false,

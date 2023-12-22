@@ -77,7 +77,7 @@ function postType(type, color) {
 }
 
 export default function PostCard(props) {
-  let { post, navigation, onPressComment, isTypeEnable } = props;
+  let { post, navigation, onPressComment, isTypeEnable, isProfile } = props;
 
   const [numOfLikes, setNumOfLikes] = useState(post.numOfLikes); //To show ur remaining Text
   const [isLiked, setIsLiked] = useState(post.isLikedByMe);
@@ -122,6 +122,7 @@ export default function PostCard(props) {
       );
     }
   }, []);
+  // console.log(route);
 
   return (
     <View
@@ -135,12 +136,14 @@ export default function PostCard(props) {
       <View style={headerStyles.container}>
         <TouchableOpacity
           style={headerStyles.avatarContainer}
-          onPress={() =>
-            navigation.navigate("PersonProfile", {
-              user: post.user,
-              isMe: post.user.id == OurUser.user.id,
-            })
-          }
+          onPress={() => {
+            if (!isProfile) {
+              navigation.navigate("PersonProfile", {
+                user: post.user,
+                isMe: post.user.id == OurUser.user.id,
+              });
+            }
+          }}
         >
           <UserAvatar
             size={35}

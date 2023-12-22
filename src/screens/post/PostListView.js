@@ -5,11 +5,9 @@ import languages from "../../strings/LanguagesController";
 import CommentPage from "../comment/CommentPage";
 import MapViewer from "../../components/MapViewer";
 
-
-
 //type of posts 1 for general 2 for islost and 3 for isfound and 4 for both
 export default function PostListView(props) {
-  const { retrieveData, type, perPage, navigation, MapViewer } = props;
+  const { retrieveData, type, perPage, navigation, isProfile } = props;
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [commentPost, setCommentPost] = useState(null);
 
@@ -34,6 +32,7 @@ export default function PostListView(props) {
           setCommentPost(clickedPost);
           setIsCommentOpen(true);
         }}
+        isProfile={isProfile}
       />
     );
   };
@@ -55,7 +54,6 @@ export default function PostListView(props) {
           }}
         />
       )}
-      
     </>
   );
 }

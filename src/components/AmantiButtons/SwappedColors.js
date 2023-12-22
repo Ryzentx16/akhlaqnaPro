@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { TouchableOpacity } from "react-native";
 import { View, StyleSheet, Text } from "react-native";
+import ThemeContext from "./../../themes/ThemeContext";
 
 export default function SwappedColors(props) {
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
 
   return (
     <TouchableOpacity
@@ -13,7 +15,9 @@ export default function SwappedColors(props) {
       ]}
       onPress={props.onPress}
     >
-      <Text style={[styles.title, { color: "#660032" }]}>{props.title}</Text>
+      <Text style={[styles.title, { color: theme.SwappedColors.text }]}>
+        {props.title}
+      </Text>
     </TouchableOpacity>
   );
 }

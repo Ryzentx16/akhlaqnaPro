@@ -21,29 +21,32 @@ import LoadingHandler from "../../components/LoadingHandler";
 import Storage from "../../components/Storage";
 import Checkbox from "expo-checkbox";
 import UserBackModal from "../../components/UserBackModal";
+import ConfirmerModal from "../../components/ConfirmerModal";
 
 const windowHeight = Dimensions.get("screen").height;
 const isRTL = I18nManager.isRTL;
 const isEdit = false;
 
-export default function LoginPage({ navigation }) {
-  const [formattedValue, setFormattedValue] = useState(null);
+export default function LoginPage({ navigation, route }) {
+  const [formattedValue, setFormattedValue] = useState("");
   const [valid, setValid] = useState(false);
   const [userBackModalStatus, setUserBackModalStatus] = useState(false);
   const phoneInput = useRef(PhoneInput);
 
-  const [phoneNumber, setPhoneNumber] = useState(null);
-  const [password, setPassword] = useState(null);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [password, setPassword] = useState("");
 
   const [loadingStatus, setLoadingStatus] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+
+  const [confirmModal, setConfirmModal] = useState(false);
 
   const checkLogin = () => {
     setLoadingStatus(true);
 
     if (
-      phoneInput == "" ||
-      phoneInput == null ||
+      phoneNumber == "" ||
+      phoneNumber == null ||
       password == "" ||
       password == null
     ) {
@@ -78,10 +81,11 @@ export default function LoginPage({ navigation }) {
   };
 
   const onForget = () => {
-    navigation.navigate("SignUpConfirmation", {
-      isChangePass: true,
-      phoneNumber: formattedValue,
-    });
+    if (!!phoneNumber) {
+      setConfirmModal(true);
+    } else {
+      Alert.alert("Error", "Phone number is required");
+    }
   };
 
   const onSignup = () => {
@@ -94,12 +98,12 @@ export default function LoginPage({ navigation }) {
   });
 
   useEffect(() => {
-    Storage.getData("UserData").then((v) => {
-      setPhoneNumber(v?.phoneNumber);
-    });
-
     const checkLogin = async () => {
       setLoadingStatus(true);
+
+      Storage.getData("UserData").then((v) => {
+        setPhoneNumber(v?.phoneNumber);
+      });
 
       if (await Storage.getData("keepLogging")) {
         OurUser.user = await Storage.getData("UserData");
@@ -111,11 +115,17 @@ export default function LoginPage({ navigation }) {
         setLoadingStatus(false);
 
         setUserBackModalStatus(true);
+      } else {
+        OurUser.user = await Storage.getData("UserData");
+        setLoadingStatus(false);
       }
     };
 
-    checkLogin();
-    setLoadingStatus(false);
+    if (!route.params?.passBy) {
+      checkLogin();
+      console.log("check login");
+    }
+    // setLoadingStatus(false);
   }, []);
 
   return (
@@ -312,6 +322,17 @@ export default function LoginPage({ navigation }) {
           color={isChecked ? "#660032" : undefined}
         />
       </UserBackModal>
+      <ConfirmerModal
+        status={confirmModal}
+        phoneNumber={formattedValue.trim()}
+        onCancel={() => setConfirmModal(false)}
+        next={() => {
+          setConfirmModal(false);
+          navigation.navigate("ChangePasswordPage", {
+            phoneNumber: formattedValue.trim(),
+          });
+        }}
+      />
     </View>
   );
 }

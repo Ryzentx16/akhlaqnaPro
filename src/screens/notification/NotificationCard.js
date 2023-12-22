@@ -54,7 +54,7 @@ export default function NotificationCard(props) {
       <View style={[styles.bodyContainer, { borderBottomColor: theme.border }]}>
         <View style={styles.headerContainer}>
           <Text style={[styles.header, { color: theme.largeText }]}>
-            {"unknowen"}
+            {"unknown"}
           </Text>
           {/* <TouchableOpacity>
             <MaterialCommunityIcons

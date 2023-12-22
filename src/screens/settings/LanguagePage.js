@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   StyleSheet,
   Switch,
@@ -11,9 +11,12 @@ import { MaterialCommunityIcons, Ionicons } from "react-native-vector-icons";
 import AppHeader from "../../components/AppHeader";
 import languages from "../../strings/LanguagesController";
 import { useNavigation } from "@react-navigation/native";
-
+import ThemeContext from "../../themes/ThemeContext";
 
 export default function LanguagePage() {
+  const { theme, isDarkMode, toggleTheme } = useContext(ThemeContext);
+  const textColor = theme.largeText;
+
   const [switchValue, setSwitchValue] = useState(false);
   const [switchChanged, setSwitchChanged] = useState(false);
 
@@ -58,7 +61,7 @@ export default function LanguagePage() {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.primary }]}>
       <AppHeader navigation={navigation} isDrawer={true} isSettings />
 
       <View
@@ -71,8 +74,8 @@ export default function LanguagePage() {
         }}
       >
         <View style={{ flex: 1, alignItems: "center" }}>
-          <Ionicons size={80} name={"language"} color={'#660032'} />
-          <Text style={{ fontSize: 36, color: '#660032' }}>Language</Text>
+          <Ionicons size={80} name={"language"} color={theme.secondary} />
+          <Text style={{ fontSize: 36, color: textColor }}>Language</Text>
         </View>
 
         <View
@@ -91,7 +94,7 @@ export default function LanguagePage() {
             <Text
               style={{
                 fontSize: 22,
-                color: '#660032',
+                color: textColor,
                 alignSelf: "center",
                 marginBottom: 20,
               }}
@@ -99,7 +102,7 @@ export default function LanguagePage() {
               {"العربية " + "/" + " English"}
             </Text>
             <Switch
-              thumbColor={'#660032'}
+              thumbColor={theme.secondary}
               style={{
                 alignSelf: "flex-start",
                 transform: [{ rotateY: "180deg" }],
@@ -120,7 +123,7 @@ export default function LanguagePage() {
                 position: "absolute",
                 maxheight: 60,
                 borderRadius: 99,
-                backgroundColor: '#660032',
+                backgroundColor: "#660032",
                 top: 150,
                 justifyContent: "center",
                 alignItems: "center",
@@ -143,7 +146,7 @@ export default function LanguagePage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
 
     paddingBottom: "72%",
   },

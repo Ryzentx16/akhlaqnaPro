@@ -50,15 +50,10 @@ export default function PersonProfile({ navigation, route }) {
           text: currLang.languagepage.applychangealert.buttons.yessingout,
           onPress: () => {
             OurUser.logOut(() => {
-              globleNavigation.dispatch(
-                globleNavigation.reset({
-                  index: 0,
-                  routes: [
-                    {
-                      name: "EditProfile",
-                      params: { user: user },
-                    },
-                  ],
+              navigation.dispatch(
+                navigation.reset({
+                  index: 1,
+                  routes: [{ name: "LoginPage" }, { name: "EditProfile" }],
                 })
               );
             });
@@ -184,7 +179,7 @@ export default function PersonProfile({ navigation, route }) {
         type={4}
         navigation={navigation}
         perPage={4}
-        Profile={user}
+        isProfile={true}
       />
       <LoadingHandler
         status={modalStatus}
