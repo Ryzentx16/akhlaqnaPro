@@ -14,6 +14,7 @@ import {
 import Ionicons from "react-native-vector-icons/Ionicons";
 // import CheckOTP from "../../../API/CheckOTP";
 import languages from "../../strings/LanguagesController";
+import AmantiLogo from "../../components/AmantiLogo";
 
 const windowHeight = Dimensions.get("window").height;
 const isRTL = I18nManager.isRTL;
@@ -68,12 +69,7 @@ export default function SignUpConfirmation({ navigation, route }) {
       >
         <View style={styles.headContainer}>
           <View style={styles.logoContainer}>
-            <View style={styles.logo}>
-              <Image
-                source={require("../../../assets/Logo.png")}
-                style={styles.imageLogo}
-              />
-            </View>
+            <AmantiLogo contentContainerStyle={styles.logo} isStartUp={true} />
           </View>
 
           <View style={styles.textContainer}>

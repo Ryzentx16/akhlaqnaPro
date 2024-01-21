@@ -22,6 +22,7 @@ import Storage from "../../components/Storage";
 import Checkbox from "expo-checkbox";
 import UserBackModal from "../../components/UserBackModal";
 import ConfirmerModal from "../../components/ConfirmerModal";
+import AmantiLogo from "../../components/AmantiLogo";
 
 const windowHeight = Dimensions.get("screen").height;
 const isRTL = I18nManager.isRTL;
@@ -137,12 +138,10 @@ export default function LoginPage({ navigation, route }) {
       >
         <View style={headerStyle.container}>
           <View style={headerStyle.logoSection}>
-            <View style={headerStyle.logo}>
-              <Image
-                source={require("../../../assets/Logo.png")}
-                style={headerStyle.imageLogo}
-              />
-            </View>
+            <AmantiLogo
+              contentContainerStyle={headerStyle.logo}
+              isStartUp={true}
+            />
           </View>
 
           <View style={headerStyle.title}>

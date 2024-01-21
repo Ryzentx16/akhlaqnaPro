@@ -17,7 +17,7 @@
       ]
     ],
     "splash": {
-      "image": "./assets/Amanti_splash.png",
+      "image": "./assets/Eshrhli_splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#660032"
     },
@@ -31,11 +31,11 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/Amanti Adaptive.png",
+        "foregroundImage": "./assets/Eshrhli_Adaptive.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.ryzentx.amanti",
-      "versionCode": 8
+      "versionCode": 9
     },
     "web": {
       "favicon": "./assets/favicon.png"

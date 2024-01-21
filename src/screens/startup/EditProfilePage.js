@@ -28,6 +28,7 @@ import OurUser from "../../OurUser";
 import UserAvatar from "@muhzi/react-native-user-avatar";
 import * as ImagePicker from "expo-image-picker";
 import domain from "../../../API/domain";
+import AmantiLogo from "../../components/AmantiLogo";
 
 const windowHeight = Dimensions.get("window").height;
 const isRTL = I18nManager.isRTL;
@@ -156,12 +157,7 @@ export default function EditProfilePage({ navigation, route }) {
         }}
       >
         <View style={styles.logoSection}>
-          <View style={styles.logo}>
-            <Image
-              source={require("../../../assets/Logo.png")}
-              style={styles.imageLogo}
-            />
-          </View>
+          <AmantiLogo contentContainerStyle={styles.logo} isStartUp={true} />
         </View>
 
         <View style={styles.titleContainer}>

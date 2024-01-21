@@ -1,7 +1,6 @@
 import { useContext, useEffect } from "react";
 import {
   BackHandler,
-  Alert,
   Image,
   View,
   StyleSheet,
@@ -12,18 +11,18 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import SearchPage from "../screens/search/SearchPage";
-import commentPage from "../screens/comment/CommentPage";
+// import commentPage from "../screens/comment/CommentPage";
 import NotificationsPage from "../screens/notification/NotificationsPage";
 import AppHeader from "../components/AppHeader";
 import ChatNavigator from "./ChatNavigator";
 import PostNavigator from "./PostNavigator";
-import AppDrawerNavigator from "./AppDrawerNavigator";
+// import AppDrawerNavigator from "./AppDrawerNavigator";
 
-import logo from "../../assets/logo.js";
-import Svg, { Ellipse, Path, SvgXml } from "react-native-svg";
+// import logo from "../../assets/logo.js";
+// import Svg, { Ellipse, Path, SvgXml } from "react-native-svg";
 import AddPostPage from "./../screens/addpost/AddpostPage";
 import ThemeContext from "../themes/ThemeContext";
-import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
+// import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
 const iconsize = 30;
