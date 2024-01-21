@@ -22,9 +22,12 @@
       "backgroundColor": "#660032"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/647986a9-70ce-4870-98be-b9c06240715c"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.ryzentx.amanti"
@@ -35,7 +38,10 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.ryzentx.amanti",
-      "versionCode": 9
+      "versionCode": 9,
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -44,6 +50,9 @@
       "eas": {
         "projectId": "647986a9-70ce-4870-98be-b9c06240715c"
       }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
     }
   }
 }
