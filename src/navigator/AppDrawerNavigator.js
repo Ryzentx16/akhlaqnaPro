@@ -63,22 +63,22 @@ export default function AppDrawerNavigator() {
     <Drawer.Navigator
       initialRouteName="Pages"
       drawerContent={(props) => <CustomDrawerContent {...props} />}
-      screenListeners={{beforeRemove: null}}
+      screenListeners={{ beforeRemove: null }}
       screenOptions={{
         swipeEnabled: false,
         headerShown: false,
         drawerType: "front",
         drawerStyle: {
           backgroundColor: "white",
-          
+
           borderLeftWidth: 5,
           borderTopWidth: 5,
           borderBottomWidth: 5,
 
           borderColor: "#660032",
 
-          borderTopLeftRadius:  15,
-          borderBottomLeftRadius:  15,
+          borderTopLeftRadius: 15,
+          borderBottomLeftRadius: 15,
 
           marginTop: 80,
           minHeight: "18%",
@@ -117,7 +117,7 @@ export default function AppDrawerNavigator() {
         options={{ title: currLang.drawer.home }}
       />
 
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="LostsPage"
         component={LostPosts}
         options={{
@@ -128,7 +128,7 @@ export default function AppDrawerNavigator() {
         name="FoundsPage"
         component={FoundPage}
         options={{ title: currLang.drawer.foundpage }}
-      />
+      /> */}
 
       <Drawer.Screen
         name="SettingPage"
