@@ -8,6 +8,7 @@ import { TextInput } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { I18nManager } from "react-native";
 import { Alert } from "react-native";
+import AmantiLogo from "./AmantiLogo";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -73,12 +74,10 @@ export default function ConfirmerModal(props) {
           >
             <View style={styles.headContainer}>
               <View style={styles.logoContainer}>
-                <View style={styles.logo}>
-                  <Image
-                    source={require("../../assets/Logo.png")}
-                    style={styles.imageLogo}
-                  />
-                </View>
+                <AmantiLogo
+                  contentContainerStyle={styles.logo}
+                  isStartUp={true}
+                />
               </View>
 
               <View style={styles.textContainer}>

@@ -15,6 +15,7 @@ import { FontAwesome, Entypo, Ionicons } from "react-native-vector-icons";
 import OurUser from "../OurUser";
 import domain from "../../API/domain";
 import ThemeContext from "./../themes/ThemeContext";
+import AmantiLogo from "./AmantiLogo";
 
 const isRTL = I18nManager.isRTL;
 
@@ -44,21 +45,12 @@ export default function AppHeader(props) {
             { backgroundColor: theme.primary },
           ]}
         >
-          <View style={[styles.circle, { borderColor: theme.secondary }]} />
-          <TouchableOpacity
-            style={[styles.logo, { borderColor: theme.secondary }]}
-            onPress={onLogo}
-          >
-            <Image
-              source={
-                isDarkMode
-                  ? require("../../assets/Amanti.png")
-                  : require("../../assets/Logo.png")
-              }
-              style={styles.imageLogo}
-            />
-            {/*<AmanatiLogo style={styles.imageLogo}/>*/}
-          </TouchableOpacity>
+          <AmantiLogo
+            onLogo={() => onLogo}
+            theme={theme}
+            isDarkMode={isDarkMode}
+          />
+
           <TouchableOpacity style={styles.profileContainer} onPress={onProfile}>
             <UserAvatar
               src={`${domain}/download/` + OurUser.user.profileImage}
@@ -113,33 +105,6 @@ const styles = StyleSheet.create({
     elevation: 7,
     borderBottomRightRadius: 10,
     borderBottomLeftRadius: 10,
-  },
-  circle: {
-    width: 750,
-    height: 800,
-    borderRadius: 800,
-    borderColor: "#660032",
-    borderWidth: 2,
-    alignSelf: "center",
-    marginTop: -700,
-  },
-
-  logo: {
-    position: "absolute",
-    height: 70,
-    width: 70,
-    alignSelf: "center",
-    borderColor: "#660032",
-    borderWidth: 2,
-    borderRadius: 150 / 2,
-
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  imageLogo: {
-    height: 57,
-    width: 37,
-    marginLeft: isRTL ? -5 : 5,
   },
 
   profileContainer: {

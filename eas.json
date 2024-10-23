@@ -3,7 +3,11 @@
     "version": ">= 3.3.2"
   },
   "build": {
-    "preview": {},
+    "preview": {
+      "android": {
+        "buildType": "apk"
+      }
+    },
     "preview2": {
       "android": {
         "gradleCommand": ":app:assembleRelease"
@@ -17,6 +21,8 @@
       }
     },
     "production": {
+      "channel": "production",
+      "distribution": "internal",
       "ios": {
         "resourceClass": "m1-medium"
       }
